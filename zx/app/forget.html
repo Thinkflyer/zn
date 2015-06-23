@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/wap.css" rel="stylesheet" />
+		<script src="../js/zepto.min.js"></script>
+		<script src="../js/config.js"></script>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">找回密码</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>手机号码:</label>
+						<input name="mobile" id="mobile" type="text" placeholder="请输入手机号码" value="13918703616" class="mui-input-clear">
+					</div>
+					<div class="mui-input-row">
+						<label>验证码:</label>
+						<input type="text" name="m_code" id="m_code" placeholder="输入验证码" value="123456" class="mui-input-clear">
+					</div>
+					<div class="mui-button-row" style="right:0.5em">
+						<button id="mobile_auth_waitting" style="float:right;font-size:1em;display:none;">获取验证码</button>
+						<button id="mobile_auth" style="float:right;font-size:1em">获取验证码</button>
+					</div>
+					<div class="mui-button-row">
+						<button type="button" id="getpwd" name="getpwd" class="mui-btn mui-btn-primary">找回密码</button>
+					</div>
+				</form>
+				<a href="register.html" id="reg">注册新账号</a>&nbsp;&nbsp;<a href="forget.html" id="forget">忘记密码?</a>
+			</div>
+		</div>
+		<script>
+			mui.ready(function() {
+				//获取验证码
+				mui('.mui-content-padded').on('tap', '#mobile_auth', function() {
+					var _mobile = Zepto('input[name="mobile"]').val();
+					if (_mobile == '') {
+						plus.nativeUI.toast('手机号码不能为空');
+						return false;
+					} else {
+						var mflag = regBox.regMobile.test(_mobile);
+						if (!(mflag)) {
+							plus.nativeUI.toast("手机号码有误！");
+							return false;
+						}
+					}
+
+					//提交获取短信
+					mui.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=user&a=getauth",
+						timeout: 5000, //超时时间设置为10秒；
+						data: {
+							mobile: _mobile
+						},
+						success: function(msg) {
+							if (msg.code == 0) {
+								plus.nativeUI.toast(msg.info);
+							} else {
+								plus.nativeUI.toast(msg.info);
+								setInterval("set_time()", mcro_time);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理
+							plus.nativeUI.toast(mylang.error_network);
+							console.log(JSON.stringify(xhr));
+						}
+					});
+				});
+
+	document.getElementById("getpwd").addEventListener('tap', function() {
+					var _mobile = Zepto('#mobile').val();
+					var _m_code = Zepto('#m_code').val();
+					if (_mobile == '') {
+						plus.nativeUI.toast('手机号码不能为空');
+						return false;
+					} else {
+						var mflag = regBox.regMobile.test(_mobile);
+						if (!(mflag)) {
+							plus.nativeUI.toast("手机号码有误！");
+							return false;
+						}
+					}
+					if (_m_code == '') {
+						plus.nativeUI.toast('验证码不能为空');
+						return false;
+					} else {
+						var mflag = regBox.regmcode.test(_m_code);
+						if (!(mflag)) {
+							plus.nativeUI.toast("输入有误6位长度数字！");
+							return false;
+						}
+					}
+					plus.nativeUI.showWaiting();
+					var datas = {
+						'mobile': _mobile,
+						'm_code': _m_code,
+					};
+					mui.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=user&a=verify_pwd",
+						timeout: 5000, //超时时间设置为10秒；
+						data: datas,
+						success: function(json) {
+							var msg = eval(json);
+							if (msg.code == '1') {
+								 mui.openWindow({
+								    url: msg.url,
+								    id:'repasswd.html',
+										styles: {
+											zindex: 1,
+										},
+								  });
+								//plus.nativeUI.toast(msg.info);
+							} else {
+								plus.nativeUI.toast(msg.info);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理
+							plus.nativeUI.toast(mylang.error_network);
+							console.log(JSON.stringify(xhr));
+						}
+					});
+					plus.nativeUI.closeWaiting();
+				});
+			});
+		</script>
+		<script src="../js/common.js"></script>
+	</body>
+
+</html>

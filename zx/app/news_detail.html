@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.css">
+		<link rel="stylesheet" href="../css/wap.css">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/zepto.min.js"></script>
+		<script src="../js/config.js"></script>
+	</head>
+
+	<body>
+		<style>
+			.mui-control-content {
+				min-height: 320px;
+			}
+			.mui-bar-nav ~ .mui-content {
+				padding-top: 40px;
+			}
+			.postbutton {
+				margin: 0 auto;
+				width: 90%
+			}
+		</style>
+
+
+<!-- 主页面容器 -->
+			<div class="mui-inner-wrap">
+				<!-- 主页面标题 -->
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-action-back mui-icon-back mui-pull-left"></a>
+					<h1 class="mui-title">新闻详情</h1>
+				</header>
+				<div id="pullrefresh" class="mui-content mui-scroll-wrapper" >
+					<div class="mui-scroll" >
+						<!-- 主界面具体展示内容 -->
+
+						<div class="mui-content-padded" >
+							<p style="margin-bottom: 0;">
+								<span class="detail-title">加载内容...</span>
+							</p>
+							<div  style="background: #FFFFFF; padding: 10px;" >
+								<div id="content" class="mui-control-content mui-active">
+									正在加载内容...
+								</div>
+							</div>
+						</div>
+						<!--end detail-->
+					</div>
+				</div>
+
+		<script>
+			mui.init();
+			mui('#pullrefresh').scroll();
+
+			var uid = null;
+			var plusReady = function() {
+				var self = plus.webview.currentWebview();
+				uid = self.uid;
+				mui.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: baseDomain + "index.php?g=Api&m=Index&a=show",
+					data: 'id=' + uid,
+					success: function(json) {
+						var msg = eval(json);
+						var str = '';
+	 					Zepto('.detail-title').html(msg.title);
+	 					Zepto('#content').html(msg.content);
+
+					},error:function(xhr,type,errorThrown){
+						//异常处理
+						plus.nativeUI.toast(mylang['error_network']);
+						console.log(JSON.stringify(xhr));
+					}
+				});
+				plus.nativeUI.closeWaiting();
+			};
+			if (window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			 //页面加载完成需要等待load
+			var loadSuccess = function() {
+				plus.nativeUI.closeWaiting();
+			};
+			window.addEventListener('load', loadSuccess, false);
+		</script>
+	</body>
+	<script src="js/common.js"></script>
+
+</html>

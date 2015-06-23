@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>微医生名单</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/wap.css">
+		<script src="../js/mui.min.js"></script>
+
+		<script src="../js/config.js"></script>
+	</head>
+	<body>
+
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<ul id="group1" class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+
+			</ul>
+		</div>
+	</body>
+	<script>
+			mui.init({
+				swipeBack: false,
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					},
+					 preloadPages:[{
+					    id:'show_detail',
+					    url:'show_detail.html'
+					  }]
+				}
+			});
+
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+				setTimeout(function() {
+					++count;
+					var table = document.body.querySelector('.mui-table-view');
+					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+					 var url=baseDomain+"index.php?g=Api&m=Index&a=getjson&p="+count+"&callback=?";
+					  $.getJSON(url,{},function(data){
+
+					  	var str='';
+                        $.each(data,function(i){
+                        		m=data[i];
+                        		var li = document.createElement('li');
+							li.className = 'mui-table-view-cell';
+							str='<div class="mui-slider-left mui-disabled">';
+							str+='<a class="mui-btn mui-btn-red mui-icon mui-icon-email"></a>';
+							str+='<a class="mui-btn mui-btn-yellow mui-icon mui-icon-phone"></a>';
+							str+='<a class="mui-btn mui-btn-grey mui-icon mui-icon-person"></a>';
+							str+='</div>';
+					  		str+='<a href="show_detail.html" open-type="common" open-id="'+m.id+'" open-docname="'+m.title+'"><div class="mui-slider-cell">';
+					  		str+='<div class="oa-contact-cell mui-table">';
+					  		str+='<div class="oa-contact-avatar mui-table-cell">';
+							str+='<img src="'+baseDomain+m.thumb+'" width="60" height="60" />';
+							str+='</div>';
+							str+='<div class="oa-contact-content mui-table-cell">';
+							str+='<div class="mui-clearfix">';
+							str+='<h4 class="oa-contact-name">'+m.title+'</h4>';
+							str+='<span class="oa-contact-position mui-h6">'+m.jibie+'</span>';
+							str+='</div>';
+							str+='<p class="oa-contact-email mui-h6">'+m.description+'</p>';
+							str+='</div>';
+							str+='</div>';
+							str+='</div></a>';
+							li.innerHTML =str;
+							table.insertBefore(li, table.firstChild);
+							});
+					  });
+						//下拉刷新，新纪录插到最前面；
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+				}, 500);
+			}
+			var count = 0;
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 1)); //参数为true代表没有更多数据了。
+					var table = document.body.querySelector('.mui-table-view');
+					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+					$.ajaxSetup({async:false});
+					 var url=baseDomain+"index.php?g=Api&m=Index&a=getjson&callback=?";
+
+					  $.getJSON(url,{},function(data){
+					  	var str='';
+                        $.each(data,function(i){
+                        		m=data[i];
+					  		str+='<li class="mui-table-view-cell">';
+					  		str+='<div class="mui-slider-left mui-disabled">';
+							str+='<a class="mui-btn mui-btn-red mui-icon mui-icon-email"></a>';
+							str+='<a class="mui-btn mui-btn-yellow mui-icon mui-icon-phone"></a>';
+							str+='<a class="mui-btn mui-btn-grey mui-icon mui-icon-person"></a>';
+							str+='</div>';
+					  		str+='<a href="show_detail.html" open-type="common" open-id="'+m.id+'" open-docname="'+m.title+'"><div class="mui-slider-cell">';
+					  		str+='<div class="oa-contact-cell mui-table">';
+					  		str+='<div class="oa-contact-avatar mui-table-cell">';
+							str+='<img src="'+baseDomain+m.thumb+'" width="60" height="60" />';
+							str+='</div>';
+							str+='<div class="oa-contact-content mui-table-cell">';
+							str+='<div class="mui-clearfix">';
+							str+='<h4 class="oa-contact-name">'+m.title+'</h4>';
+							str+='<span class="oa-contact-position mui-h6">'+m.jibie+'</span>';
+							str+='</div>';
+							str+='<p class="oa-contact-email mui-h6">'+m.description+'</p>';
+							str+='</div>';
+							str+='</div>';
+							str+='</div></a>';
+							str+='</li>';
+							});
+					      $("#group1").html(str);
+					  });
+
+				}, 1500);
+			}
+			if (mui.os.plus) {
+				mui.plusReady(function() {
+					setTimeout(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					}, 1000);
+
+				});
+			} else {
+				mui.ready(function() {
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				});
+			}
+			var detailPage = null;
+			mui('#pullrefresh').on('tap', 'a', function() {
+				var id = this.getAttribute('href');
+				var uid =this.getAttribute('open-id');
+				var docname=this.getAttribute('open-docname');
+				 //获得详情页面
+				  if(!detailPage){
+				    detailPage = plus.webview.getWebviewById('show_detail');
+				  }
+			   //触发详情页面的newsId事件
+				  mui.fire(detailPage,'newsId',{
+				    	id:uid,
+       				docname:docname
+				  });
+				mui.openWindow({
+						id: uid,
+						url: this.href,
+						waiting: {
+						autoShow: false
+						},
+
+					});
+			});
+
+
+
+
+		</script>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0, user-scalable=yes"/>
+		<meta name="HandheldFriendly" content="true"/>
+		<meta name="MobileOptimized" content="320"/>
+		<title>View</title>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script src="../js/config.js"></script>
+		<script type="text/javascript" src="../js/common.js"></script>
+     	<link href="../css/wap.css" rel="stylesheet"/>
+    		<link href="../css/mui.min.css" rel="stylesheet"/>
+		<style type="text/css" media="screen">
+			img {
+				vertical-align: middle;
+			}
+		</style>
+		<script type="text/javascript">
+		var w=null;
+		// H5 plus事件处理
+		function plusReady(){
+			w=plus.nativeUI.showWaiting();
+			plus.key.addEventListener('backbutton', function(){
+				back();
+			});
+		}
+  
+if(window.plus){
+	plusReady();
+}else{
+	document.addEventListener("plusready",plusReady,false);
+}
+
+function imgLoaded() {
+	w&&(w.close(),w=null);
+	var b = document.body;
+	var img = document.getElementById("img");
+	var pb = b.clientHeight/b.clientWidth,
+	pi = img.clientHeight/img.clientWidth;
+	if ( pb > pi ) {
+		img.style.width = "100%";
+	} else {
+		img.style.height = "100%";
+	}
+	b.style.lineHeight = b.clientHeight+"px";
+}
+function imgError(){
+	w&&(w.close(),w=null);
+	document.getElementById("img").style.display = "none";
+	plus.nativeUI.alert( "无效的图片资源", function(){
+		back();
+	});
+}
+function loadMedia(src){
+	document.getElementById("img").src=src;
+}
+    	var old_back = mui.back; 		
+		mui.back = function(){
+		old_back(); 	
+		}
+	</script> 
+
+	</head>
+	<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-back mui-pull-left mui-action-back"></a>
+			<h1 class="mui-title">图片预览</h1>
+	</header>
+	<body style="text-align:center;background:#000000;">
+		<img id="img" onclick="back();" onload="imgLoaded();" onerror="imgError();"/>
+	</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>新闻列表</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/wap.css">
+		<script src="../js/config.js"></script>
+		<script src="../js/zepto.min.js"></script>
+		<script src="../js/mui.min.js"></script>
+	</head>
+	<body>
+	<div class="mui-title tit-sort">
+		<input type="hidden" id="page" name="page" value="1" />
+		<input type="hidden" id="cid" name="cid" value="1" />
+	</div>
+		<!-- 侧滑导航根容器 -->
+			<!-- 主页面容器 -->
+			<div class="mui-inner-wrap mui-content">
+				<div id="pullrefresh" class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<!--media list-->
+						<ul class="mui-table-view list" id="newslist">
+						</ul>
+						<!--end media list-->
+					</div>
+				</div>
+			</div>
+
+		<script type="text/javascript">
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh', //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+					up: {
+						contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+						callback: add_more //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					}
+				},
+
+			});
+
+			function add_more() {
+				var page = Zepto('#page').val(),
+					cid = Zepto('#cid').val();
+				    Zepto('#page').val(parseInt(page) + 1);
+				mui.ajax({
+					type: 'GET',
+					dataType:'json',
+					url: baseDomain+"index.php?g=Api&m=Index&a=newslist&cid=1",
+					data: 'p=' + page,
+					success: function(json){
+						var msg = eval(json);
+						if (msg.code == 200) {
+							Zepto.each(msg.data,function(i, v) {
+							var str = '<li class="mui-table-view-cell"><a href="news_detail.html" open-uid="'+ v.id +'" ><img class="mui-media-object mui-pull-left" src="' + v.sthumb.replace('/Public/','../') + '" /><div class="mui-ellipsis"><b>' + v.title + '</b></div><p class="mui-media-body">' + v.description + '</p></a></li>';
+							Zepto('#newslist').append(str);
+							});
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(false); //参数为true代表没有更多数据了。
+						} else {
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
+						}
+					},error:function(xhr,type,errorThrown){
+					//异常处理；
+						plus.nativeUI.toast(mylang['error_network']);
+						console.log(JSON.stringify(xhr));
+					}
+				});
+
+			}
+			//触发第一页
+			if (mui.os.plus) {
+				mui.plusReady(function() {
+					setTimeout(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					}, 1000);
+
+				});
+			} else {
+				mui.ready(function() {
+					Zepto('#page').val(1);
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				});
+			}
+
+		//主列表点击事件
+	mui('#pullrefresh').on('tap', 'a', function(){
+		var id = this.getAttribute('href');
+		var type = this.getAttribute('open-type');
+		var title = this.getAttribute('open-title');
+		var uid = this.getAttribute('open-uid');
+		if (type == "common") {
+				mui.openWindow({
+					id: id,
+					url: this.href,
+					waiting: {
+						autoShow: false
+					},
+					 extras:{
+				        uid: uid,
+				        title: title
+				    }
+			});
+		}
+	});
+		</script>
+	</body>
+<script src="../js/tap.js"></script>
+<script src="../js/common.js"></script>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/wap.css">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/zepto.min.js"></script>
+		<script src="../js/config.js"></script>
+		<script src="../js/common.js"></script>
+
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-back mui-pull-left mui-action-back"></a>
+			<h1 class="mui-title">消息内容</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab" style="text-align:right;padding-right:10px;">
+			<button class="mui-btn mui-btn-primary" id="sms_ask">
+				我要咨询
+			</button>
+		</nav>
+
+		<div class="mui-content">
+			<div class="mui-title tit-sort">
+				<input type="hidden" id="page" name="page" value="1" />
+				<input type="hidden" id="cid" name="cid" value="1" />
+			</div>
+			<input type="hidden" name="nologin" id="nologin">
+			<input type="hidden" name="username" id="username">
+			<div class="container ui-content">
+				<div class="content-reply-box mg10" id="showdetail">
+				</div>
+			</div>
+		</div>
+		<script>
+			var linkid = null;
+			var ask_person = null;
+			var f;
+			mui.init();
+			window.onload = function() {
+					mui.plusReady(function() {
+						//关闭等待框
+						var self = plus.webview.currentWebview();
+						linkid = self.linkid;
+						var flg;
+						var strs;
+						var pics = new Array();
+						mui.ajax({
+							type: 'GET',
+							dataType: 'json',
+							url: baseDomain + "index.php?g=Api&m=Index&a=get_zxun",
+							data: 'id=' + linkid,
+							success: function(json) {
+								var msg = eval(json);
+								if (msg.code == 200) {
+									Zepto.each(msg.data, function(i, m) {
+										var str = '';
+										str += '<p class="notime">' + m.createtime + '</p><li class="' + flg + '">';
+										if (f == m.userid) flg = "even";
+										else flg = "odd";
+										f = m.userid;
+										if (i <= 0) {
+											str += '<div class="reply-content c_' + flg + ' pr">';
+											str += m.blsm;
+											if (m.filepath) {
+												var imglist = "";
+												strs = m.filepath.split("||"); //字符分割
+												for (n = 0; n < strs.length; n++) {
+													imglist += "<img class='ubox_img' src='" + baseDomain + "Site" + strs[n] + "'/>&nbsp;"; //分割后的字符输出
+												}
+												str += "<p>配图:</p>" + imglist;
+											}
+											str += '</div>';
+										} else {
+											str += '<a class="user" href="#"><img class="img-responsive icon_avatar2" src="' + baseDomain + m.thumb + '" alt="' + m.title + '" width="40"><span class="user-name">' + m.title + '</span></a>';
+											str += '<div class="reply-content-box" >';
+											str += '<div class="reply-content c_' + flg + ' pr">';
+											str += m.blsm;
+											str += '</div>';
+											str += '</div>';
+											str += '</li>';
+										}
+										Zepto('.mg10').append(str);
+									});
+									Zepto('#nologin').val(msg.nologin);
+									Zepto('#username').val(msg.username);
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log(type);
+								//alert(type);
+							}
+						});
+						plus.nativeUI.closeWaiting();
+						//显示当前页面
+						mui.currentWebview.show();
+					});
+				}
+				/*点击我要咨询 跳转到提交事件*/
+			document.getElementById("sms_ask").addEventListener('tap', function() {
+				checklogin();
+				var username = Zepto('#username').val();
+				mui.openWindow({
+					url: 'msg_send.html',
+					id: 'msg_send',
+					show: {
+						aniShow: 'slide-in-right',
+						duration: 300
+					},
+					styles: {
+						zindex: 1,
+					},
+					extras: {
+						linkid: linkid,
+						uid: f,
+						username: username
+					}
+				});
+			});
+
+  mui('#showdetail').on('tap', '.ubox_img', function(event) {
+  					var img = this.getAttribute('src');
+  					w = mui.openWindow({
+					url: 'camera_image.html',
+					id: 'camera_image',
+					show: {
+						aniShow: 'pop-in',
+						duration: 300
+					},
+					styles: {
+						zindex: 1,
+					}
+				});
+				
+				/*
+					url = "camera_image.html";
+					w = plus.webview.create(url, url, {
+						scrollIndicator: 'none',
+						scalable: true,
+						bounce: "all"
+					});
+					*/
+					w.addEventListener("loaded", function() {
+						w.evalJS("loadMedia('" + img + "')");
+					}, false);
+					w.addEventListener("close", function() {
+						w = null;
+					}, false);
+					w.show("pop-in");
+   });
+		</script>
+	</body>
+
+</html>

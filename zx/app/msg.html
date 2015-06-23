@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>MSG</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/wap.css">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/zepto.min.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/config.js"></script>
+	</head>
+ 	<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的消息</h1>
+		</header>
+	<body>
+		<div class="mui-title tit-sort">
+			<input type="hidden" id="page" name="page" value="1" />
+			<input type="hidden" id="cid" name="cid" value="1" />
+		</div>
+		<!-- 侧滑导航根容器 -->
+		<!-- 主页面容器 -->
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+			<input type="hidden" name="nologin" id="nologin">
+			<ul id="smslist" class="mui-table-view" >
+			</ul>
+				</div>
+			</div>
+
+	</body>
+	<script>
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				up: {
+					contentrefresh: "正在加载...",
+					contentnomore: '没有更多数据了',
+					callback: get_sms
+				}
+			},
+			swipeBack: false
+		});
+		 //触发第一页
+		if (mui.os.plus) {
+			mui.plusReady(function() {
+				setTimeout(function() {
+					//此处判断是否登陆
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				}, 1000);
+			});
+		} else {
+			mui.ready(function() {
+				Zepto('#page').val(1);
+				mui('#pullrefresh').pullRefresh().pullupLoading();
+			});
+		}
+		/*删除操作*/
+		(function($) {
+			var btnArray = ['确认', '取消'];
+			//第二个demo，向左拖拽后显示操作图标，释放后自动触发的业务逻辑
+				$('#smslist').on('tap', '.mui-btn', function(event) {
+				var elem = this;
+				mui.confirm('确认删除该条记录？', '操作', btnArray, function(e) {
+					if (e.index == 0) {
+							var li = elem.parentNode.parentNode;
+							var _id=li.title;
+							li.parentNode.removeChild(li);
+
+						//删除操作
+						mui.ajax({
+							type: 'POST',
+							dataType:'json',
+							url: baseDomain+"index.php?g=Api&m=Index&a=del_sms",
+							timeout:3000,//超时时间设置为10秒；
+							data:{
+								sid : _id
+							},
+							success: function(json){
+								var msg = eval(json);
+								if(msg.code =='1'){
+									elem.parentNode.removeChild(elem);
+								}else{
+									plus.nativeUI.toast(msg.info);
+								}
+							},error:function(xhr,type,errorThrown){
+								//异常处理
+								plus.nativeUI.toast(mylang['error_network']);
+								console.log(JSON.stringify(xhr));
+							}
+						});
+					}
+				});
+			});
+
+			$('#smslist').on('tap', 'a', function(event) {
+				var id = this.getAttribute('href');
+				var linkid = this.getAttribute('open-linkid');
+					mui.openWindow({
+						id: id,
+						url: this.href,
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							linkid: linkid,
+						},
+						show: {
+							aniShow: "slide-in-right",
+							duration: 300
+						},
+						styles: {
+							zindex: 1,
+						},
+					});
+
+			});
+
+		})(mui);
+	</script>
+
+</html>

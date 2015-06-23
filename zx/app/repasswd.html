@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/wap.css" rel="stylesheet" />
+		<script src="../js/config.js"></script>
+		<script src="../js/zepto.min.js"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">重置新密码</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<form class="mui-input-group" name="form_reg">
+					<div class="mui-input-row">
+						<label>新密码:</label>
+						<input type="password" name="password" class="mui-input-clear" placeholder="输入新登录密码" value="123456">
+					</div>
+					<div class="mui-input-row">
+						<label>确认密码:</label>
+				<input type="password" name="repassword" class="mui-input-clear" placeholder="输入确认密码" value="123456">
+					</div>
+
+					<div class="mui-button-row">
+						<button class="mui-btn btn-block mui-btn-primary btn-register">密码重置</button>
+					</div>
+				</form>
+				<a id="weiuserlogin" href="login.html" open-type="common">已经有账号?</a>&nbsp;&nbsp;
+			</div>
+		</div>
+		<script>
+			mui.ready(function() {
+				mui('.mui-content-padded').on('tap', '.btn-register', function() {
+					var _password = Zepto('input[name="password"]').val(),
+						_repassword = Zepto('input[name="repassword"]').val();
+					//验证手机号码
+					if (_password == '') {
+						plus.nativeUI.toast('密码不能为空');
+						return false;
+					}
+
+					if (_repassword == '') {
+						plus.nativeUI.toast('确认密码不能为空');
+						return false;
+					}
+
+					if (_repassword != _password) {
+						plus.nativeUI.toast('设置的新密码输入不一致');
+						return false;
+					}
+
+					mui.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=user&a=resetpwd",
+						data: {
+							repassword: _repassword,
+							password: _password
+						},
+						success: function(msg) {
+							if (msg.code == 0) {
+								plus.nativeUI.alert(msg.info);
+							} else {
+								plus.nativeUI.alert(msg.info);
+								mui.openWindow({
+									id: 'main',
+									url: '/main.html',
+									waiting: {
+										autoShow: false
+									}
+								});
+							}
+						}
+					});
+				});
+			});
+		</script>
+		<script src="../js/common.js"></script>
+	</body>
+
+</html>

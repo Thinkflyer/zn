@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/wap.css">
+		<script src="../js/config.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/zepto.min.js"></script>
+	</head>
+
+	<style>
+	#maindoc{min-height:300px;background-color: #efeff4;}
+	#post_button{
+				margin:0 auto;width:90%;
+	}
+	</style>
+	<body>
+	<nav class="mui-bar mui-bar-tab" id="footer_bar">
+		<button type="button" id="post_button" class="mui-btn mui-btn-primary mui-btn-block">提交信息</button>
+	</nav>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-back mui-pull-left mui-action-back"></a>
+			<h1 class="mui-title">回复信息</h1>
+		</header>
+		<div class="mui-content" id="maindoc">
+			<ul class="mui-table-view" style="margin:0px">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right ask_person" >
+						<h5>回复人 <span style="float:right;margin-right:10%" id="ask_person"></span></h5>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<textarea id="reply" rows="6" placeholder="回复信息"></textarea>
+				<p>可上传病例报告图片</p>
+				<div id="history" class="dlist" >
+					<div class="ubox" id="ubox">+</div>
+				    <p id="empty" class="ditem-empty"></p>
+				</div>
+
+
+				</li>
+
+			</ul>
+		</div>
+<script>
+		mui.init();
+				var uid = null;
+				var linkid=null;
+				var files = [];
+				var i = 1;
+				var gentry = null;
+				var w = null;
+				var hl = null;
+				var le = null;
+				var de = null;
+				var f1 = null;
+				var f2 = null;
+			var plusReady = function() {
+					var self = plus.webview.currentWebview();
+					uid = self.uid;
+					linkid = self.linkid;
+					Zepto('#ask_person').html(self.username);
+					plus.nativeUI.closeWaiting();
+				};
+				if (window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener('plusready', plusReady, false);
+				}
+				 //页面加载完成需要等待load
+				var loadSuccess = function() {
+					plus.nativeUI.closeWaiting();
+				};
+				window.addEventListener('load', loadSuccess, false);
+
+	 // 监听DOMContentLoaded事件
+	document.addEventListener("DOMContentLoaded", function() {
+		// 获取DOM元素对象
+		hl = document.getElementById("history");
+		le = document.getElementById("empty");
+	}, false);
+
+
+//post_button提交回复信息
+document.getElementById("post_button").addEventListener('tap',function(){
+	if (checklogin()) {
+						var blsm = $('#reply').val();
+						plus.nativeUI.showWaiting();
+						var url = baseDomain + 'index.php?g=Api&m=Index&a=reply';
+						var dataType = 'json';
+						//发送数据
+						var data = {
+							doc_id: uid,
+							reply_id: linkid,
+							ishead:0,
+							pics: files,
+							blsm: blsm
+						};
+						mui.post(url, data, function(info) {
+							plus.nativeUI.closeWaiting();
+							var jsonList = eval("(" + info + ")");
+							if (jsonList.code == 200) {
+								plus.nativeUI.toast(jsonList.info);
+								mui.back();
+							} else {
+								plus.nativeUI.toast(jsonList.info);
+							}
+						});
+		}
+		});
+
+//点击上传病例
+document.getElementById("ubox").addEventListener('tap', function(){
+	if (checklogin()) {
+						var btnArray = [{
+							title: "拍摄照片"
+						}, {
+							title: "选择照片"
+						}];
+						plus.nativeUI.actionSheet({
+							title: "选择照片",
+							cancel: "取消",
+							buttons: btnArray
+						}, function(e) {
+							var index = e.index;
+							switch (index) {
+								case 0:
+									//text += "取消";
+									break;
+								case 1:
+									getImage();
+									//text += "拍照";
+									break;
+								case 2:
+									//text += "相册";
+									appendByGallery();
+									break;
+							}
+							info.innerHTML = text + "\"按钮";
+						});
+					}
+
+	});
+
+				function getImage() {
+						var cmr = plus.camera.getCamera();
+						cmr.captureImage(function(p) {
+								plus.io.resolveLocalFileSystemURL(p, function(entry) {
+									var localurl = entry.toLocalURL(); //把拍照的目录路径，变成本地url路径
+									if (files.length < max_uploads_images) {
+										createItem(entry);
+										appendFile(localurl);
+									}else{
+										plus.nativeUI.toast('最多上传'+max_uploads_images+'个附件');
+
+									}
+								});
+							}, function(error) {
+								alert("Capture image failed: " + error.message);
+							}, {
+								filename: "file:///storage/sdcard0/DCIM/Camera/" + "ra/"
+							} //改变一下拍照的路径,名字
+						);
+					}
+
+
+	// 从相册添加文件
+
+				function appendByGallery() {
+						plus.gallery.pick(function(path) {
+							plus.io.resolveLocalFileSystemURL(path, function(entry) {
+								if (files.length < max_uploads_images) {
+									createItem(entry);
+									appendFile(path);
+								}else{
+										plus.nativeUI.toast('最多上传'+max_uploads_images+'个附件');
+								}
+							});
+						});
+					} // 添加文件
+				var index = 1;
+				var n=1;
+				function appendFile(path) {
+						var img = new Image();
+						img.src = path;
+						img.onload = function() {
+							var that = this;
+							//生成比例
+							var w = that.width,
+								h = that.height,
+								scale = w / h;
+							w = 480 || w; //480  你想压缩到多大
+							h = w / scale;
+							//生成canvas
+							var canvas = document.createElement('canvas');
+							var ctx = canvas.getContext('2d');
+							$(canvas).attr({
+								width: w,
+								height: h
+							});
+							ctx.drawImage(that, 0, 0, w, h);
+							var base64 = canvas.toDataURL('image/jpeg', 1 || 0.8); //1z 表示图片质量，越低越模糊。
+							files.push({
+								name: "file" + index,
+								pic: base64
+							}); // 把base64数据丢进数组，上传要用。
+							var pic = document.getElementById("x"+index);
+							pic.src = base64;   //这里丢到img 的 src 里面就能看到效果了
+							index++;
+
+						}
+					}
+					// 显示文件
+
+				function displayFile(li) {
+						var name = li.entry.name;
+						var suffix = name.substr(name.lastIndexOf('.'));
+						var url = "";
+						url = "camera_image.html";
+						//
+						w = plus.webview.create(url, url, {
+							scrollIndicator: 'none',
+							scalable: true,
+							bounce: "all"
+						});
+						w.addEventListener("loaded", function() {
+							w.evalJS("loadMedia('" + li.entry.toLocalURL() + "')");
+						}, false);
+						w.addEventListener("close", function() {
+							w = null;
+						}, false);
+						w.show("slide-in-right", 300);
+					}
+					// 添加播放项
+
+				function createItem(entry) {
+					//alert(entry.toLocalURL());
+					    n++;
+						var li = document.createElement("li");
+						li.className = "ubox";
+						li.innerHTML = '<div class="aname"><img id="x"'+n+'" src="'+entry.toLocalURL()+'" width="50" height="50">--</div>';
+						li.setAttribute("onclick", "displayFile(this);");
+						hl.insertBefore(li, le.nextSibling);
+						//li.querySelector(".aname").innerText = entry.name;
+						li.entry = entry;
+						// 设置空项不可见
+						le.style.display = "none";
+					}
+					// 清除历史记录
+
+				function cleanHistory() {
+					hl.innerHTML = '<li id="empty" class="ditem-empty">可上传病例报告图片</li>';
+					le = document.getElementById("empty");
+					files.splice(0, files.length);
+				}
+				document.getElementById("blsm").addEventListener('tap', function() {
+					//输入病情情况的时候
+					checklogin();
+				});
+
+				function checklogin() {
+					var nologin = Zepto('#nologin').val();
+					if (nologin <= 0) {
+						plus.nativeUI.toast('您尚未登陆!');
+						mui.openWindow({
+							url: 'login.html',
+							id: 'login',
+							show: {
+								aniShow: 'slide-in-bottom',
+								duration: 300
+							},
+							styles: {
+								zindex: 99,
+							},
+						});
+						window.addEventListener("pageflowrefresh", function(e) {
+							location.reload();
+						});
+						return false;
+					} else {
+						return true;
+					}
+				}
+
+
+
+</script>
+<script src="../js/common.js"></script>
+</body>
+</html>

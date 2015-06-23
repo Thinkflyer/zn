@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../js/mui.min.js"></script>
+    <link href="../css/mui.min.css" rel="stylesheet"/>
+    <link href="../css/wap.css" rel="stylesheet"/>
+    <script src="../js/config.js"></script>
+    <script src="../js/zepto.min.js"></script>
+  	</head>
+    <body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">登陆</h1>
+		</header>
+			<div class="mui-content">
+			<div class="mui-content-padded" style="padding-bottom: 50px;">
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>用户名:</label>
+						<input name="username" id="username" class="mui-input-clear"  value="admin "type="text" placeholder="请输入账户">
+					</div>
+					<div class="mui-input-row">
+						<label>密码:</label>
+						<input name="password"  id="password" class="mui-input-clear"  value="admin" type="password" placeholder="请输入密码">
+					</div>
+				<div class="mui-input-row">
+						<label>记住密码</label>
+					<div class="mui-switch mui-active">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</div>
+				<div class="mui-button-row">
+				<button type="button" id="loginin" class="mui-btn mui-btn-primary">用户登陆</button></div>
+				</form>
+<a href="register.html" id="reg" >注册新账号</a>&nbsp;&nbsp;<a href="forget.html" id="forget">忘记密码?</a>
+			</div>
+		</div>
+<script>
+mui.init();
+var main;
+window.onload = function(){
+	mui.plusReady(function(){
+		//获得父窗体wid
+		main = plus.webview.currentWebview().opener();
+	});
+};
+  document.getElementById("loginin").addEventListener('tap',function(){
+     plus.nativeUI.showWaiting();
+     var username = Zepto('#username').val();
+	 var password = Zepto('#password').val();
+     var datas={
+	   			'username':	username,
+	   			'password':	password
+	   		};
+	 			mui.ajax({
+					type: 'POST',
+					dataType:'json',
+					url: baseDomain+"index.php?g=Api&m=user&a=ajaxlogin",
+					timeout:5000,//超时时间设置为10秒；
+					data: datas,
+					success: function(json){
+						var msg = eval(json);
+						if(msg.code =='1'){
+							
+							plus.nativeUI.toast(mylang['login_success']);
+							mui.fire(main, "pageflowrefresh" );
+							mui.back();
+						}else{
+							plus.nativeUI.toast(msg.info);
+						}
+					},error:function(xhr,type,errorThrown){
+						//异常处理
+						plus.nativeUI.toast(mylang['error_network']);
+						console.log(JSON.stringify(xhr));
+					}
+	});
+     plus.nativeUI.closeWaiting();
+  });
+</script>
+ <script src="../js/common.js"></script>
+</body>
+</html>
