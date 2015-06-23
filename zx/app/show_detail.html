@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -11,8 +10,8 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/zepto.min.js"></script>
 		<script src="../js/config.js"></script>
+		<script src="../js/common.js"></script>
 	</head>
-
 	<body>
 		<style>
 			.mui-control-content {
@@ -83,18 +82,15 @@
 								<!--医生咨询-->
 								<div class="mui-content-padded">
 									<textarea id="blsm" rows="5" placeholder="请输入您的病例说明"></textarea>
-									<div id="empty" class="ditem-empty">可上传病例报告图片</div>
 									<div id="history" class="dlist">
 										<div class="ubox" id="ubox">+</div>
+										<div id="empty" class="ditem-empty"></div>
 									</div>
+
 								</div>
-
 								<!---->
-
 							</div>
-
 						</div>
-
 					</div>
 					<div id="item3mobile" class="mui-slider-item mui-control-content">
 						<div id="scroll3" class="mui-scroll-wrapper">
@@ -198,9 +194,6 @@
 					mui('#slider').slider().gotoItem(1);
 					upload();
 				});
-				document.getElementById("sliderSegmentedControl").addEventListener('shown.mui.tab', function(e) {
-					alert(e.detail.tabNumber);
-				});
 				document.getElementById("fav_btn").addEventListener('tap', function() {
 					plus.nativeUI.showWaiting();
 					var datas = {
@@ -296,7 +289,6 @@
 							});
 						});
 					} // 添加文件
-			
 
 				function appendFile(path) {
 						var img = new Image();
@@ -354,7 +346,7 @@
 						n++;
 						var li = document.createElement("li");
 						li.className = "ubox";
-						li.innerHTML = '<div class="aname" ><img id="x"' + n + '" src="' + entry.toLocalURL() + '" width="50" height="50">--</div>';
+						li.innerHTML = '<div class="aname" ><img id="x"' + n + '" src="' + entry.toLocalURL() + '" width="50" height="50"></div>';
 						li.setAttribute("onclick", "displayFile(this);");
 						hl.insertBefore(li, le.nextSibling);
 						//li.querySelector(".aname").innerText = entry.name;
@@ -373,9 +365,7 @@
 					//输入病情情况的时候
 					checklogin();
 				});
-
-		
 			</script>
-<script type="text/javascript" src="../js/common.js" ></script>
 	</body>
+
 </html>
