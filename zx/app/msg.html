@@ -79,7 +79,8 @@
 							url: baseDomain+"index.php?g=Api&m=Index&a=del_sms",
 							timeout:3000,//超时时间设置为10秒；
 							data:{
-								sid : _id
+								sid : _id,
+								
 							},
 							success: function(json){
 								var msg = eval(json);
@@ -101,6 +102,7 @@
 			$('#smslist').on('tap', 'a', function(event) {
 				var id = this.getAttribute('href');
 				var linkid = this.getAttribute('open-linkid');
+				var mid = this.getAttribute('open-mid');
 					mui.openWindow({
 						id: id,
 						url: this.href,
@@ -109,6 +111,7 @@
 						},
 						extras: {
 							linkid: linkid,
+							mid:mid,
 						},
 						show: {
 							aniShow: "slide-in-right",

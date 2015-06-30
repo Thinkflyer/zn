@@ -52,7 +52,7 @@ function get_sms() {
 	Zepto('#page').val(parseInt(page) + 1);
 	var smslist = "";
 	var str = "";
-
+	var status = null;
 	mui.ajax({
 		type: 'GET',
 		dataType: 'json',
@@ -62,14 +62,16 @@ function get_sms() {
 			var msg = eval(json);
 			if (msg.code == 200) {
 				Zepto.each(msg.data, function(i, m) {
+					if (parseInt(m.status) <= 0) status = "<font color='red'>[未读]</font>";
+					else status = "[已读]";
 					//Zepto('#smslist').append(hotdocilst);
 					str = '<li class="mui-table-view-cell" title="' + m.id + '">';
 					str += '<div class="mui-slider-right mui-disabled">';
 					str += '<span class="mui-btn mui-btn-red ">删除</span>';
 					str += '</div>';
 					str += '<div class="mui-slider-handle" >';
-					str += '<a href="msg_detail.html"  open-type="common" open-linkid="' + m.linkid + '">';
-					str += '<p class="oa-contact mui-h6">' + m.content + '</p>';
+					str += '<a href="msg_detail.html"  open-type="common" open-linkid="' + m.linkid + '" open-mid="' + m.id + '">';
+					str += '<span class="oa-contact mui-h6">' + status + m.content + '</span>';
 					str += '<span class="oa-time mui-h6"  >' + m.createtime + '</span>';
 					str += '</a>';
 					str += '</div>';
@@ -117,10 +119,11 @@ function set_time() {
 		Zepto('#mobile_auth_waitting').hide();
 	}
 }
+
 function checklogin() {
 	var nologin = Zepto('#nologin').val();
 
-	if (nologin<=0) {
+	if (nologin <= 0) {
 		plus.nativeUI.toast('您尚未登陆!');
 		mui.openWindow({
 			url: 'login.html',
@@ -140,5 +143,14 @@ function checklogin() {
 	} else {
 		return true;
 	}
+}
+function setmark(new_string){
+	var n_name=new_string.slice(2,4);
+	new_string=new_string.replace(n_name,"***");
+	return new_string;
+}
+function refresh(tid) {
+	var list = plus.webview.getWebviewById(tid);
+	list.reload(true);
 }
 setInterval("heart()", 5000);

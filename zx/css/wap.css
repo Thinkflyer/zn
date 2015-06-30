@@ -1,7 +1,3 @@
-html,
-body {
-	background-color: #efeff4;
-}
 #search {
 	margin-bottom: 0px;
 }
@@ -41,7 +37,13 @@ body {
 oa-contact-position {
 	float: left;
 }
-
+.avatar_name{
+	width:40px;
+	line-height:10px;
+	font-size:0.8em;
+	word-break: break-all;
+	text-align:center;
+}
 .icon_avatar {
 	width: 50px;
 	height: 50px;
@@ -362,8 +364,8 @@ h5.show-content {
 	margin-bottom: 0;
 }
 .media_img {
-	width: 90px;
-	height:90px;
+	width: 60px;
+	height:60px;
 }
 .mui-control-content {
 	background-color: white;
@@ -463,9 +465,27 @@ h5.show-content {
 
 }
 .c_odd{
-	background-color: #DBF0FF;
+	'background-color: #DBF0FF;
 	color:#000000;
 	border: 1px solid #DBF0FF;
+	padding: .6em;
+	border-radius: 4px;
+	box-shadow: 0 0 5px #ccc;
+}
+.m_odd{
+float:left;margin-right:1em;text-align:center;	
+}
+.m_even{
+	float:right;margin-left:1em;text-align:center;
+}
+.t_even{
+	float:right;width:75%;
+	background-color: #DBF0FF;
+	border: 1px solid #DBF0FF;
+}
+.t_odd{
+	float:left;width:75%;
+	
 	padding: .6em;
 	border-radius: 4px;
 	box-shadow: 0 0 5px #ccc;
@@ -553,7 +573,7 @@ h5.show-content {
     margin-top: 0;
     padding-left: 0;
     position: relative;
-    height:100px;
+    height:110px;
 }
 .uinfo img{
 	border-radius: 120px;

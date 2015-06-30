@@ -19,12 +19,11 @@
 
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-icon mui-icon-back mui-pull-left mui-action-back"></a>
+
 			<h1 class="mui-title">消息内容</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab" style="text-align:right;padding-right:10px;">
-			<button class="mui-btn mui-btn-primary" id="sms_ask">
-				我要咨询
-			</button>
+			<button class="mui-btn mui-btn-primary" id="sms_ask" >我要回复</button>
 		</nav>
 
 		<div class="mui-content">
@@ -34,21 +33,26 @@
 			</div>
 			<input type="hidden" name="nologin" id="nologin">
 			<input type="hidden" name="username" id="username">
-			<div class="container ui-content">
+			<div class="container ui-content ">
+			
 				<div class="content-reply-box mg10" id="showdetail">
 				</div>
 			</div>
 		</div>
 		<script>
 			var linkid = null;
+			var mid = null;
+			var attrid = null;//点击某条消息
 			var ask_person = null;
-			var f;
+			var thumb_img=null;
+			var uid = null;//回复对象id
 			mui.init();
 			window.onload = function() {
 					mui.plusReady(function() {
 						//关闭等待框
 						var self = plus.webview.currentWebview();
 						linkid = self.linkid;
+						mid=self.mid;
 						var flg;
 						var strs;
 						var pics = new Array();
@@ -62,13 +66,20 @@
 								if (msg.code == 200) {
 									Zepto.each(msg.data, function(i, m) {
 										var str = '';
-										str += '<p class="notime">' + m.createtime + '</p><li class="' + flg + '">';
-										if (f == m.userid) flg = "even";
-										else flg = "odd";
-										f = m.userid;
+										str += '<p class="notime">' + m.createtime + '</p>';
+										if (msg.nologin != m.from_userid) {
+											flg = "odd"; 
+											uid=m.from_userid;
+										}else{ 
+											flg = "even"
+											};
+										if (m.from_avatar != '') thumb_img = baseDomain + m.from_avatar; else thumb_img = noavatar_img;
+										str +='<li>';
 										if (i <= 0) {
-											str += '<div class="reply-content c_' + flg + ' pr">';
-											str += m.blsm;
+											//默认回复对象
+											str +='<div class="icon_img m_'+flg+'"><img  class="img-responsive icon_avatar2" src="' + thumb_img+ '" alt="' + m.from_name + '" width="40"><p class="avatar_name">'+m.from_name+'</p></div>';
+											str += '<div class="reply-content t_'+flg+' pr" >';
+											str += '<span class="content_c" attr-id='+ m.id +' uid-id='+ m.from_userid +'>'+m.blsm+'</span>';
 											if (m.filepath) {
 												var imglist = "";
 												strs = m.filepath.split("||"); //字符分割
@@ -78,15 +89,14 @@
 												str += "<p>配图:</p>" + imglist;
 											}
 											str += '</div>';
+										
 										} else {
-											str += '<a class="user" href="#"><img class="img-responsive icon_avatar2" src="' + baseDomain + m.thumb + '" alt="' + m.title + '" width="40"><span class="user-name">' + m.title + '</span></a>';
-											str += '<div class="reply-content-box" >';
-											str += '<div class="reply-content c_' + flg + ' pr">';
-											str += m.blsm;
+											str +='<div class="icon_img m_'+flg+'"><img  class="img-responsive icon_avatar2" src="' + thumb_img+ '" alt="' + m.from_name + '" width="40"><p class="avatar_name">'+m.from_name+'</p></div>';
+											str += '<div class="reply-content pr t_'+flg+'">';
+											str += '<span class="content_c" attr-id='+ m.id +' uid-id='+ m.from_userid +'>'+m.blsm+'</span>';
 											str += '</div>';
-											str += '</div>';
-											str += '</li>';
 										}
+										str += '</li>';
 										Zepto('.mg10').append(str);
 									});
 									Zepto('#nologin').val(msg.nologin);
@@ -104,29 +114,8 @@
 						mui.currentWebview.show();
 					});
 				}
-				/*点击我要咨询 跳转到提交事件*/
-			document.getElementById("sms_ask").addEventListener('tap', function() {
-				checklogin();
-				var username = Zepto('#username').val();
-				mui.openWindow({
-					url: 'msg_send.html',
-					id: 'msg_send',
-					show: {
-						aniShow: 'slide-in-right',
-						duration: 300
-					},
-					styles: {
-						zindex: 1,
-					},
-					extras: {
-						linkid: linkid,
-						uid: f,
-						username: username
-					}
-				});
-			});
-
-  mui('#showdetail').on('tap', '.ubox_img', function(event) {
+			
+	mui('#showdetail').on('tap', '.ubox_img', function(event) {
   					var img = this.getAttribute('src');
   					w = mui.openWindow({
 					url: 'camera_image.html',
@@ -156,6 +145,62 @@
 					}, false);
 					w.show("pop-in");
    });
+   
+   
+				/*点击我要咨询 跳转到提交事件*/
+			mui('#showdetail').on('tap', '.content_c', function(event) {
+				//获取引用信息
+				attrid = this.getAttribute('attr-id');
+				uid = this.getAttribute('uid-id');
+				checklogin();
+				var username = Zepto('#username').val();
+				mui.openWindow({
+					url: 'msg_send.html',
+					id: 'msg_send',
+					show: {
+						aniShow: 'slide-in-right',
+						duration: 300
+					},
+					styles: {
+						zindex: 1,
+					},
+					extras: {
+						linkid: linkid,
+						uid: uid,
+						attrid:attrid,
+						username: username
+					}
+				});
+			});
+
+			/*点击我要咨询 跳转到提交事件*/
+			document.getElementById("sms_ask").addEventListener('tap', function() {
+				checklogin();
+				var username = Zepto('#username').val();
+				mui.openWindow({
+					url: 'msg_send.html',
+					id: 'msg_send',
+					show: {
+						aniShow: 'slide-in-right',
+						duration: 300
+					},
+					styles: {
+						zindex: 1,
+					},
+					extras: {
+						linkid: linkid,
+						uid: uid,
+						username: username
+					}
+				});
+			});
+
+	window.addEventListener("refresh", function(e) {
+				refresh('msg_detail.html');
+				//mui('#scroll').scroll().scrollTo(200,0);
+
+	});
+		
 		</script>
 	</body>
 

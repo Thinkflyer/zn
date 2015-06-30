@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -12,10 +13,11 @@
 		<script src="../js/config.js"></script>
 		<script src="../js/common.js"></script>
 	</head>
+
 	<body>
 		<style>
 			.mui-control-content {
-				min-height: 400px;
+				min-height: 350px;
 			}
 			.mui-bar-nav ~ .mui-content {
 				padding-top: 40px;
@@ -37,11 +39,10 @@
 				<span class="mui-icon mui-icon-plus fav_btn" id="fav_btn">关注</span>
 				<li class="mui-media uinfo">
 					<img class="media_img mui-pull-left" src="../images/60x60.gif">
-					<div>
-						<h4>姓名</h4><span>职位</span>
-						<p class="mui-ellipsis" style="font:0.6em;" id="udes">说明</p>
-					</div>
+					<h4>姓名</h4><span>职位</span>
+					<p class="mui-ellipsis" style="font:0.6em;" id="udes">说明</p>
 				</li>
+				<span style="color:#FF5053;float:right;margin-right:1em"><span class="favourite">0</span>位患者已关注</span>
 			</ul>
 			<div id="slider" class="mui-slider">
 				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted" style="background-color:#FAFAFA;">
@@ -96,6 +97,10 @@
 						<div id="scroll3" class="mui-scroll-wrapper">
 							<div class="mui-scroll">
 								<!---->
+								<ul class="mui-table-view" id="newslist">
+
+								</ul>
+
 								<!---->
 							</div>
 						</div>
@@ -140,11 +145,18 @@
 							Zepto('#hospital').html(msg.data.hospital);
 							Zepto('#goodat').html(msg.data.goodat);
 							Zepto('#desc').html(msg.data.description);
-							//Zepto('.favourite').html(msg.data.favourite_num);
+							Zepto('.favourite').html(msg.data.favourite_num);
 							Zepto('#nologin').val(msg.nologin);
 							if (msg.data.isfavourite) {
 								Zepto('#fav_btn').removeClass('mui-icon-plus').addClass('fav_channel').addClass('mui-icon-minus').html('取消关注');
 							}
+							//加载就医经验
+							$str="";
+							Zepto.each(msg.data.blsm,function(i, v) {
+							var username=setmark(v.username);
+							str = '<li class="mui-table-view-cell" open-linkid="'+ v.bl_id +'"><p>咨询人:'+username+'  时间:'+v.datetime+'</p><p>'+v.blsm+'</p></li>';
+							Zepto('#newslist').append(str);
+							});
 						}
 					});
 					plus.nativeUI.closeWaiting();
@@ -365,6 +377,25 @@
 					//输入病情情况的时候
 					checklogin();
 				});
+			
+		mui('#newslist').on('tap', '.mui-table-view-cell', function(event) {
+					var 	linkid=this.getAttribute('open-linkid');
+						mui.openWindow({
+									url: 'msg_detail.html',
+									id: 'msg_detail',
+									show: {
+										aniShow: 'slide-in-right',
+										duration: 300
+									},
+									styles: {
+										zindex: 1,
+									},
+									extras: {
+										linkid: linkid,
+										
+									}
+								});
+			});
 			</script>
 	</body>
 
