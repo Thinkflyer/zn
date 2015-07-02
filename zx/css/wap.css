@@ -1,3 +1,7 @@
+body{
+	background-color: #efeff4;
+;
+}
 #search {
 	margin-bottom: 0px;
 }
@@ -86,6 +90,7 @@ oa-contact-position {
 * {
 	font-family: "microsoft yahei", sans-serif;
 	font-size: 12px;
+
 }
 p {
 	font-size: 12px;

@@ -70,7 +70,7 @@ function get_sms() {
 					str += '<span class="mui-btn mui-btn-red ">删除</span>';
 					str += '</div>';
 					str += '<div class="mui-slider-handle" >';
-					str += '<a href="msg_detail.html"  open-type="common" open-linkid="' + m.linkid + '" open-mid="' + m.id + '">';
+					str += '<a href="im-chat.html"  open-type="common" open-linkid="' + m.linkid + '" open-mid="' + m.id + '">';
 					str += '<span class="oa-contact mui-h6">' + status + m.content + '</span>';
 					str += '<span class="oa-time mui-h6"  >' + m.createtime + '</span>';
 					str += '</a>';

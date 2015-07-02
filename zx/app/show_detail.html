@@ -281,7 +281,7 @@
 									}
 								});
 							}, function(error) {
-								alert("Capture image failed: " + error.message);
+								//alert("Capture image failed: " + error.message);
 							}, {
 								filename: "file:///storage/sdcard0/DCIM/Camera/" + "ra/"
 							} //改变一下拍照的路径,名字
@@ -326,6 +326,7 @@
 								name: "file" + index,
 								pic: base64
 							}); // 把base64数据丢进数组，上传要用。
+
 							index++;
 							//var pic = document.getElementById("x");
 							//pic.src = base64;   //这里丢到img 的 src 里面就能看到效果了
