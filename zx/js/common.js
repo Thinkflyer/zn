@@ -121,8 +121,7 @@ function set_time() {
 }
 
 function checklogin() {
-	var nologin = Zepto('#nologin').val();
-
+	var nologin = plus.storage.getItem('userid');
 	if (nologin <= 0) {
 		plus.nativeUI.toast('您尚未登陆!');
 		mui.openWindow({

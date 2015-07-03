@@ -18,7 +18,7 @@
 			<h1 class="mui-title">诸夏工作室</h1>
 		</header>
 	<nav class="mui-bar mui-bar-tab" id="footer_bar">
-			<a class="mui-tab-item" href="app/msg.html" open-type="common" >
+			<a class="mui-tab-item" href="app/msg.html" open-type="common" islogin="true">
 				<span class="mui-icon mui-icon-email"><span id="sms_num"></span>
 				</span>
 				<span class="mui-tab-label">我的消息</span>
@@ -227,6 +227,10 @@ var initTemplates = function() {
 		initTemplates(); //预加载所有模板
 		//关闭splash页面；
 		plus.navigator.closeSplashscreen();
+		var isActive=plus.storage.getItem("isActive");
+		if(isActive<=0){
+			plus.storage.clear();
+		}	
 	});
 
 	var index = null;//主页面

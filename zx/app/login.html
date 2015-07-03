@@ -28,9 +28,10 @@
 					</div>
 				<div class="mui-input-row">
 						<label>记住密码</label>
-					<div class="mui-switch mui-active">
-						<div class="mui-switch-handle"></div>
-					</div>
+						<div id="autoLogin" class="mui-switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					
 				</div>
 				<div class="mui-button-row">
 				<button type="button" id="loginin" class="mui-btn mui-btn-primary">用户登陆</button></div>
@@ -48,9 +49,11 @@ window.onload = function(){
 	});
 };
   document.getElementById("loginin").addEventListener('tap',function(){
-     plus.nativeUI.showWaiting();
-     var username = Zepto('#username').val();
-	 var password = Zepto('#password').val();
+    plus.nativeUI.showWaiting();
+    var username = Zepto('#username').val();
+	var password = Zepto('#password').val();
+	var ismember = document.getElementById("autoLogin").classList.contains("mui-active");
+
      var datas={
 	   			'username':	username,
 	   			'password':	password
@@ -64,9 +67,18 @@ window.onload = function(){
 					success: function(json){
 						var msg = eval(json);
 						if(msg.code =='1'){
-							
 							plus.nativeUI.toast(mylang['login_success']);
 							mui.fire(main, "pageflowrefresh" );
+							//save
+							plus.storage.clear();
+							if(ismember==true){
+								plus.storage.setItem("isActive", "1");
+							 }else{
+								plus.storage.setItem("isActive", "0");
+							 }
+							plus.storage.setItem( "username", msg.username);
+							plus.storage.setItem( "userid", msg.userid);
+							plus.storage.setItem( "groupid", msg.groupid);
 							mui.back();
 						}else{
 							plus.nativeUI.toast(msg.info);

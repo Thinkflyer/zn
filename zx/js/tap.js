@@ -61,6 +61,11 @@ mui('.mui-content').on('tap', 'a', function() {
 mui('#footer_bar').on('tap', 'a', function() {
 	var id = this.getAttribute('href');
 	var type = this.getAttribute("open-type");
+	var showlogin=this.getAttribute("islogin");
+    if(showlogin){
+    	//  checklogin();	
+    //  exit;
+    };
 	if (type == "common") {
 		if (~id.indexOf('offcanvas-')) {
 			var pop = ~id.indexOf('offcanvas-with-right') ? "close" : "none";
