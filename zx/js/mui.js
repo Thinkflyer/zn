@@ -2171,6 +2171,7 @@ var mui = (function(document, undefined) {
 	$.post = function( /* url, data, success, dataType */ ) {
 		var options = parseArguments.apply(null, arguments);
 		options.type = 'POST';
+		options.async= false;
 		return $.ajax(options);
 	};
 

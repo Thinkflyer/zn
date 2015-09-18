@@ -70,22 +70,21 @@
 					if (e.index == 0) {
 							var li = elem.parentNode.parentNode;
 							var _id=li.title;
-							li.parentNode.removeChild(li);
-
+							//
 						//删除操作
 						mui.ajax({
 							type: 'POST',
 							dataType:'json',
 							url: baseDomain+"index.php?g=Api&m=Index&a=del_sms",
-							timeout:3000,//超时时间设置为10秒；
 							data:{
 								sid : _id,
-								
 							},
 							success: function(json){
 								var msg = eval(json);
 								if(msg.code =='1'){
+									li.parentNode.removeChild(li);
 									elem.parentNode.removeChild(elem);
+									plus.nativeUI.toast(msg.info);
 								}else{
 									plus.nativeUI.toast(msg.info);
 								}
@@ -99,13 +98,12 @@
 				});
 			});
 
-			$('#smslist').on('tap', 'a', function(event) {
-				var id = this.getAttribute('href');
+			$('#smslist').on('tap', '.sms_list', function(event) {
 				var linkid = this.getAttribute('open-linkid');
 				var mid = this.getAttribute('open-mid');
 					mui.openWindow({
-						id: id,
-						url: this.href,
+						id: 'im-chat',
+						url: 'im-chat.html',
 						waiting: {
 							autoShow: false
 						},

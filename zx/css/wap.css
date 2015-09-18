@@ -1,22 +1,28 @@
-body{
+body {
 	background-color: #efeff4;
-;
 }
 #search {
 	margin-bottom: 0px;
 }
+#mobile_auth_waitting{ float:right;font-size:1em;display:none;margin-top:-40px;}
+#mobile_auth{float:right;font-size:1em;margin-top:-40px}
+.select_doc{float:right;font-size:1em;margin-top:-30px;}
+
+.itime{text-align:center;border-radius:5px;background: #EFEFF4;color:#808080;margin:0 auto;width:15em;}
+.mui-input-row input {margin-top:1px}
 .bannerimg {
 	height: 100px;
 	width: 100%;
 	background-image: url(../images/muwu.jpg);
 	background-position: center center;
 }
-
+#loginin{line-height:5px}
 .title {
 	margin: 20px 15px 10px;
 	color: #6d6d72;
 	font-size: 15px;
 }
+.li_list{height:8em;overflow: hidden;}
 .oa-contact-cell.mui-table .mui-table-cell {
 	padding: 11px 0;
 	vertical-align: middle;
@@ -41,27 +47,27 @@ body{
 oa-contact-position {
 	float: left;
 }
-.avatar_name{
-	width:40px;
-	line-height:10px;
-	font-size:0.8em;
+.avatar_name {
+	width: 40px;
+	line-height: 10px;
+	font-size: 0.8em;
 	word-break: break-all;
-	text-align:center;
+	text-align: center;
 }
 .icon_avatar {
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
 }
-.icon_avatar2{
+.icon_avatar2 {
 	width: 50px;
 	height: 50px;
 	border-radius: 5%;
 	overflow: hidden;
 }
 .oa-contact-avatarindex {
-	float:left;
-	margin-right:10px;
+	float: left;
+	margin-right: 10px;
 	list-style-type: none;
 	text-align: center;
 }
@@ -70,7 +76,7 @@ oa-contact-position {
 	height: 100px;
 	overflow: hidden;
 }
-.ttlist{
+.ttlist {
 	text-align: center;
 }
 .doclist label {
@@ -90,7 +96,6 @@ oa-contact-position {
 * {
 	font-family: "microsoft yahei", sans-serif;
 	font-size: 12px;
-
 }
 p {
 	font-size: 12px;
@@ -125,6 +130,9 @@ header a {
 	height: 75px;
 	max-width: 100px;
 }
+#index_bar span{
+font-size:2.4em;
+}
 .info {
 	color: #0062CC;
 }
@@ -147,6 +155,7 @@ header a {
 	src: url('../fonts/iconfont.ttf') format('truetype');
 	/* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
 }
+.fa{float:right;margin-right:1em;color:#FF0000;}
 .iconfont {
 	font-family: "iconfont" !important;
 	font-size: 16px;
@@ -254,8 +263,8 @@ span.left-desc {
 	padding-left: 5px;
 	color: #666;
 }
-#description{
-height:30px;
+#description {
+	height: 30px;
 }
 .mui-bar .tit-sort {
 	left: 0;
@@ -349,7 +358,7 @@ h5.show-content {
 }
 .content-detail {
 	/*display: none;*/
-
+	
 	background: #FFF;
 	padding: 10px;
 }
@@ -370,7 +379,7 @@ h5.show-content {
 }
 .media_img {
 	width: 60px;
-	height:60px;
+	height: 60px;
 }
 .mui-control-content {
 	background-color: white;
@@ -380,7 +389,6 @@ h5.show-content {
 	margin-top: 50px;
 	height: 100px;
 }
-
 #hotdoclist {
 	overflow: hidden;
 	width: 100%;
@@ -401,9 +409,8 @@ h5.show-content {
 	padding: 2px;
 	border-radius: 5px;
 	color: #ffffff;
-	margin:0 auto;
+	margin: 0 auto;
 	margin-bottom: 10px;
-
 }
 .sms_ask {
 	text-align: center;
@@ -447,7 +454,7 @@ h5.show-content {
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
 	overflow: hidden;
-	text-align:center;
+	text-align: center;
 }
 .reply-time {
 	color: #e1912d;
@@ -467,30 +474,34 @@ h5.show-content {
 	background-color: #fcfcfc;
 	border-radius: 4px;
 	box-shadow: 0 0 5px #ccc;
-
 }
-.c_odd{
+.c_odd {
 	'background-color: #DBF0FF;
-	color:#000000;
+ color: #000000;
 	border: 1px solid #DBF0FF;
 	padding: .6em;
 	border-radius: 4px;
 	box-shadow: 0 0 5px #ccc;
 }
-.m_odd{
-float:left;margin-right:1em;text-align:center;	
+.m_odd {
+	float: left;
+	margin-right: 1em;
+	text-align: center;
 }
-.m_even{
-	float:right;margin-left:1em;text-align:center;
+.m_even {
+	float: right;
+	margin-left: 1em;
+	text-align: center;
 }
-.t_even{
-	float:right;width:75%;
+.t_even {
+	float: right;
+	width: 75%;
 	background-color: #DBF0FF;
 	border: 1px solid #DBF0FF;
 }
-.t_odd{
-	float:left;width:75%;
-	
+.t_odd {
+	float: left;
+	width: 75%;
 	padding: .6em;
 	border-radius: 4px;
 	box-shadow: 0 0 5px #ccc;
@@ -508,7 +519,6 @@ float:left;margin-right:1em;text-align:center;
 	top: 8px;
 	left: -12px;
 	z-index: 999;
-
 }
 .content-reply-box li.even .arrow {
 	width: 0;
@@ -537,7 +547,6 @@ float:left;margin-right:1em;text-align:center;
 }
 .pr {
 	position: relative;
-
 }
 .oh {
 	overflow: hidden;
@@ -554,58 +563,90 @@ float:left;margin-right:1em;text-align:center;
 	box-shadow: 0 0 5px #ccc;
 }
 .fav_btn {
-	color:red;
+	color: red;
 	font-size: 12px;
-	float:right;
+	float: right;
 	line-height: 20px;
-	width:80px;
-	text-align:center;
-	color:#FFFFFF;
-	margin-top:10px;
-	margin-right:10px;
+	width: 80px;
+	text-align: center;
+	color: #FFFFFF;
+	margin-top: 10px;
+	margin-right: 10px;
 	border-radius: 5px;
 	background-color: #F14E41;
 	'display:none;
+
 }
-.fav_channel{
+.fav_channel {
 	background-color: #C7C7CC;
 }
-.bgimage{
-	background-image:url(../images/yuantiao.jpg);
+.bgimage {
+	background-image: url(../images/yuantiao.jpg);
 	background-color: #fff;
-    list-style: outside none none;
-    margin-bottom: 0;
-    margin-top: 0;
-    padding-left: 0;
-    position: relative;
-    height:110px;
+	list-style: outside none none;
+	margin-bottom: 0;
+	margin-top: 0;
+	padding-left: 0;
+	position: relative;
+	height: 110px;
 }
-.uinfo img{
+.uinfo img {
 	border-radius: 120px;
-	margin:5px;
-	height:90px;
-	width:90px;
+	margin: 5px;
+	height: 90px;
+	width: 90px;
 }
-.uinfo h4{
-	padding-top:10px;
+.uinfo h4 {
+	padding-top: 10px;
 }
-.ubox{
-	width:50px;
-	line-height:50px;
-	height:50px;
+.ubox {
+	width: 50px;
+	line-height: 50px;
+	height: 50px;
 	border: 1px dashed;
-	text-align:center;
-	color:#CCCCCC;
-	float:left;
-	margin:5px;
+	text-align: center;
+	color: #CCCCCC;
+	float: left;
+	margin: 5px;
 }
-.ubox_img{
-	width:40px;
-	height:40px;
+.ubox_img {
+	width: 40px;
+	height: 40px;
 	border: 1px dashed;
-	text-align:center;
-	color:#CCCCCC;
+	text-align: center;
+	color: #CCCCCC;
 }
-.dlist{list-style: none;}
-.oa-contact{color:red;}
-.oa-time{float:right;}
+.dlist {
+	list-style: none;
+}
+.oa-contact {
+	color: red;
+}
+.oa-time {
+	float: right;
+}
+.oauth-area {
+	position: absolute;
+	bottom: 20px;
+	left: 0px;
+	text-align: center;
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+}
+.oauth-area .oauth-btn {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	background-size: 30px 30px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	margin: 0px 20px;
+	/*-webkit-filter: grayscale(100%); */
+	
+	border: solid 1px #ddd;
+	border-radius: 25px;
+}
+.oauth-area .oauth-btn:active {
+	border: solid 1px #aaa;
+}

@@ -1,147 +1,220 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title></title>
-    <script src="../js/mui.min.js"></script>
-    <link href="../css/mui.min.css" rel="stylesheet"/>
-    <link href="../css/wap.css" rel="stylesheet"/>
-    <script src="../js/config.js"></script>
-    <script src="../js/zepto.min.js"></script>
-  	</head>
-    <body>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/wap.css" rel="stylesheet" />
+		<script src="../js/config.js"></script>
+		<script src="../js/zepto.min.js"></script>
+	</head>
+	<style>
+		.mui-card .mui-control-content {
+				padding: 10px;
+			}
+			.mui-control-content {
+				height: 150px;
+			}
+	</style>
+
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">新用户注册</h1>
 		</header>
-			<div class="mui-content">
-			<div class="mui-content-padded">
-								<form class="mui-input-group" name="form_reg">
-							<div class="mui-input-row">
-								<label>手机号码:</label>
-								<input type="text" name="mobile" class="mui-input-clear" placeholder="输入手机号码" value="13918703616">
-							</div>
-							<div class="mui-input-row">
-								<label>登陆密码:</label>
-								<input type="password" name="password" class="mui-input-clear"placeholder="输入登录密码" value="123456">
-							</div>
-								<div class="mui-input-row">
-								<label>验证码:</label>
-				<input type="text" name="m_code" placeholder="输入验证码" value="123456">
-			</div>
-		<div class="mui-button-row" style="right:0.5em">
-<button id="mobile_auth_waitting" style="float:right;font-size:1em;display:none;">获取验证码</button>
-<button style="float:right;font-size:1em" id="mobile_auth" >获取验证码</button>
-		</div>
-		<div class="mui-button-row">
-			<button class="mui-btn btn-block mui-btn-primary btn-register">用户注册</button>
-		</div>
-</form>
-				<a id="weiuserlogin" href="login.html" open-type="common">已经有账号?</a>&nbsp;&nbsp;<a href="forget.html" id="forget">忘记密码?</a>
-		</div>
-</div>
-<script>
 
-	mui.ready(function(){
-		//获取验证码
-			mui('.mui-content-padded').on('tap','#mobile_auth',function(){
-				var _mobile = Zepto('input[name="mobile"]').val();
-				if( _mobile==''){
-							plus.nativeUI.toast('手机号码不能为空');
-							return false;
-						}else{
-							 var mflag = regBox.regMobile.test(_mobile);
-							if (!(mflag)) {
-        						plus.nativeUI.toast("手机号码有误！");
-        						return false;
-    						}
-					}
-			//提交获取短信
-				mui.ajax({
-						type:'POST',
-						dataType:'json',
-						url: baseDomain+"index.php?g=Api&m=user&a=getauth",
-						timeout:5000,//超时时间设置为10秒；
-						data:{
-							mobile : _mobile
-							},
-							success:function(msg){
-								if(msg.code == 0){
-									plus.nativeUI.toast(msg.info);
-								}else{
-									plus.nativeUI.toast(msg.info);
-									setInterval("set_time()",mcro_time);
-								}
-						},error:function(xhr,type,errorThrown){
-						//异常处理
-						plus.nativeUI.toast(mylang.error_network);
-						console.log(JSON.stringify(xhr));
+		<div class="mui-content">
+			<div style="padding: 5px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" style="font-size:1.1em" typename="hz" >
+				我是患者</a>
+					<a class="mui-control-item" style="font-size:1.1em" typename="ys">
+				我是医生</a>
+				</div>
+			</div>
+			<form class="mui-input-group" name="form_reg">
+				<div class="mui-input-row">
+					<label>手机号码:</label>
+					<input type="text" name="mobile" class="mui-input-clear" placeholder="输入手机号码" value="13918703616">
+				</div>
+				<div class="mui-input-row">
+					<label>登陆密码:</label>
+					<input type="password" name="password" class="mui-input-clear" placeholder="输入登录密码" value="123456">
+				</div>
+				<div class="mui-input-row">
+					<label>验证码:</label>
+					<input type="text" name="m_code" value="123456" placeholder="输入验证码">
+				</div>
+
+				<div style="right:0.5em;margin-top:5px;margin-right:5px;">
+					<button id="mobile_auth_waitting">获取验证码</button>
+					<button id="mobile_auth">获取验证码</button>
+				</div>
+					<input type="hidden" typename="hz" name="m_type" id="m_type" value="hz" >
+
+			</form>
+			<div class="mui-content-padded">
+				<button id="loginin" class="mui-btn mui-btn-block mui-btn-primary btn-register">用户注册</button>
+			   <a class="reg" linkurl="login.html" open-type="common" >已有账号 </a>
+				  &nbsp;&nbsp;
+				  <a linkurl="forget.html" class="forget">忘记密码?</a>
+			
+			</div>
+		</div>
+		<script>
+			mui.ready(function() {
+				//切换注册界面
+				mui('.mui-content').on('tap', '.mui-control-item', function(event) {
+					var typename = this.getAttribute('typename');
+					Zepto('#m_type').attr("value",typename);
+				});
+				
+				
+				mui('.mui-content').on('tap', '.forget', function(event) {
+					var linkurl = this.getAttribute('linkurl');
+					mui.openWindow({
+						url: linkurl,
+						id: linkurl,
+						show: {
+							aniShow: 'slide-in-right',
+							duration: 300
+						},
+						styles: {
+							zindex: 1,
 						}
 					});
-
-			});
-
-				mui('.mui-content-padded').on('tap','.btn-register',function(){
+				});
+				mui('.mui-content').on('tap', '.reg', function(event) {
+					var linkurl = this.getAttribute('linkurl');
+					mui.openWindow({
+						url: linkurl,
+						id: linkurl,
+						show: {
+							aniShow: 'slide-in-right',
+							duration: 300
+						},
+						styles: {
+							zindex: 1,
+						}
+					});
+				});
+				//获取验证码
+				mui('.mui-content-padded').on('tap', '#mobile_auth', function() {
+					var _mobile = Zepto('input[name="mobile"]').val();
+					if (_mobile == '') {
+						plus.nativeUI.toast('手机号码不能为空');
+						return false;
+					} else {
+						var mflag = regBox.regMobile.test(_mobile);
+						if (!(mflag)) {
+							plus.nativeUI.toast("手机号码有误！");
+							return false;
+						}
+					}
+					//提交获取短信
+					mui.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=user&a=getauth",
+						timeout: 5000, //超时时间设置为10秒；
+						data: {
+							mobile: _mobile
+						},
+						success: function(msg) {
+							if (msg.code == 0) {
+								plus.nativeUI.toast(msg.info);
+							} else {
+								plus.nativeUI.toast(msg.info);
+								setInterval("set_time()", mcro_time);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理
+							plus.nativeUI.toast(mylang.error_network);
+							console.log(JSON.stringify(xhr));
+						}
+					});
+				});
+				mui('.mui-content-padded').on('tap', '.btn-register', function() {
 					var _mobile = Zepto('input[name="mobile"]').val(),
 						_m_code = Zepto('input[name="m_code"]').val(),
 						_password = Zepto('input[name="password"]').val();
+						_mtype = Zepto('input[name="m_type"]').val();
 
-							//验证手机号码
-						if( _password==''){
-							plus.nativeUI.toast('密码不能为空');
+					//验证手机号码
+					if (_password == '') {
+						plus.nativeUI.toast(mylang.error_pwd_empty);
+						return false;
+					}
+					if (_m_code == '') {
+						plus.nativeUI.toast(mylang.error_auth_empty);
+						return false;
+					} else {
+						var mflag = regBox.regName.test(_m_code);
+						if (!(mflag)) {
+							plus.nativeUI.toast(mylang.error_auth_size);
 							return false;
 						}
-						if(_m_code==''){
-							 plus.nativeUI.toast('验证码不能为空');
+					}
+					if (_mobile == '') {
+						plus.nativeUI.toast(mylang.error_mobile_empty);
+						return false;
+					} else {
+						var mflag = regBox.regMobile.test(_mobile);
+						if (!(mflag)) {
+							plus.nativeUI.toast(mylang.error_mobile);
 							return false;
-						}else{
-							 var mflag = regBox.regName.test(_m_code);
-							if (!(mflag)) {
-        						plus.nativeUI.toast("输入有误6位长度数字！");
-        						return false;
-    							}
 						}
-					if( _mobile==''){
-							plus.nativeUI.toast('手机号码不能为空');
-							return false;
-						}else{
-							 var mflag = regBox.regMobile.test(_mobile);
-							if (!(mflag)) {
-        						plus.nativeUI.toast("手机号码有误！");
-        						return false;
-    							}
-						}
-
+					}
+					
+					if(_mtype=='ys'){
+						jump_url=basepath+"register_doc.html";
+					}else{
+						jump_url="/"+jump_baseurl;
+					}
 					mui.ajax({
-						type:'POST',
-						dataType:'json',
-						url: baseDomain+"index.php?g=Api&m=user&a=register_done",
-						data:{
-							mobile : _mobile,
-							m_code : _m_code,
-							password : _password
-							},
-							success:function(msg){
-								if(msg.code == 0){
-									plus.nativeUI.alert(msg.info);
-								}else{
-									//注册成功
-										plus.nativeUI.alert(msg.info);
-										mui.openWindow({
-											id: 'main',
-											url: '/main.html',
-											waiting: {
-												autoShow: false
-											}
-									});
+						type: 'POST',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=user&a=register_done",
+						data: {
+							mobile: _mobile,
+							m_code: _m_code,
+							m_type: _mtype,
+							password: _password
+						},
+						success: function(msg) {
+							if (msg.code == 0) {
+								plus.nativeUI.alert(msg.info);
+							} else {
+								//注册成功
+								if(_mtype!='ys'){
+									plus.nativeUI.toast(msg.info);
 								}
+								mui.openWindow({
+									id: 'main',
+									url: jump_url,
+									show: {
+										aniShow: 'slide-in-right',
+										duration: 300
+									},
+									styles: {
+										zindex: 1,
+									},
+									extras: {
+										uid: msg.uid,
+										ishidden: 1,
+									}
+								});
+							}
 						}
 					});
+				});
+			});
+		</script>
+		<script src="../js/common.js"></script>
+	</body>
 
-		});
-	});
-</script>
- <script src="../js/common.js"></script>
-</body>
 </html>

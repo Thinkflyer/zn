@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -8,12 +7,10 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="../css/mui.css">
 		<link rel="stylesheet" href="../css/wap.css">
-		<script src="../js/mui.min.js"></script>
-		<script src="../js/zepto.min.js"></script>
 		<script src="../js/config.js"></script>
-		<script src="../js/common.js"></script>
+		<script src="../js/zepto.min.js"></script>
+		<script src="../js/mui.min.js"></script>
 	</head>
-
 	<body>
 		<style>
 			.mui-control-content {
@@ -42,7 +39,7 @@
 					<h4>姓名</h4><span>职位</span>
 					<p class="mui-ellipsis" style="font:0.6em;" id="udes">说明</p>
 				</li>
-				<span style="color:#FF5053;float:right;margin-right:1em"><span class="favourite">0</span>位患者已关注</span>
+				<span class="fa"><span class="favourite">0</span>位患者已关注</span>
 			</ul>
 			<div id="slider" class="mui-slider">
 				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted" style="background-color:#FAFAFA;">
@@ -70,7 +67,6 @@
 									<div class="mui-collapse-content">
 										<p id="desc">加载中...</p>
 									</div>
-									<input type="hidden" name="nologin" id="nologin">
 								</li>
 							</ul>
 							<!--医生简介-->
@@ -109,7 +105,16 @@
 				</div>
 			</div>
 			<script>
-				mui.init();
+				mui.init({
+					beforeback: function(){
+						//获得列表界面的webview
+						//var wvall =plus.webview.all();
+						 //console.log(JSON.stringify(wvall));
+						var list = plus.webview.getWebviewById('HBuilder');
+						mui.fire(list,'refresh_index');
+						return true;
+					}
+				});
 				var uid = null;
 				var files = [];
 				var i = 1;
@@ -125,6 +130,10 @@
 				var plusReady = function() {
 					var self = plus.webview.currentWebview();
 					uid = self.uid;
+					var _userinfo = plus.storage.getItem("$user") || "{}";
+					_userinfo=	JSON.parse(_userinfo);
+					_nologin=_userinfo.userid;
+					plus.navigator.closeSplashscreen();
 					mui.ajax({
 						type: 'POST',
 						dataType: 'json',
@@ -146,7 +155,8 @@
 							Zepto('#goodat').html(msg.data.goodat);
 							Zepto('#desc').html(msg.data.description);
 							Zepto('.favourite').html(msg.data.favourite_num);
-							Zepto('#nologin').val(msg.nologin);
+							
+							 //console.log(msg.data.nologin); 
 							if (msg.data.isfavourite) {
 								Zepto('#fav_btn').removeClass('mui-icon-plus').addClass('fav_channel').addClass('mui-icon-minus').html('取消关注');
 							}
@@ -157,10 +167,13 @@
 							str = '<li class="mui-table-view-cell" open-linkid="'+ v.bl_id +'"><p>咨询人:'+username+'  时间:'+v.datetime+'</p><p>'+v.blsm+'</p></li>';
 							Zepto('#newslist').append(str);
 							});
+				
 						}
 					});
 					plus.nativeUI.closeWaiting();
 				};
+				
+			
 				if (window.plus) {
 					plusReady();
 				} else {
@@ -211,6 +224,8 @@
 					var datas = {
 						'uid': uid
 					};
+		
+				
 					if (checklogin()) {
 						//关注
 						mui.ajax({
@@ -253,7 +268,8 @@
 						var data = {
 							doc_id: uid,
 							pics: files,
-							blsm: blsm
+							blsm: blsm,
+							sid:_nologin
 						};
 						mui.post(url, data, function(info) {
 							plus.nativeUI.closeWaiting();
@@ -275,7 +291,7 @@
 									var localurl = entry.toLocalURL(); //把拍照的目录路径，变成本地url路径
 									if (files.length < max_uploads_images) {
 										createItem(entry);
-										appendFile(localurl);
+										UploadFile(localurl);
 									} else {
 										plus.nativeUI.toast('最多上传' + max_uploads_images + '个附件');
 									}
@@ -294,7 +310,7 @@
 							plus.io.resolveLocalFileSystemURL(path, function(entry) {
 								if (files.length < max_uploads_images) {
 									createItem(entry);
-									appendFile(path);
+									UploadFile(path);
 								} else {
 									plus.nativeUI.toast('最多上传' + max_uploads_images + '个附件');
 								}
@@ -302,36 +318,36 @@
 						});
 					} // 添加文件
 
-				function appendFile(path) {
-						var img = new Image();
-						img.src = path;
-						img.onload = function() {
-							var that = this;
-							//生成比例
-							var w = that.width,
-								h = that.height,
-								scale = w / h;
-							w = 480 || w; //480  你想压缩到多大
-							h = w / scale;
-							//生成canvas
-							var canvas = document.createElement('canvas');
-							var ctx = canvas.getContext('2d');
-							$(canvas).attr({
-								width: w,
-								height: h
-							});
-							ctx.drawImage(that, 0, 0, w, h);
-							var base64 = canvas.toDataURL('image/jpeg', 1 || 0.8); //1z 表示图片质量，越低越模糊。
-							files.push({
-								name: "file" + index,
-								pic: base64
-							}); // 把base64数据丢进数组，上传要用。
-
-							index++;
-							//var pic = document.getElementById("x");
-							//pic.src = base64;   //这里丢到img 的 src 里面就能看到效果了
+					function UploadFile(path) {
+							var img = new Image();
+							img.src = path;
+							img.onload = function() {
+								var that = this;
+								//生成比例
+								var w = that.width,
+									h = that.height,
+									scale = w / h;
+								w = 480 || w; //480  你想压缩到多大
+								h = w / scale;
+								//生成canvas
+								var canvas = document.createElement('canvas');
+								var ctx = canvas.getContext('2d');
+								$(canvas).attr({
+									width: w,
+									height: h
+								});
+								ctx.drawImage(that, 0, 0, w, h);
+								var base64 = canvas.toDataURL('image/jpeg', 1 || 0.8); //1z 表示图片质量，越低越模糊。
+								files.push({
+									name: "file" + index,
+									pic: base64
+								}); // 把base64数据丢进数组，上传要用。
+	
+								index++;
+								//var pic = document.getElementById("x");
+								//pic.src = base64;   //这里丢到img 的 src 里面就能看到效果了
+							}
 						}
-					}
 					// 显示文件
 
 				function displayFile(li) {
@@ -382,8 +398,8 @@
 		mui('#newslist').on('tap', '.mui-table-view-cell', function(event) {
 					var 	linkid=this.getAttribute('open-linkid');
 						mui.openWindow({
-									url: 'msg_detail.html',
-									id: 'msg_detail',
+									url: 'im-chat.html',
+									id: 'im-chat',
 									show: {
 										aniShow: 'slide-in-right',
 										duration: 300
@@ -393,11 +409,12 @@
 									},
 									extras: {
 										linkid: linkid,
-										
+										ishidden: 1,
 									}
 								});
 			});
 			</script>
-	</body>
+		<script src="../js/common.js"></script>
 
+	</body>
 </html>

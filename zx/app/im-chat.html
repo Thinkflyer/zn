@@ -11,7 +11,7 @@
 		<script src="../js/config.js"></script>
 		<script src="../js/common.js"></script>
 		<script src="../js/zepto.min.js"></script>
-
+		<link rel="stylesheet" href="../css/wap.css">
 		<style>
 			html,
 			body {
@@ -109,7 +109,18 @@
 				padding: 3px;
 				color: #ddd;
 			}
-			
+			.msg-item .msg-user_self {
+				width: 38px;
+				height: 38px;
+				border: solid 1px #d3d3d3;
+				display: inline-block;
+				background: #fff;
+				border-radius: 3px;
+				vertical-align: top;
+				text-align: center;
+				float: left;
+				color: #ddd;
+			}
 			.msg-item .msg-user-img{
 				width: 38px;
 				height: 38px;
@@ -152,7 +163,7 @@
 				-webkit-transform: rotateZ(45deg);
 				transform: rotateZ(45deg);
 			}
-			.msg-item-self .msg-user,
+			.msg-item-self .msg-user,.msg-item-self .msg-user_self,
 			.msg-item-self .msg-content {
 				float: right;
 			}
@@ -278,6 +289,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">咨询</h1>
 		</header>
+		
 			<input type="hidden" id="page" name="page" value="1" />
 			<input type="hidden" id="cid" name="cid" value="1" />
 			<input type="hidden" name="nologin" id="nologin">
@@ -285,17 +297,20 @@
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
 			<% for(var i in record){ var item=record[i]; %>
+				<!--//发布时间显示--><div class="itime" ><i><%=(item.createtime)%></i></div>
 				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 					<% if(item.sender=='header') { %>
-						<i class="msg-user mui-icon mui-icon-person"></i>
+						<i class=""></i>
 					<% } else if(item.sender=='self') { %>
-						<i class="msg-user mui-icon mui-icon-person"></i>
+						<i class="msg-user_self mui-icon">
+							<img class="msg-user-img" src="<%=(item.from_useravatar)%>" alt="<%=(item.from_username)%>" />
+						</i>
 					<% } else { %>
-						<img class="msg-user-img" src="../images/60x60.gif" alt="" />
+						<img class="msg-user-img" src="<%=(item.from_useravatar)%>" alt="<%=(item.from_username)%>" />
 					<% } %>
-					
 					<div class="msg-content">
 						<div class="msg-content-inner">
+							
 							<% if(item.type=='text' ) { %>
 								<%= (item.content|| '&nbsp;&nbsp;') %>
 							<div class="msg-content-arrow"></div>
@@ -306,8 +321,9 @@
 								<span class="mui-icon mui-icon-mic" style="font-size: 18px;font-weight: bold;"></span>
 								<span class="play-state">点击播放</span>
 								<div class="msg-content-arrow"></div>
+
 							<% } else if(item.type=='header' ) { %>
-								<div style="width:100em"><%=(item.content)%></div>
+								<div style="width:100em;"><%=(item.content)%></div>
 							<% } %>
 						</div>
 					</div>
@@ -316,12 +332,11 @@
 				<% } %>
 		</script>
 		<div class="mui-content">
-<img id="x">
+			<img id="x">
 			<div id='msg-list'>
-
 			</div>
 		</div>
-		<footer>
+		<footer class="msg-footer">
 			<div class="footer-left">
 				<i id='msg-image' class="mui-icon mui-icon-camera" style="font-size: 28px;"></i>
 			</div>
@@ -332,6 +347,12 @@
 			<label for="" class="footer-right">
 				<i id='msg-type' class="mui-icon mui-icon-mic"></i>
 			</label>
+		</footer>
+		
+		<footer class="msg-footer2" style="display:none">
+			<nav class="mui-bar mui-bar-tab" style="text-align:center;">
+			<button class="mui-btn mui-btn-block mui-action-back mui-btn-primary" style="width:98%;margin:0 auto;">返回</button>
+			</nav>
 		</footer>
 		<div id='sound-alert' class="rprogress">
 			<div class="rschedule"></div>
@@ -371,14 +392,25 @@
 						softinputMode: "adjustResize"
 					});
 					//初始化数据
-					
 						var self = plus.webview.currentWebview();
 						linkid = self.linkid;
 						mid=self.mid;
 						var flg;
 						var strs;
+					    var _myavatar;
+					   	var _createtime;//时间显示
+
 						var pics = new Array();
 						var record = new Array();
+						//alert(self.ishidden);
+						if(self.ishidden==1){
+							Zepto('.msg-footer').hide();
+							Zepto('.msg-footer2').show();
+						}
+						
+						var _userinfo = plus.storage.getItem("$user") || "{}";
+						_userinfo=	JSON.parse(_userinfo);
+						_nologin=_userinfo.userid;
 						mui.ajax({
 							type: 'GET',
 							dataType: 'json',
@@ -388,6 +420,15 @@
 								var msg = eval(json);
 								if (msg.code == 200) {
 									Zepto.each(msg.data, function(i, m) {
+										if(m.from_avatar) _myavatar=baseDomain+m.from_avatar; else _myavatar=baseDomain+"Public/Images/no_avatar.jpg";
+										_createtime=m.createtime;
+										/*var date = new Date();
+										alert(date.toLocaleDateString().replace(/(\d+)[^\d](\d+)[^\d](\d+)[^\d]?/, "$1-$2-$3"));
+										if(date.toLocaleDateString()==_createtime.substr(0,12)){
+											
+										_createtime=_createtime.substr(0,2);
+	
+										}*/
 										var str = '';
 										if (i <= 0) {
 											//默认回复对象
@@ -403,6 +444,8 @@
 											record.push({
 												sender: 'header',
 												type: 'header',
+												from_useravatar:_myavatar,
+												createtime:_createtime,
 												content: str
 											});
 										} else {
@@ -411,20 +454,27 @@
 											 uid=m.from_userid;
 											if(m.msg_type=='image'){
 												m.blsm= baseDomain + "Site" +m.filepath;
+											}else if(m.msg_type=='sound'){
+												m.blsm=m.filepath;
 											}
-											
 											record.push({
 												sender: 'zs',
 												type: m.msg_type,
+											    from_useravatar:_myavatar,
+											    createtime:_createtime,
 												content: m.blsm
 											});
 										}else{
 											if(m.msg_type=='image'){
 												m.blsm=baseDomain + "Site" +m.filepath;
+											}else if(m.msg_type=='sound'){
+												m.blsm=m.filepath;
 											}
 											record.push({
 												sender: 'self',
 												type: m.msg_type,
+												from_useravatar:_myavatar,
+												createtime:_createtime,
 												content: m.blsm
 											});
 										};
@@ -484,6 +534,7 @@
 						var msgContent = msgItem.getAttribute('msg-content')
 						if (msgType == 'sound') {
 							player = plus.audio.createPlayer(msgContent);
+							//alert(msgContent);
 							var playState = msgItem.querySelector('.play-state');
 							playState.innerText = '正在播放...';
 							player.play(function() {
@@ -516,19 +567,21 @@
 						imageViewer.findAllImage();
 						ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 					};
+
 					bindMsgList();
 					window.addEventListener('resize', function() {
 						ui.areaMsgList.scrollTop = ui.areaMsgList.scrollHeight + ui.areaMsgList.offsetHeight;
 					}, false);
+					
 					var send = function(msg) {
 						record.push(msg);
 						bindMsgList();
 						tosave(msg);
 					};
-					
+					/*
 					var toRobot = function(info) {
 						var apiUrl = 'http://www.tuling123.com/openapi/api';
-						$.getJSON(apiUrl, {
+						$.getJSON(apiUrl, {bindMsgList
 							"key": 'acfbca724ea1b5db96d2eef88ce677dc',
 							"info": info,
 							"userid": plus.device.uuid
@@ -542,29 +595,27 @@
 							bindMsgList();
 						});
 					};
-					
+					*/
 					var tosave = function(infoin) {
 					var url = baseDomain + 'index.php?g=Api&m=Index&a=reply';
 					var dataType = 'json';
 					//发送数据
 					//alert(infoin.content);
 					if(infoin.type=='image'){
-						blsm='图片';	
-						appendFile(infoin.content);
+						appendFile(infoin.content,uid,linkid,attrid);
 					}else if(infoin.type=='sound'){
-						blsm='点击播放';	
+						appendSound(infoin.content,uid,linkid,attrid);
 					}else{
 						blsm=infoin.content;	
-					}
 					var data = {
+						async:false,
 						uid: uid,//回复用户对象
 						linkid: linkid,//病例主体
-						pics: files,
+						pics: files['pic'],
 						blsm: blsm,
 						msg_type: infoin.type,
 						attrid:attrid //回复的信息id
 					};
-					
 					mui.post(url, data, function(info) {
 						//plus.nativeUI.closeWaiting();
 						var jsonList = eval("(" + info + ")");
@@ -573,9 +624,10 @@
 						} else {
 							plus.nativeUI.toast(jsonList.info);
 						}
+					//刷新	
 					});
-						
-						
+					}
+				
 			};
 					
 					function msgTextFocus () {
@@ -621,9 +673,11 @@
 								ui.boxMsgText.focus();
 							}, 150);
 //							event.detail.gesture.preventDefault();
+						  _myavatar=baseDomain+"Site/Uploads/avatar/"+_nologin+"/myavatar.jpg";
 							send({
 								sender: 'self',
 								type: 'text',
+								from_useravatar:_myavatar,
 								content: ui.boxMsgText.value.replace(new RegExp('\n','gm'),'<br/>')
 							});
 							ui.boxMsgText.value = '';
@@ -669,6 +723,7 @@
 										send({
 											sender: 'self',
 											type: 'image',
+											from_useravatar:_myavatar,
 											content: "file://" + plus.io.convertLocalFileSystemURL(path)
 										});
 									}, function(err) {});
@@ -678,6 +733,7 @@
 										send({
 											sender: 'self',
 											type: 'image',
+										   from_useravatar:_myavatar,
 											content: path
 										});
 									}, function(err) {}, null);
@@ -703,6 +759,7 @@
 							send({
 								sender: 'self',
 								type: 'sound',
+								 from_useravatar:_myavatar,
 								content: path
 							});
 						}, function(e) {
@@ -757,39 +814,54 @@
 					}, false);
 				});
 			}(mui, document));
-		
-			function appendFile(path) {
-						var img = new Image();
-						img.src = path;
-						img.onload = function() {
-							var that = this;
-							//生成比例
-							var w = that.width,
-								h = that.height,
-								scale = w / h;
-
-							w = 480 || w; //480  你想压缩到多大
-							h = w / scale;
-							//生成canvas
-							var canvas = document.createElement('canvas');
-							var ctx = canvas.getContext('2d');
-							$(canvas).attr({
-								width: w,
-								height: h
-							});
-							ctx.drawImage(that, 0, 0, w, h);
-							var base64 = canvas.toDataURL('image/jpeg', 1 || 0.8); //1z 表示图片质量，越低越模糊。
-							files.push({
-								name: "file" + index,
-								pic: base64
-							}); // 把base64数据丢进数组，上传要用。
-							
-							index++;
-							//var pic = document.getElementById("x");
-							//pic.src = base64;   //这里丢到img 的 src 里面就能看到效果了
-						}
+			
+			
+			
+			function appendSound(path,uid,linkid,attrid){
+				//上传语音部分
+				
+			plus.io.resolveLocalFileSystemURL(path, function( entry ) {
+				// 可通过entry对象操作test.html文件 
+				entry.file( function(file){
+					var fileReader = new plus.io.FileReader();
+					//alert("getFile:" + JSON.stringify(file));
+					fileReader.readAsText(file, 'utf-8');
+					fileReader.onloadend = function(evt) {
+						console.log("输出结果"+evt.target.result);
+						//alert(evt.target.result+file.size + '--' + file.name+ '--' + file.fullPath);
 					}
-		
+				} );
+			}, function ( e ) {
+				alert( "Resolve file URL failed: " + e.message );
+			} );
+	
+	
+				
+				
+				
+					var url = baseDomain + 'index.php?g=Api&m=Index&a=reply';
+					var dataType = 'json';
+					var data = {
+									uid: uid,//回复用户对象
+									linkid: linkid,//病例主体
+									attrid:attrid, //回复的信息id
+									blsm: '语音',
+									filepath:path,
+									msg_type: 'sound'
+								};
+						mui.post(url, data, function(info) {
+								plus.nativeUI.closeWaiting();
+								var jsonList = eval("(" + info + ")");
+								if (jsonList.code == 200) {
+									plus.nativeUI.toast(jsonList.info);
+								} else {
+									plus.nativeUI.toast(jsonList.info);
+						}
+							//刷新	
+					});
+			}
+			
+			
 		</script>
 	</body>
 

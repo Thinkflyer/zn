@@ -1,115 +1,92 @@
 /**
- * 演示程序当前的 “注册/登录” 等操作，是基于 “本地存储” 完成的
- * 当您要参考这个演示程序进行相关 app 的开发时，
- * 请注意将相关方法调整成 “基于服务端Service” 的实现。
- **/
-(function($, owner) {
-	/**
-	 * 用户登录
-	 **/
-	owner.login = function(loginInfo, callback) {
-		callback = callback || $.noop;
-		loginInfo = loginInfo || {};
-		loginInfo.account = loginInfo.account || '';
-		loginInfo.password = loginInfo.password || '';
-		if (loginInfo.account.length < 5) {
-			return callback('账号最短为 5 个字符');
-		}
-		if (loginInfo.password.length < 6) {
-			return callback('密码最短为 6 个字符');
-		}
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		var authed = users.some(function(user) {
-			return loginInfo.account == user.account && loginInfo.password == user.password;
-		});
-		if (authed) {
-			return owner.createState(loginInfo.account, callback);
-		} else {
-			return callback('用户名或密码错误');
-		}
-	};
+ * BadgeManager 静态类
+ * 只需要关心对应业务的角标增长值，自动计算总的角标数，并设置App角标plus.runtime.setBadgeNumber
+ * @author fanrong33
+ * @version 1.0.1 build 20150630
+ */
+;function BadgeManager(){
+};
+/**
+ * 角标增长
+ * @param {String} key  键值
+ * @param {Number} step 增长值
+ */
+BadgeManager.setInc = function(key, step){
+    var key = "badge_"+key;
+    var badge_total_number = plus.storage.getItem("badge_total_number");
+    var badge_key_number   = plus.storage.getItem(key);
+    badge_total_number = parseInt(badge_total_number); // 字符串转数字
+    badge_key_number  = parseInt(badge_key_number);
+    if(!badge_key_number) badge_key_number    = 0;
+    if(!badge_total_number) badge_total_number = 0;
+    badge_key_number   = badge_key_number + step;
+    badge_total_number = badge_total_number + step;
 
-	owner.createState = function(name, callback) {
-		var state = owner.getState();
-		state.account = name;
-		state.token = "token123456789";
-		owner.setState(state);
-		return callback();
-	};
+    plus.storage.setItem(key, badge_key_number.toString()); // 数字转字符串
+    plus.storage.setItem("badge_total_number", badge_total_number.toString());
 
-	/**
-	 * 新用户注册
-	 **/
-	owner.reg = function(regInfo, callback) {
-		callback = callback || $.noop;
-		regInfo = regInfo || {};
-		regInfo.account = regInfo.account || '';
-		regInfo.password = regInfo.password || '';
-		if (regInfo.account.length < 5) {
-			return callback('用户名最短需要 5 个字符');
-		}
-		if (regInfo.password.length < 6) {
-			return callback('密码最短需要 6 个字符');
-		}
-		if (!checkEmail(regInfo.email)) {
-			return callback('邮箱地址不合法');
-		}
-		//var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		//users.push(regInfo);
-		//localStorage.setItem('$users', JSON.stringify(users));
-		
-		
-		return callback();
-	};
+    // 设置APP图标的角标
+    plus.runtime.setBadgeNumber(badge_total_number);
+}
 
-	/**
-	 * 获取当前状态
-	 **/
-	owner.getState = function() {
-		var stateText = localStorage.getItem('$state') || "{}";
-		return JSON.parse(stateText);
-	};
+/**
+ * 角标减少
+ * @param {String} key  键值
+ * @param {Number} step 减少值
+ */
+BadgeManager.setDec = function(key, step){
+    var key = "badge_"+key;
+    var badge_total_number = plus.storage.getItem("badge_total_number");
+    var badge_key_number   = plus.storage.getItem(key);
+    badge_total_number = parseInt(badge_total_number);
+    badge_key_number  = parseInt(badge_key_number);
+    if(!badge_key_number) badge_key_number   = 0;
+    if(!badge_total_number) badge_total_number = 0;
+    badge_key_number   = badge_key_number - step;
+    badge_total_number = badge_total_number - step;
 
-	/**
-	 * 设置当前状态
-	 **/
-	owner.setState = function(state) {
-		state = state || {};
-		localStorage.setItem('$state', JSON.stringify(state));
-		//var settings = owner.getSettings();
-		//settings.gestures = '';
-		//owner.setSettings(settings);
-	};
+    if(badge_key_number < 0)    badge_key_number = 0;
+    if(badge_total_number < 0) badge_total_number = 0;
 
-	var checkEmail = function(email) {
-		email = email || '';
-		return (email.length > 3 && email.indexOf('@') > -1);
-	};
+    plus.storage.setItem(key, badge_key_number.toString());
+    plus.storage.setItem("badge_total_number", badge_total_number.toString());
 
-	/**
-	 * 找回密码
-	 **/
-	owner.forgetPassword = function(email, callback) {
-		callback = callback || $.noop;
-		if (!checkEmail(email)) {
-			return callback('邮箱地址不合法');
-		}
-		return callback(null, '新的随机密码已经发送到您的邮箱，请查收邮件。');
-	};
+    // 设置APP图标的角标
+    plus.runtime.setBadgeNumber(badge_total_number);
+}
 
-	/**
-	 * 获取应用本地配置
-	 **/
-	owner.setSettings = function(settings) {
-		settings = settings || {};
-		localStorage.setItem('$settings', JSON.stringify(settings));
-	}
+/**
+ * 根据key获取对应的角标值
+ * @param {String} key
+ */
+BadgeManager.getBadgeNumber = function(key){
+    var key = "badge_"+key;
+    var badge_key_number = plus.storage.getItem(key);
+    badge_key_number       = parseInt(badge_key_number);
 
-	/**
-	 * 设置应用本地配置
-	 **/
-	owner.getSettings = function() {
-		var settingsText = localStorage.getItem('$settings') || "{}";
-		return JSON.parse(settingsText);
-	}
-}(mui, window.app = {}));
+    if(!badge_key_number) badge_key_number = 0;
+    return badge_key_number;
+}
+
+/**
+ * 删除key对应的角标值
+ * @param {String} key
+ */
+BadgeManager.removeBadgeNumber = function(key){
+    var key = "badge_"+key;
+    var badge_total_number = plus.storage.getItem("badge_total_number");
+    var badge_key_number   = plus.storage.getItem(key);
+    badge_total_number = parseInt(badge_total_number);
+    badge_key_number  = parseInt(badge_key_number);
+    if(!badge_key_number) badge_key_number   = 0;
+    if(!badge_total_number) badge_total_number = 0;
+    badge_total_number = badge_total_number - badge_key_number;
+
+    if(badge_total_number < 0) badge_total_number = 0;
+
+    plus.storage.removeItem(key);
+    plus.storage.setItem("badge_total_number", badge_total_number.toString());
+
+    // 设置APP图标的角标
+    plus.runtime.setBadgeNumber(badge_total_number);
+}

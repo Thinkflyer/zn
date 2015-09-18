@@ -12,7 +12,12 @@
 		<script src="../js/zepto.min.js"></script>
 		<script src="../js/config.js"></script>
 	</head>
-
+<script>
+function getLocalTime(nS) {
+  // return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');    
+    return new Date(parseInt(nS)*1000).toLocaleString().substr(0,10);
+}
+</script>
 	<body>
 		<style>
 			.mui-control-content {
@@ -42,6 +47,7 @@
 						<div class="mui-content-padded" >
 							<p style="margin-bottom: 0;">
 								<span class="detail-title">加载内容...</span>
+								<span class="detail-date" style="float:right"></span>
 							</p>
 							<div  style="background: #FFFFFF; padding: 10px;" >
 								<div id="content" class="mui-control-content mui-active">
@@ -70,6 +76,7 @@
 						var msg = eval(json);
 						var str = '';
 	 					Zepto('.detail-title').html(msg.title);
+	 					Zepto('.detail-date').html(getLocalTime(msg.createtime));
 	 					Zepto('#content').html(msg.content);
 
 					},error:function(xhr,type,errorThrown){
@@ -93,5 +100,4 @@
 		</script>
 	</body>
 	<script src="js/common.js"></script>
-
 </html>

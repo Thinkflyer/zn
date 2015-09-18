@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<title>新闻列表</title>
@@ -12,23 +13,42 @@
 		<script src="../js/zepto.min.js"></script>
 		<script src="../js/mui.min.js"></script>
 	</head>
+	<style>
+		.mui-control-content {
+			min-height: 320px;
+		}
+		.mui-bar-nav ~ .mui-content {
+			padding-top: 40px;
+		}
+		.postbutton {
+			margin: 0 auto;
+			width: 90%
+		}
+	</style>
+
 	<body>
-	<div class="mui-title tit-sort">
-		<input type="hidden" id="page" name="page" value="1" />
-		<input type="hidden" id="cid" name="cid" value="1" />
-	</div>
+		<div class="mui-title tit-sort">
+			<input type="hidden" id="page" name="page" value="1" />
+			<input type="hidden" id="cid" name="cid" value="1" />
+		</div>
 		<!-- 侧滑导航根容器 -->
-			<!-- 主页面容器 -->
-			<div class="mui-inner-wrap mui-content">
-				<div id="pullrefresh" class="mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<!--media list-->
-						<ul class="mui-table-view list" id="newslist">
-						</ul>
-						<!--end media list-->
-					</div>
+		<!-- 主页面容器 -->
+		<div class="mui-content">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-icon mui-action-back mui-icon-back mui-pull-left"></a>
+				<h1 class="mui-title">新闻详情</h1>
+			</header>
+
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--media list-->
+					<ul class="mui-table-view list" id="newslist">
+					</ul>
+					<!--end media list-->
 				</div>
 			</div>
+
+		</div>
 
 		<script type="text/javascript">
 			mui.init({
@@ -40,44 +60,42 @@
 						callback: add_more //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
 					}
 				},
-
 			});
 
 			function add_more() {
-				var page = Zepto('#page').val(),
-					cid = Zepto('#cid').val();
-				    Zepto('#page').val(parseInt(page) + 1);
-				mui.ajax({
-					type: 'GET',
-					dataType:'json',
-					url: baseDomain+"index.php?g=Api&m=Index&a=newslist&cid=1",
-					data: 'p=' + page,
-					success: function(json){
-						var msg = eval(json);
-						if (msg.code == 200) {
-							Zepto.each(msg.data,function(i, v) {
-							var str = '<li class="mui-table-view-cell"><a href="news_detail.html" open-uid="'+ v.id +'" ><img class="mui-media-object mui-pull-left" src="' + v.sthumb.replace('/Public/','../') + '" /><div class="mui-ellipsis"><b>' + v.title + '</b></div><p class="mui-media-body">' + v.description + '</p></a></li>';
-							Zepto('#newslist').append(str);
-							});
-							mui('#pullrefresh').pullRefresh().endPullupToRefresh(false); //参数为true代表没有更多数据了。
-						} else {
-							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
+					var page = Zepto('#page').val(),
+						cid = Zepto('#cid').val();
+					Zepto('#page').val(parseInt(page) + 1);
+					mui.ajax({
+						type: 'GET',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=1",
+						data: 'p=' + page,
+						success: function(json) {
+							var msg = eval(json);
+							if (msg.code == 200) {
+								Zepto.each(msg.data, function(i, v) {
+									var str = '<li class="mui-table-view-cell li_list" linkurl="news_detail.html" open-uid="' + v.id + '"  ><img class="mui-media-object mui-pull-left" src="' + v.sthumb.replace('/Public/', '../') + '" /><div class="mui-ellipsis"><b>' + v.title + '</b></div><p class="mui-media-body">' + v.description + '</p></li>';
+									Zepto('#newslist').append(str);
+								});
+								mui('#pullrefresh').pullRefresh().endPullupToRefresh(false); //参数为true代表没有更多数据了。
+							} else {
+								mui('#pullrefresh').pullRefresh().endPullupToRefresh(true); //参数为true代表没有更多数据了。
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							plus.nativeUI.toast(mylang['error_network']);
+							console.log(JSON.stringify(xhr));
 						}
-					},error:function(xhr,type,errorThrown){
-					//异常处理；
-						plus.nativeUI.toast(mylang['error_network']);
-						console.log(JSON.stringify(xhr));
-					}
-				});
-
-			}
-			//触发第一页
+					});
+				}
+				//触发第一页
 			if (mui.os.plus) {
 				mui.plusReady(function() {
 					setTimeout(function() {
 						mui('#pullrefresh').pullRefresh().pullupLoading();
 					}, 1000);
-
 				});
 			} else {
 				mui.ready(function() {
@@ -85,29 +103,26 @@
 					mui('#pullrefresh').pullRefresh().pullupLoading();
 				});
 			}
-
-		//主列表点击事件
-	mui('#pullrefresh').on('tap', 'a', function(){
-		var id = this.getAttribute('href');
-		var type = this.getAttribute('open-type');
-		var title = this.getAttribute('open-title');
-		var uid = this.getAttribute('open-uid');
-		if (type == "common") {
+			 //主列表点击事件
+			mui('#pullrefresh').on('tap', 'li', function() {
+				var linkurl = this.getAttribute('linkurl');
+				var uid = this.getAttribute('open-uid');
 				mui.openWindow({
-					id: id,
-					url: this.href,
+					id: linkurl,
+					url: linkurl,
 					waiting: {
 						autoShow: false
 					},
-					 extras:{
-				        uid: uid,
-				        title: title
-				    }
+					styles: {
+						zindex: 1,
+					},
+					extras: {
+						uid: uid,
+					}
+				});
 			});
-		}
-	});
 		</script>
 	</body>
-<script src="../js/tap.js"></script>
-<script src="../js/common.js"></script>
+	<script src="../js/common.js"></script>
+
 </html>
