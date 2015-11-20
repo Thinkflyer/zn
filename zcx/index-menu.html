@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Left Menu</title></title>
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<script src="js/mui.min.js"></script>
+		<script src="js/config.js"></script>
+
+		<style type="text/css">
+			body,.mui-content{
+			  	background-color: #333;
+			  	color:#fff;
+			  }
+			
+			  .title+.content{
+			  	margin: 10px 15px 35px;
+			  	color: #bbb;
+			  	text-indent: 1em;
+			  	font-size: 14px;
+			  	line-height: 24px;
+			  }
+			  .mui-table-view{
+			  	margin-bottom: 35px;
+			  }
+			  .left_menu_button{
+				width:45%;padding: 5px 20px;background-color:#31363D;
+				color:#ffffff;
+				}
+			.left_menu_tel{
+				color:#ffffff;
+				text-align:center;
+				font-size:1em;
+				
+			}
+			.left_menu_myface{
+				margin: 20px 15px;
+				text-align: center;
+			}
+			.left_menu_myface IMG{
+				border-radius:50%;
+				width:80px;
+			}
+			.flex-container {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-flow: row wrap;
+				justify-content: space-between;
+				text-align: center;
+			}
+			.mui-table-view-cell{
+				border-color:#FFFFFF;
+			}
+			.mui-table-view-cell span{
+				width: 25px;
+				height: 25px;
+				display: inline-block;
+				text-align: center;
+				border-radius: 25px;
+				background-clip: padding-box;
+			}
+			.mui-table-view-inverted .mui-table-view-cell::after {
+    				background-color: #3B4047;
+			}
+			.left_menu_ico1{margin-right:10px;background-color:#57C0FC;color:#FFFFFF;}
+			.left_menu_ico2{margin-right:10px;background-color:#FDBD44;color:#FFFFFF;}
+			.left_menu_ico3{margin-right:10px;background-color:#57C0FC;color:#FFFFFF;}
+			.left_menu_ico4{margin-right:10px;background-color:#8CCB75;color:#FFFFFF;}
+		
+		.mui-table-view-inverted::after {
+			    background-color: #333;
+			    bottom: 0;
+			    content: "";
+			    height: 1px;
+			    left: 0;
+			    position: absolute;
+			    right: 0;
+			    transform: scaleY(0.5);
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="left_mui-content">
+	
+			<div class="left_menu_myface" >
+				<img id="avatar" src="./images/avatar.png" title="个人头像"/>
+				<p id="user_account"></p>			
+			</div>
+			<ul class="mui-table-view mui-table-view-chevron mui-table-view-inverted" style="color: #ddd;">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="setting.html" islogin="1">
+						<span class="mui-icon mui-icon-person left_menu_ico1"></span>个人中心
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="link.html" open-type="link" open-linkurl="Page/list/50.html" open-title="联系我们"   >
+						<span class="mui-icon mui-icon-chatbubble left_menu_ico2"></span>联系我们
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="news.html" open-type="page" open-sid="35">
+						<span class="mui-icon mui-icon-info left_menu_ico3"></span>关于我们
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right"  href="news.html" open-type="page" open-sid="40">
+						<span class="mui-icon mui-icon-loop left_menu_ico4"></span>版本更新
+					</a>
+				</li>
+				
+				<p style="margin-top:3em"></p>
+				<p style="margin: 10px 15px;text-align:center" id="login_box">
+				<button id="leftmenu_reg" type="button" class="mui-btn left_menu_button">注册</button>
+				<button id="leftmenu_login" type="button" class="mui-btn left_menu_button">登陆</button>
+				</p>
+			<p style="text-align:center;display:none;" id="loginout_box">
+				<button id="exit" type="button" class="mui-btn left_menu_button">退出登录</button>
+			</p>
+					 <p class="left_menu_tel" style="margin-top:3em">服务热线</p>
+					 <p class="left_menu_tel" id="tel">400-720-0068</p>
+				</ul>
+				
+			
+		</div>
+		
+		<script src="js/app.js"></script>
+		<script type="text/javascript" charset="utf-8">
+		mui.init();
+		var plusReady = function() {
+		var self = plus.webview.currentWebview();
+		var state = app.getState();
+		//判断是否登陆状态
+		if(state.account){
+			//登陆状态 avatar
+			document.getElementById("avatar").src="./images/avatar_new.png?"+Math.random();
+			document.getElementById("user_account").innerHTML=state.account;
+			document.getElementById("login_box").style.display="none";
+			document.getElementById("loginout_box").style.display="block";
+			}else{
+			document.getElementById("login_box").style.display="block";
+			document.getElementById("loginout_box").style.display="none";
+	
+			}
+		}
+			
+		if (window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+		}
+			var aniShow = "slide-in-right";
+			//关于backbutton和menubutton两个按键的说明，在iOS平台不存在，故需隐藏
+			if(!mui.os.android){
+				var span = document.getElementById("android-only")
+				if(span){
+					span.style.display = "none";
+				}
+				aniShow = "pop-in";
+			}
+			var subWebview=null,template=null,index=null;
+			mui.plusReady(function () {
+				//获得主页面webview引用；
+				index = plus.webview.currentWebview().opener();
+				mui.fire(index,'getstate_tab',null);
+			})
+			
+			
+		document.getElementById('leftmenu_reg').addEventListener('tap', function() {
+				mui.openWindow({
+					url: 'reg.html',
+					id: 'reg',
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+
+		}, false);
+		
+		document.getElementById('leftmenu_login').addEventListener('tap', function() {
+			
+				mui.openWindow({
+					url: 'login.html',
+					id: 'login',
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+				close();
+
+		}, false);
+		
+		 //退出操作******************
+		document.getElementById('exit').addEventListener('tap', function() {
+			if (mui.os.ios) {
+				app.setState({});
+				refresh();
+				mui.openWindow({
+					url: 'login.html',
+					id: 'login',
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+				return;
+			}
+			var btnArray = [{
+				title: "注销当前账号"
+			}, {
+				title: "直接关闭应用"
+			}];
+			plus.nativeUI.actionSheet({
+				cancel: "取消",
+				buttons: btnArray
+			}, function(event) {
+				var index = event.index;
+				switch (index) {
+					case 1:
+						app.setState({});
+						refresh();
+						mui.openWindow({
+							url: 'login.html',
+							id: 'login',
+							show: {
+								aniShow: 'pop-in'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+						break;
+					case 2:
+						plus.runtime.quit();
+						break;
+				}
+			});
+		}, false);
+		
+		//客服电话
+		document.getElementById("tel").addEventListener('tap', function() {
+			plus.device.dial("4007200068");
+		});
+		
+			
+			mui('.mui-table-view').on('tap', 'a', function() {
+
+				var id = this.getAttribute("href");
+				var type = this.getAttribute("open-type");
+				var sid = this.getAttribute("open-sid");
+				var islogin = this.getAttribute("islogin");
+				
+				var more = this.getAttribute("open-more");
+				var linkurl = this.getAttribute("open-linkurl");
+				var title= this.getAttribute("open-title");
+				
+				
+				if(islogin==1){
+						var state = app.getState();
+						if(!state.account) {
+								plus.nativeUI.toast('用户未登录');
+								mui.openWindow({
+									url: 'login.html',
+									id: 'login',
+									show: {
+										aniShow: 'pop-in'
+									},
+									waiting: {
+										autoShow: false
+									}
+								});	
+						return false;
+
+						}
+				}
+				
+				var detailPage = null;
+				if(!detailPage){
+    					detailPage = plus.webview.getWebviewById('news.html');
+ 				 }
+				
+				mui.fire(detailPage,'newsId',{
+	    				sid: sid,
+	    				type: type
+	  				});
+	  				
+					var webview_style = {
+						popGesture: "close"
+					};
+					mui.openWindow({
+						id: id,
+						url: id,
+						styles: webview_style,
+						show: {
+							aniShow: aniShow
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							sid: sid,
+							linkurl:linkurl,
+	    						type: type,
+							title: title,
+							more: more
+						}
+					});
+				
+			});
+			/*
+			 * 刷新状态
+			 * */
+			function refresh(){
+				
+				var state = app.getState();
+				//判断是否登陆状态
+				if(state.account){
+					//登陆状态 avatar
+					document.getElementById("avatar").src="./images/avatar_new.png?"+Math.random();
+					document.getElementById("user_account").innerHTML=state.account;
+					document.getElementById("login_box").style.display="none";
+					document.getElementById("loginout_box").style.display="block";
+
+					}else{
+					document.getElementById("avatar").src="./images/avatar.png?"+Math.random();
+					document.getElementById("user_account").innerHTML='';
+					document.getElementById("login_box").style.display="block";
+					document.getElementById("loginout_box").style.display="none";
+			
+					}
+					
+			}
+	
+			window.addEventListener('refresh', function() {
+					mui.fire(index,'getstate_tab',null);
+					refresh();
+				}, false);
+		
+			/**
+			 * 关闭侧滑菜单
+			 */
+			function close() {
+				mui.fire(mui.currentWebview.opener(),"menu:close");
+			}
+			
+			//点击“关闭侧滑菜单”按钮处理逻辑
+			//在android4.4.2中的swipe事件，需要preventDefault一下，否则触发不正常
+			window.addEventListener('dragstart',function(e){
+				mui.gestures.touch.lockDirection = true; //锁定方向
+				mui.gestures.touch.startDirection = e.detail.direction;
+			});
+			window.addEventListener('dragleft', function(e) {
+				if(!mui.isScrolling){
+					e.detail.gesture.preventDefault();	
+				}
+			});
+		
+			//监听左滑事件，若菜单已展开，左滑要关闭菜单；
+			window.addEventListener("swipeleft",function (e) {
+				if(Math.abs(e.detail.angle)>170){
+					close();
+				}
+			});
+			
+	
+		
+		</script>
+	</body>
+
+</html>

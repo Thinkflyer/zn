@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/zepto.min.js"></script>
+		<script src="js/config.js"></script>
+		<style>
+			#leftmenu,
+			#setting,
+			.mui-icon {
+				color: #ffffff;
+			}
+			
+			.nav_line {
+				border: 1px solid #EFEFF4;
+				height: 30px;
+				margin: 8px 8px 8px 10px;
+			}
+			
+			.tel-btn:enabled:active {
+				font-size: 18px;
+				font-weight: bold;
+				color: #20285A;
+			}
+			
+			.bg_color {
+				background-color: #832F32;
+				height: 70px;
+			}
+			
+			.buttom_button {
+				background-image: url(images/bg_button.png);
+				background-size: 310px;
+				background-position: center;
+				background-repeat: no-repeat;
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title" id="title"></h1>
+			<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+				<div class="kele mui-action-back mui-icon-back">返回</div>
+			</button>
+		</header>
+		<div class="mui-content">
+
+			aa
+		</div>
+
+		<div class="mui-bar mui-bar-tab bg_color buttom_button">
+			<button class="mui-btn mui-btn-block mui-btn-link tel-btn" style="padding-bottom:35px;color:#000000;" id="call_tel">+86 139XXXXXXXX
+			</button>
+		</div>
+
+		<script>
+			var ws = null,
+				embed = null;
+			mui.init();
+			function plusReady() {
+				ws = plus.webview.currentWebview();
+				plus.nativeUI.closeWaiting();
+				var linkurl = ws.linkurl;
+				var title = ws.title;
+				if (typeof(title) != "undefined") Zepto('#title').html(title);
+			}
+			if (window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+			//页面加载完成需要等待load
+			var loadSuccess = function() {
+				plus.nativeUI.closeWaiting();
+			};
+			window.addEventListener('load', loadSuccess, false);
+//			mui('.mui-content').on('tap', 'a', function() {
+//				var id = this.getAttribute("href");
+//				var sid = this.getAttribute("open-sid");
+//				var type = this.getAttribute("open-type");
+//				var more = this.getAttribute("open-more");
+//				var linkurl = this.getAttribute("open-linkurl");
+//				var title = this.getAttribute("open-title");
+//				var href = this.href;
+//				mui.openWindow({
+//					id: id,
+//					url: href,
+//					show: {
+//						aniShow: 'pop-in'
+//					},
+//					waiting: {
+//						autoShow: false
+//					},
+//					extras: {
+//						sid: sid,
+//						linkurl: linkurl,
+//						type: type,
+//						title: title,
+//						more: more
+//					}
+//				});
+//			});
+			doc.getElementById('call_tel').addEventListener('tap', function(event) {
+				alert('2');
+				var btnArray = ['返回', '立即拨打'];
+				mui.confirm('你确定拨打电话' + call_telphone + '吗？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						plus.device.dial(call_telphone);
+					}
+				});
+			}, false); //--左侧菜单显示
+		</script>
+	</body>
+
+</html>

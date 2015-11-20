@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<script src="js/zepto.min.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/md5.min.js"></script>
+		<script src="js/config.js"></script>
+		<script src="js/lazyload.js"></script>
+
+	</head>
+
+	<body>
+		<style>
+			html,
+			body,
+			.mui-content {
+				background-color: #ffffff;
+				font-size: 14px;
+			}
+			.mui-control-content {
+				min-height: 320px;
+			}
+			.mui-bar-nav ~ .mui-content {
+				padding-top: 40px;
+			}
+			#title{width:60%;margin:0 auto;}
+			.mui-content img{width:100%;height:100%;border-radius:2px;margin-top:10px}
+		</style>
+	
+		<!-- 主页面容器 -->
+		<div class="mui-inner-wrap">
+			<!-- 主页面标题 -->
+			<header class="mui-bar mui-bar-nav">
+				<h1 class="mui-title detail-title" id="title"></h1>
+				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+					<div class="kele mui-action-back mui-icon-back">返回</div>
+				</button>
+			</header>
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+
+					<div class="mui-content-padded">
+
+						<div style="background: #FFFFFF; padding: 10px;">
+							<div id="content" class="mui-control-content mui-active">
+							</div>
+						</div>
+					</div>
+					<!--end detail-->
+				</div>
+			</div>		
+			<script>
+			(function($, doc) {
+				$.init();
+				$('#pullrefresh').scroll();
+				var sid = null,
+					type=null;
+				$.plusReady(function() {
+					plus.nativeUI.showWaiting();
+					var self = plus.webview.currentWebview();
+					sid = self.sid;
+					type = self.type;
+					$.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=Index&a=show",
+						data: {'id': sid,'type': type },
+						success: function(json) {
+							var msg = eval(json);
+							var str = '';
+							Zepto('.detail-title').html(msg.title);
+							Zepto('#content').html(msg.content);
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理
+							plus.nativeUI.toast(mylang['error_network']);
+							console.log(JSON.stringify(xhr));
+						}
+					});
+					plus.nativeUI.closeWaiting();
+					plus.webview.currentWebview().show();
+
+				});
+				
+			}(mui, document));
+			</script>
+
+	</body>
+
+</html>

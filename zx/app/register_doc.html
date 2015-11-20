@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/wap.css" rel="stylesheet" />
+		<script src="../js/config.js"></script>
+		<script src="../js/zepto.min.js"></script>
+		
+		<link href="../css/mui.listpicker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">医生认证资料</h1>
+		</header>
+
+		<div class="mui-content">
+		
+			<form class="mui-input-group" name="form_reg">
+				<div class="mui-input-row">
+					<label>姓名:</label>
+					<input type="text" name="realname" class="mui-input-clear" placeholder="输入真实姓名" value="姓名" >
+				</div>
+				<div class="mui-input-row">
+					<label>性别:</label>
+					<input type="text" id="sex" name="sex" class="mui-input-clear" placeholder="输入性别" value="女性">
+				</div>
+				<div class="mui-input-row" >
+					<label>城市:</label>
+					<input type="text" name="city" id="city" class="mui-input-clear" placeholder="输入所属城市" value="上海">
+				</div>
+				
+				<div class="mui-input-row">
+					<label>医院:</label>
+					<input type="text" name="hospital" id="hospital" class="mui-input-clear" placeholder="输入所属医院" value="上海市胸科医院">
+
+				</div>
+				<div class="mui-input-row">
+					<label>科室:</label>
+					<input type="text" name="keshi" id="keshi"  class="mui-input-clear" placeholder="输入所属科室" value="心外科">
+				</div>
+				
+				<div class="mui-input-row" >
+					<label>职称:</label>
+					<input type="text" name="zhichen" id="zhichen" class="mui-input-clear" placeholder="输入职称名称" value="主任">
+				</div>
+				
+				<div class="mui-input-row">
+					<label>擅长:</label>
+					<input type="text" name="shanchang" class="mui-input-clear" placeholder="输入所属擅长" value="属擅长">
+				</div>
+	
+	
+				
+				
+				
+			</form>
+			<div class="mui-content-padded">
+				<button id="loginin" class="mui-btn mui-btn-block mui-btn-primary btn-register">完善资料</button>
+			  <a class="reg" linkurl="login.html" open-type="common" >已有账号 </a>
+				  &nbsp;&nbsp;
+				  <a linkurl="forget.html" class="forget">忘记密码?</a>
+			</div>
+		</div>
+		<script>
+		var uid;
+			mui.init({
+					beforeback: function(){
+						//获得列表界面的webview
+						//var wvall =plus.webview.all();
+						 //console.log(JSON.stringify(wvall));
+						var list = plus.webview.getWebviewById('HBuilder');
+						mui.fire(list,'refresh_index');
+						return true;
+					}
+				});
+			var plusReady = function() {
+					var self = plus.webview.currentWebview();
+					var _userinfo = plus.storage.getItem("$user") || "{}";
+					uid = self.uid;
+					_userinfo=	JSON.parse(_userinfo);
+					_nologin=_userinfo.userid;
+
+				};
+				var uid = null;
+				if (window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener('plusready', plusReady, false);
+				}
+				 //页面加载完成需要等待load
+				var loadSuccess = function() {
+					plus.nativeUI.closeWaiting();
+				};
+				window.addEventListener('load', loadSuccess, false);
+				
+			mui.ready(function() {
+				mui('.mui-content').on('tap', '.forget', function(event) {
+					var linkurl = this.getAttribute('linkurl');
+					mui.openWindow({
+						url: linkurl,
+						id: linkurl,
+						show: {
+							aniShow: 'slide-in-right',
+							duration: 300
+						},
+						styles: {
+							zindex: 1,
+						}
+					});
+				});
+			mui('.mui-content').on('tap', '.reg', function(event) {
+						var linkurl = this.getAttribute('linkurl');
+						mui.openWindow({
+							url: linkurl,
+							id: linkurl,
+							show: {
+								aniShow: 'slide-in-right',
+								duration: 300
+							},
+							styles: {
+								zindex: 1,
+							}
+						});
+					});
+
+		
+			mui('.mui-content-padded').on('tap', '.btn-register', function() {
+					var _keshi = Zepto('input[name="keshi"]').val(),
+						_realname = Zepto('input[name="realname"]').val();
+						_sex = Zepto('input[name="sex"]').val();
+						_hospital = Zepto('input[name="hospital"]').val();
+						_city = Zepto('input[name="city"]').val();
+						_shanchang = Zepto('input[name="shanchang"]').val();
+						_zhichen = Zepto('input[name="zhichen"]').val();
+
+					//验证手机号码
+					if (_realname == '') {
+						plus.nativeUI.toast(mylang.error_realname_empty);
+						return false;
+					}
+					if (_sex == '') {
+						plus.nativeUI.toast(mylang.error_no_empty);
+						return false;
+					}
+					if (_city == '') {
+						plus.nativeUI.toast(mylang.error_city_empty);
+						return false;
+					}
+					if (_keshi == '') {
+						plus.nativeUI.toast(mylang.error_keshi_empty);
+						return false;
+					}
+					if (_hospital == '') {
+						plus.nativeUI.toast(mylang.error_hospital_empty);
+						return false;
+					}
+					if (_zhichen == '') {
+						plus.nativeUI.toast(mylang.error_no_empty);
+						return false;
+					}
+					
+					if (_shanchang == '') {
+						plus.nativeUI.toast(mylang.error_no_empty);
+						return false;
+					}
+					mui.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=user&a=register_doc_done",
+						data: {
+							uid:uid,
+							m_realname: _realname,
+							m_sex: _sex,
+							m_city: _city,
+							m_zhichen:_zhichen,
+							m_keshi: _keshi,
+							m_hospital: _hospital,
+							m_shanchang: _shanchang
+						},
+						success: function(msg) {
+							if (msg.code == 0) {
+								plus.nativeUI.alert(msg.info);
+							} else {
+								mui.openWindow({
+									id: 'main',
+									url: jump_url,
+									show: {
+										aniShow: 'slide-in-right',
+										duration: 300
+									},
+									styles: {
+										zindex: 1,
+									},
+									extras: {
+										uid: msg.uid,
+										ishidden: 1,
+									}
+								});
+							}
+						}
+					});
+				});
+	
+			});
+		</script>
+		<script src="../js/mui.listpicker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			 document.write('<scr'+'ipt src="'+baseDomain+ '/index.php?g=Api&m=Index&a=get_jsdata"></scr'+'ipt>');
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					//普通示例
+					var keshiPicker = new $.PopPicker();
+					keshiPicker.setData(keshiData);
+					var keshi = doc.getElementById('keshi');
+					keshi.addEventListener('tap', function(event) {
+						keshiPicker.show(function(items) {
+							keshi.value = items[0].text ;
+						});
+					}, false); 
+					//-----------------------------------------
+					var zhichenPicker = new $.PopPicker();
+					zhichenPicker.setData(zhichenData);
+					var zhichen = doc.getElementById('zhichen');
+					zhichen.addEventListener('tap', function(event) {
+						zhichenPicker.show(function(items) {
+							zhichen.value = items[0].text ;
+						});
+					}, false); 
+						//-----------------------------------------
+					var sexPicker = new $.PopPicker();
+					sexPicker.setData(sexData);
+					var sex = doc.getElementById('sex');
+					sex.addEventListener('tap', function(event) {
+						sexPicker.show(function(items) {
+							sex.value = items[0].text ;
+						});
+					}, false); 
+					//-----------------------------------------
+					var hospitalPicker = new $.PopPicker();
+					hospitalPicker.setData(hosiptalData);
+					var hospital = doc.getElementById('hospital');
+					hospital.addEventListener('tap', function(event) {
+						hospitalPicker.show(function(items) {
+							hospital.value = items[0].text ;
+						});
+					}, false); 
+					//-----------------------------------------
+					//级联示例
+					var cityPicker = new $.PopPicker({
+						layer: 2
+					}); 
+					cityPicker.setData(cityData);
+					var showCityPickerButton = doc.getElementById('city');
+					var cityResult = doc.getElementById('city');
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker.show(function(items) {
+							cityResult.value = items[0].text +"-"+ items[1].text;
+						});
+					}, false);
+				});
+			})(mui, document);
+		</script>
+		
+		<script src="../js/common.js"></script>
+	</body>
+
+</html>

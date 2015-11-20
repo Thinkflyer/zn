@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>新闻详细页面</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="./css/mui.min.css">
+		<script src="js/config.js"></script>
+		<script src="js/zepto.min.js"></script>
+
+	</head>
+<style>
+			html,body,.mui-content {
+				background-color: #ffffff;
+				font-size:14px;
+			}
+			.mui-bar-nav{
+				background-color:#780005;
+			}
+			
+			.mui-title , .mui-icon-back{
+				color:#ffffff;
+			}
+			.mui-control-content {
+				min-height: 320px;
+			}
+			#back{color:#ffffff}
+			.mui-bar-nav ~ .mui-content {
+				padding-top: 40px;
+			}
+			
+			.box{margin:20px;}
+.mui-segmented-control {
+    background-color: transparent;
+    border: 1px solid #CAD4DE;
+    display: table;
+    font-size: 15px;
+    font-weight: 400;
+    overflow: hidden;
+    position: relative;
+    table-layout: fixed;
+    width: 100%;
+    
+}
+
+.mui-segmented-control .mui-control-item.mui-active {
+    background-color: #CAD4DE;
+    color: #262626;
+    
+}
+.mui-content-padded {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    width: auto;
+}
+.mui-segmented-control .mui-control-item {
+    border-color: #CAD4DE;
+    color: #333;
+    display: table-cell;
+    line-height: 38px;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    transition: background-color 0.1s linear 0s;
+    white-space: nowrap;
+    width: 1%;
+    font-size:14px;
+    font-weight:bold;
+    background: -moz-linear-gradient(center top , #ffffff 0%, #dfe5eb 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+
+
+</style>
+	<body>
+		<div class="mui-inner-wrap">
+				<!-- 主页面标题 -->
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-action-back mui-icon-back mui-pull-left" id="back"></a>
+					<h1 class="mui-title detail-title"></h1>
+				</header>
+				<div id="pullrefresh" class="mui-content mui-scroll-wrapper" >
+					<div class="mui-scroll" >
+						<!-- 主界面具体展示内容 -->
+						<div class="mui-content-padded" >
+			
+					<div id="content" class="mui-control-content mui-active">
+							<p class="box">正在加载内容...</p>
+						</div>
+						</div>
+						<!--end detail-->
+					</div>
+				</div>
+	</div>
+	<script src="js/mui.min.js"></script>
+	<script src="js/app.js"></script>
+	<script>
+		mui.init();
+		mui('#pullrefresh').scroll();
+			var plusReady = function() {
+				var self = plus.webview.currentWebview();
+				var sid = self.sid;
+			    var type = self.type;
+				mui.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: baseDomain + "index.php?g=Api&m=Index&a=show",
+					data: {'id': sid,'type': type },
+					success: function(json) {
+						var msg = eval(json);
+						var str = '';
+	 					Zepto('.detail-title').html(msg.title);
+	 					Zepto('#content').html(msg.content);
+
+					},error:function(xhr,type,errorThrown){
+						//异常处理
+						plus.nativeUI.toast(mylang['error_network']);
+						//console.log(JSON.stringify(xhr));
+					}
+				});
+				plus.nativeUI.closeWaiting();
+			};
+			if (window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+		
+			
+			mui('.mui-content').on('tap', 'a', function() {
+				var id = this.getAttribute("href");
+				var sid = this.getAttribute("open-sid");
+				var type = this.getAttribute("open-type");
+				var more = this.getAttribute("open-more");
+				var linkurl = this.getAttribute("open-linkurl");
+				var title= this.getAttribute("open-title");
+				var href = this.href;
+					mui.openWindow({
+						id: id,
+						url: href,
+						show: {
+							aniShow: 'pop-in'
+						},
+						waiting: {
+							autoShow: false,
+							title: '正在加载...', //等待对话框上显示的提示内容
+
+						},
+						extras: {
+							sid: sid,
+							linkurl:linkurl,
+	    						type: type,
+							title: title,
+							more: more
+						}
+					});
+			
+			});
+				
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<script src="js/zepto.min.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/config.js"></script>
+		<script src="js/app.js"></script>
+	</head>
+	<style>
+		html,
+		body,
+		.mui-content {
+			background-color: #ffffff;
+		}
+		
+		.mui-control-content {
+			min-height: 320px;
+		}
+		
+		.mui-bar-nav ~ .mui-content {
+			padding-top: 40px;
+		}
+		
+		.list_desc {
+			line-height: 25px;
+			font-size: 16px;
+			color: #333333;
+			margin-bottom: 15px;
+			font-size: 16px;
+		}
+		
+		.mui-table-view::before,
+		.mui-table-view::after {
+			background: none;
+		}
+		
+		#content {
+			height: 12em;
+		}
+	</style>
+
+	<body>
+		<!-- 侧滑导航根容器 -->
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title detail-title">意见反馈</h1>
+			<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+				<div class="kele mui-action-back mui-icon-back">返回</div>
+			</button>
+		</header>
+		<div class="mui-content span_box">
+			<div class="mui-table-view">
+				<div class="row mui-input-row">
+					<div class="list_desc">请与我们分享您对本App的反馈，如希望回复，请提供您的电子邮箱．</div>
+				</div>
+
+				<div class="row mui-input-row">
+					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="您的电子邮箱">
+				</div>
+
+				<div class="row mui-input-row">
+					<textarea id="content" class="mui-input-clear" placeholder="输入您的反馈...*"></textarea>
+				</div>
+			</div>
+			<div class="mui-input-row">
+				<button id="postButton" class="btn-color mui-btn-block">提交</button>
+			</div>
+		</div>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+//					var self = plus.webview.currentWebview();
+//					var m_type = self.sid;
+					var state = app.getState();
+//					var self = plus.webview.currentWebview();
+//					sid = self.sid;
+//					type = self.type;
+					
+					document.getElementById('postButton').addEventListener('tap', function(event) {
+						var m_token = state.token;
+						var content = document.getElementById('content');
+						var m_content = content.value;
+						if (!m_content) {
+							plus.nativeUI.toast(mylang['error_no_empty']);
+							return false;
+						}
+						$.ajax({
+							type: 'POST',
+							dataType: 'json',
+							url: baseDomain + "index.php?g=Api&m=Index&a=post_content",
+							data: {
+								'm_type': m_type,
+								'm_content': m_content,
+								'm_token': m_token
+							},
+							success: function(json) {
+								var msg = eval(json);
+								//console.log(msg.debug);
+								plus.nativeUI.toast(msg.info);
+								mui.back();
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理
+								plus.nativeUI.toast(mylang['error_network']);
+								//console.log(JSON.stringify(xhr));
+							}
+						});
+					});
+					plus.nativeUI.closeWaiting();
+					plus.webview.currentWebview().show();
+				});
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

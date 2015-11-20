@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Left Menu</title>
+		</title>
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/config.js"></script>
+		<script src="js/app.js"></script>
+
+		<style type="text/css">
+			body,
+			.mui-content {
+				background-color: #333;
+				color: #fff;
+			}
+			.title+.content {
+				margin: 10px 15px 35px;
+				color: #bbb;
+				text-indent: 1em;
+				font-size: 14px;
+				line-height: 24px;
+			}
+			.mui-table-view {
+				margin-bottom: 35px;
+			}
+			.flex-container {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-flow: row wrap;
+				justify-content: space-between;
+				text-align: center;
+			}
+			.mui-table-view-cell {
+				border-color: #FFFFFF;
+				font-size: 14px;
+				color: #999999;
+			}
+			.mui-table-view-inverted .mui-table-view-cell::after {
+				background-color: #3B4047;
+			}
+			.left_menu_ico {
+				font-size: 20px;
+				margin-right: 10px;
+				background-color: #333;
+				color: #999999;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="left_mui-content">
+			<ul class="mui-table-view mui-table-view-chevron mui-table-view-inverted" style="color: #ddd;">
+				<li class="mui-table-view-cell">
+				<a linkurl="detail_tel.html" open-type="page" open-title="立刻联系我们" open-sid="5">
+					<span class="iconfont icon-phone left_menu_ico"></span>立刻联系我们
+				</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a linkurl="country_save.html"  open-title="保存的国家" >
+						<span class="iconfont icon-sphere left_menu_ico"></span>保存的国家
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a linkurl="more.html" open-type="list" open-sid="6" open-more="1" open-title="全球信息" >
+					<span class="iconfont icon-info left_menu_ico"></span>全球信息
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a linkurl="hospital.html" open-type="list"  open-title="诊所信息" >
+					<span class="iconfont icon-aidkit left_menu_ico"></span>诊所信息
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a linkurl="setting.html" open-type="list"  open-title="设置信息" >
+					<span class="iconfont icon-cog left_menu_ico"></span>设置
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a linkurl="feedback.html"><span class="iconfont icon-bullhorn left_menu_ico"></span>反馈</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a linkurl="about.html"><span class="iconfont icon-info left_menu_ico"></span>关于</a>
+				</li>
+
+				<li class="mui-table-view-cell" id="loginout_box">
+					<span class="iconfont icon-exit left_menu_ico"></span>退出登录
+				</li>
+
+			</ul>
+
+		</div>
+		<script type="text/javascript" charset="utf-8">
+			(function($, doc) {
+				$.init();
+				var subWebview = null,
+					template = null,
+					index = null,
+					aniShow = "slide-in-right";
+				$.plusReady(function() {
+					var state = app.getState();
+					var self = plus.webview.currentWebview();
+				});
+				//退出操作
+				document.getElementById('loginout_box').addEventListener('tap', function() {
+					
+					close();
+					if ($.os.ios) {
+						app.setState({});
+						$.openWindow({
+							id: 'IndexLogin',
+							url: 'IndexLogin.html',
+							show: {
+								aniShow: 'pop-in',
+								autoShow: false
+							},
+							waiting: {
+								autoShow: true,
+								title: '正在加载...', //等待对话框上显示的提示内容
+							}
+						});
+						return;
+					}
+					
+					var btnArray = [{
+						title: "注销当前账号"
+					}, {
+						title: "直接关闭应用"
+					}];
+					plus.nativeUI.actionSheet({
+						cancel: "取消",
+						buttons: btnArray
+					}, function(event) {
+						var index = event.index;
+						switch (index) {
+							case 1:
+								app.setState({});
+								$.openWindow({
+									id: 'IndexLogin',
+									url: 'IndexLogin.html',
+									show: {
+										aniShow: 'pop-in',
+										autoShow: false
+
+									},
+									waiting: {
+										autoShow: true
+									}
+								});
+								break;
+							case 2:
+								plus.runtime.quit();
+								break;
+						}
+					});
+				}, false);
+				//*通用链接处理*/
+				$('.mui-table-view-cell').on('tap', 'a', function() {
+					var id = this.getAttribute("linkurl");
+					var type = this.getAttribute("open-type");
+					var sid = this.getAttribute("open-sid");
+					var more = this.getAttribute("open-more");
+					var islogin = this.getAttribute("islogin");
+					var linkurl = this.getAttribute("open-linkurl");
+					var title = this.getAttribute("open-title");
+
+					if (islogin == 1) {
+						var state = app.getState();
+						if (!state.account) {
+							plus.nativeUI.toast('用户未登录');
+							$.openWindow({
+								url: 'login.html',
+								id: 'login',
+								show: {
+									aniShow: 'pop-in',
+									autoShow: false
+								},
+								waiting: {
+									autoShow: true
+								},
+								extras: {
+									sid: sid,
+									linkurl:linkurl,
+			    						type: type,
+									title: title,
+									more: more
+								}
+							});
+							return false;
+						}
+					}
+					var detailPage = null;
+					if (!detailPage) {
+						detailPage = plus.webview.getWebviewById('news.html');
+					}
+					$.fire(detailPage, 'newsId', {
+						sid: sid,
+						type: type
+					});
+					var webview_style = {
+						popGesture: "close"
+					};
+					$.openWindow({
+						id: id,
+						url: id,
+						styles: webview_style,
+						show: {
+							aniShow: aniShow
+						},
+						waiting: {
+							autoShow: true
+						},
+						extras: {
+							sid: sid,
+							linkurl: linkurl,
+							type: type,
+							title: title,
+							more: more
+						}
+					});
+					close(); //关闭侧栏菜单
+				});
+			}(mui, document));
+			 //关于backbutton和menubutton两个按键的说明，在iOS平台不存在，故需隐藏
+			if (!mui.os.android) {
+				var span = document.getElementById("android-only")
+				if (span) {
+					span.style.display = "none";
+				}
+				aniShow = "pop-in";
+			}
+			/**
+			 * 关闭侧滑菜单
+			 */
+			function close() {
+				//刷新首页 并关闭侧栏
+					mui.fire(mui.currentWebview.opener(), "show_index");
+				}
+				//点击“关闭侧滑菜单”按钮处理逻辑
+				//在android4.4.2中的swipe事件，需要preventDefault一下，否则触发不正常
+			window.addEventListener('dragstart', function(e) {
+				mui.gestures.touch.lockDirection = true; //锁定方向
+				mui.gestures.touch.startDirection = e.detail.direction;
+			});
+			window.addEventListener('dragleft', function(e) {
+				if (!mui.isScrolling) {
+					e.detail.gesture.preventDefault();
+				}
+			});
+			 //监听左滑事件，若菜单已展开，左滑要关闭菜单；
+			window.addEventListener("swipeleft", function(e) {
+				if (Math.abs(e.detail.angle) > 170) {
+					close();
+				}
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>个人中心</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="./css/mui.min.css">
+		<script src="js/config.js"></script>
+		<style>
+			html,body,.mui-content {
+				background-color: #ffffff;
+			}
+			.mui-bar-nav{
+				background-color:#780005;
+				box-shadow :none;
+			}
+			.logout{
+				background-color:#780005;
+				width:280px;
+				border: none;
+				margin:0 auto;
+				margin-top:20px;
+				padding:10px;
+			}
+			.logout a{color:#ffffff;}
+			.mui-title,.mui-bar .mui-btn-link {color: #fff;}
+    			
+    			.avatar_background{
+    				background-color:#780005;
+				text-align:center;
+				margin-top:40px;
+    			}
+    			.oa-contact-avatar img{
+    				width:120px;
+    				height:120px;
+    				border-radius:50%;
+    			}	
+		
+			.mui-navbar {
+				position: fixed;
+				right: 0;
+				left: 0;
+				z-index: 10;
+				height: 45px;
+				background-color: #780005;
+			}
+			
+		
+			.mui-page .mui-table-view:first-child {
+				margin-top: 15px;
+			}
+			.mui-page .mui-table-view:last-child {
+				margin-bottom: 30px;
+			}
+			.mui-table-view {
+				margin-top: 20px;
+			}
+		
+			.mui-table-view span.mui-pull-right {
+				color: #999;
+			}
+		 .mui-table-view-cell{
+		 	margin-left:0px;
+		 }
+			
+		</style>
+
+	</head>
+
+	<body>
+		
+		<div class="mui-content">
+			<!--页面标题栏开始-->
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">个人中心</h1>
+			</div>
+			<!--页面标题栏结束-->
+			<!--页面主内容区开始-->
+			<div class="mui-table-view-cell avatar_background">
+							<span class="oa-contact-avatar">	
+								<img id="avatar" src="./images/avatar_new.png" title="个人头像"/>
+							</span>
+			</div>
+			<div class="mui-table-view">
+				<li class="mui-table-view-cell">
+								<a id="rate" href="post.html" open-type="page" open-sid="42"  open-title="招聘信息" class="mui-navigate-right" ><span class="mui-icon mui-icon-compose left_menu_ico1"></span>发布招聘信息</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a id="share" href="post.html" open-type="page" open-sid="43" open-title="融资信息" class="mui-navigate-right"><span class="mui-icon mui-icon-compose left_menu_ico1"></span>发布融资信息</a>
+							</li>
+							
+							<li class="mui-table-view-cell">
+								<a id="share2" href="post.html" open-type="page" open-sid="44"  open-title="风投信息"  class="mui-navigate-right"><span class="mui-icon mui-icon-compose left_menu_ico1"></span>发布风投信息</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a  href="more.html" open-type="list" open-sid="42" open-title="我发布的招聘信息" class="mui-navigate-right"><span class="mui-icon mui-icon-info left_menu_ico1"></span>我发布的招聘信息</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a href="more.html" open-type="list" open-sid="43" open-title="我发布的融资信息" class="mui-navigate-right"><span class="mui-icon mui-icon-info left_menu_ico1"></span>我发布的融资信息</a>
+							</li>
+				<li class="mui-table-view-cell">
+								<a href="more.html"  open-type="list" open-sid="44" open-title="我发布的风投信息"  class="mui-navigate-right"><span class="mui-icon mui-icon-info left_menu_ico1"></span>我发布的风投信息</a>
+							</li>
+			</div>
+			<div  style="margin:0 auto;text-align:center;">
+			<button id='exit' class="logout mui-btn-block mui-btn-negative">退出</button>
+			</div>
+			<!--页面主内容区结束-->
+		</div>
+
+
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/app.js"></script>
+
+	<script>
+		mui.init();
+		//判断是否登陆
+		var plusReady = function() {
+		var self = plus.webview.currentWebview();
+		
+			
+			
+		}
+			
+		if (window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+		}
+			
+			
+			mui('.mui-content').on('tap', 'a', function() {
+				var id = this.getAttribute("href");
+				var sid = this.getAttribute("open-sid");
+				var type = this.getAttribute("open-type");
+				var title=this.getAttribute("open-title");
+				var href = this.href;
+				mui.openWindow({
+					id: id,
+					url: href,
+					waiting: {
+						autoShow: true,
+						 title:'正在加载...',//等待对话框上显示的提示内容
+					},
+					styles: {
+						zindex: 1,
+					},
+					extras: {
+						sid: sid,
+    						type: type,
+    						title: title
+
+					}
+				});
+			});
+			
+		 //退出操作******************
+		document.getElementById('exit').addEventListener('tap', function() {
+			if (mui.os.ios) {
+				app.setState({});
+				mui.openWindow({
+					url: 'login.html',
+					id: 'login',
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+				return;
+			}
+			var btnArray = [{
+				title: "注销当前账号"
+			}, {
+				title: "直接关闭应用"
+			}];
+			plus.nativeUI.actionSheet({
+				cancel: "取消",
+				buttons: btnArray
+			}, function(event) {
+				var index = event.index;
+				switch (index) {
+					case 1:
+						app.setState({});
+						mui.openWindow({
+							url: 'login.html',
+							id: 'login',
+							show: {
+								aniShow: 'pop-in'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+						break;
+					case 2:
+						plus.runtime.quit();
+						break;
+				}
+			});
+		}, false);
+		
+		var view = viewApi.view;
+		(function($) {
+			//处理view的后退与webview后退
+			var oldBack = $.back;
+			$.back = function() {
+				if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					oldBack();
+				}
+			};
+			
+		})(mui);
+	
+	</script>
+
+</html>

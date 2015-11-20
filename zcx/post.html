@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<script src="js/config.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/zepto.min.js"></script>
+
+	</head>
+	<style>
+		html,
+		body,
+		.mui-content {
+			background-color: #ffffff;
+			font-size: 14px;
+		}
+		.mui-bar-nav {
+			background-color: #780005;
+		}
+		.mui-content span {
+			margin-top: 20px;
+			font-size: 16px;
+			line-height: 30px;
+		}
+		.mui-title,
+		.mui-icon-back {
+			color: #ffffff;
+		}
+		.span_box {
+			margin: 15px;
+		}
+		#back {
+			color: #ffffff
+		}
+		.mui-bar-nav ~ .mui-content {
+			padding-top: 40px;
+		}
+		.mui-input-row input {
+			background-color: #D6D0CB;
+			height: 40px;
+			line-height: 21px;
+			outline: 0 none;
+			padding: 10px 15px;
+			border: none;
+		}
+		
+		.btn-color {
+			background-color: #780005;
+			border: none;
+			text-align: center;
+		}
+	</style>
+
+	<body>
+		<!-- 侧滑导航根容器 -->
+		<!-- 主页面容器 -->
+		<header class="mui-bar mui-bar-nav" style="padding-right: 15px;">
+			<a class="mui-icon mui-action-back mui-icon-back mui-pull-left"></a>
+			<h1 class="mui-title">我的发布
+				</h1>
+		</header>
+		<div class="mui-content span_box">
+			<span id="title">发布招聘信息</span>
+			<div class="mui-table-view">
+				<div class="row mui-input-row">
+			<textarea  id="content" class="mui-input-clear question" placeholder="请详细描述你的内容..."></textarea>
+				</div>
+			</div>
+			<div class="mui-input-row">
+				<button id="postButton" class="btn-color mui-btn-block mui-btn-negative">提交</button>
+			</div>
+		</div>
+	<script src="js/app.js"></script>
+<script>
+		mui.init();
+			var plusReady = function() {
+				var self = plus.webview.currentWebview();
+				var m_type = self.sid;
+				var state = app.getState();
+			    Zepto('#title').html(self.title);
+			document.getElementById('postButton').addEventListener('tap', function(event) {	
+				var m_token=state.token;
+ 					var content = document.getElementById('content');
+					var m_content = content.value;
+					if(!m_content) {
+						plus.nativeUI.toast(mylang['error_no_empty']);
+						return false;
+					}	
+				mui.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: baseDomain + "index.php?g=Api&m=Index&a=post_content",
+					data: {'m_type': m_type,'m_content': m_content,'m_token': m_token },
+					success: function(json) {
+						var msg = eval(json);
+						//console.log(msg.debug);
+						plus.nativeUI.toast(msg.info);
+						mui.back();
+					},error:function(xhr,type,errorThrown){
+						//异常处理
+						plus.nativeUI.toast(mylang['error_network']);
+						//console.log(JSON.stringify(xhr));
+					}
+				});
+
+				});
+				plus.nativeUI.closeWaiting();
+			};
+			if (window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			 //页面加载完成需要等待load
+			var loadSuccess = function() {
+				plus.nativeUI.closeWaiting();
+			};
+			window.addEventListener('load', loadSuccess, false);
+			
+
+</script>
+</body>
+</html>

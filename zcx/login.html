@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/config.js"></script>
+
+		<style>
+			html,body,.mui-content {
+				background:url('images/bg.png') repeat;
+			}
+			.mui-title,.mui-bar .mui-btn-link {color: #fff;}
+			.reg-area{float:right;font-weight:bold;}
+			.reg-area a{color:#780005}
+			.forget-area{float:left}
+			.forget-area a{color:#FFFFFF;}
+			.mui-input-row {
+				    margin: 0 auto;
+				    position: relative;
+				    width: 250px;
+				}
+				.mui-input-row input{
+				    background-color: #D6D0CB;
+				    height: 40px;
+				    line-height: 21px;
+				    outline: 0 none;
+				    padding: 10px 15px;
+				    border:none;
+				}
+			.area {
+				margin: 20px auto 0px auto;
+			}
+		
+			.logo_name{text-align:center;width:250px;color:#E1E2E3;padding:20px;margin:0 auto;}
+			.logo_name h1{font-weight:bold;font-size:52px;}
+			.logo_name img{margin-top:10px;}			
+			.btn-color{background-color:#780005; border:none;width:250px;padding:10px;margin-top:10px;}
+			.other_f{font-size:14px;width:250px;}
+			.mui-bar-nav{
+				background-color:#780005;
+				background:none;
+				box-shadow :none;
+			}
+			.mui-input-group {
+				margin-top: 10px;
+			}
+			.mui-input-group:first-child {
+				margin-top: 20px;
+			}
+			.mui-input-group label {
+				width: 22%;
+			}
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				width: 78%;
+			}
+			.mui-checkbox input[type=checkbox],
+			.mui-radio input[type=radio] {
+				top: 6px;
+			}
+			.mui-content-padded {
+				margin-top: 25px;
+			
+			}
+			.mui-btn {
+				padding: 10px;
+			}
+			.link-area {
+				display: block;
+				margin-top: 25px;
+				text-align: center;
+			}
+			.spliter {
+				color: #bbb;
+				padding: 0px 8px;
+			}
+			.oauth-area {
+				position: absolute;
+				bottom: 20px;
+				left: 0px;
+				text-align: center;
+				width: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+			.oauth-area .oauth-btn {
+				display: inline-block;
+				width: 50px;
+				height: 50px;
+				background-size: 30px 30px;
+				background-position: center center;
+				background-repeat: no-repeat;
+				margin: 0px 20px;
+				/*-webkit-filter: grayscale(100%); */
+				
+				border: solid 1px #ddd;
+				border-radius: 25px;
+			}
+			.oauth-area .oauth-btn:active {
+				border: solid 1px #aaa;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+			<span class="mui-icon mui-icon-left-nav"></span></button>
+		</header>
+		<div class="mui-content">
+			<div class="logo_name">
+				<h1>微医生</h1>
+				<span>WWW.100BF.NET</span>
+				<div class="logo_s"><img src="./images/slogan.png" width="100%"></div>
+			</div>
+				<div class="mui-input-row">
+					<input id='account' type="text"   class"mui-input-clear mui-input" placeholder="请输入您的手机号">
+				</div>
+				<div class="mui-input-row">
+					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+				</div>
+				<div class="mui-input-row">
+					<button id='login' class="btn-color mui-btn-block  mui-btn-negative">登录</button>
+				
+			<div class="other_f" >
+				<div class="forget-area">
+					<a id='forgetPassword'>忘记密码?</a>
+				</div>	
+				<div class="reg-area">
+					<a id='reg'>快速注册>></a> 
+				</div>	
+			</div>
+			
+			
+					</div>
+			
+		</div>
+		<script src="js/app.js"></script>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+
+					var state = app.getState();
+					// close splash
+					setTimeout(function() {
+						main = $.preload({
+							id: 'HBuilder',
+							url: 'main.html',
+						});
+						//关闭 splash
+						plus.navigator.closeSplashscreen();
+					}, 200);
+					//检查 "登录状态/锁屏状态" 结束
+					var loginButton = doc.getElementById('login');
+					var accountBox = doc.getElementById('account');
+					var passwordBox = doc.getElementById('password');
+					var regButton = doc.getElementById('reg');
+					var forgetButton = doc.getElementById('forgetPassword');
+					loginButton.addEventListener('tap', function(event) {
+						var loginInfo = {
+							account: accountBox.value,
+							password: passwordBox.value
+						};
+						app.login(loginInfo, function(err) {
+							if (err) {
+								plus.nativeUI.toast(err);
+								return;
+							}
+						});
+						//数据库提交服务器
+						var m_mobile=accountBox.value;
+						var m_password = passwordBox.value;
+					$.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=Index&a=ajaxlogin",
+						timeout: 5000, //超时时间设置为10秒；
+						data: {
+							m_mobile: m_mobile,
+							m_password: m_password,
+						},
+						success: function(msg) {
+							if (msg.code == 0) {
+								plus.nativeUI.toast(msg.info);
+							} else {
+								plus.nativeUI.toast(msg.info);
+								app.createState(msg.username,msg.auth);
+								mui.fire(main,'show_index',null);
+								mui.currentWebview.close(); 
+							}
+						}
+					});
+					
+
+					});
+					
+					
+					regButton.addEventListener('tap', function(event) {
+						$.openWindow({
+							url: 'reg.html',
+							id: 'reg',
+							show: {
+								aniShow: 'pop-in'
+							},
+							styles: {
+								popGesture: 'hide'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					mui.currentWebview.close(); 
+
+
+					}, false);
+					
+					
+					forgetButton.addEventListener('tap', function(event) {
+						$.openWindow({
+							url: 'forget_password.html',
+							id: 'forget_password',
+							show: {
+								aniShow: 'pop-in'
+							},
+							styles: {
+								popGesture: 'hide'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+
+					}, false);
+					//
+
+				});
+	
+			
+			}(mui, document));
+			mui.back = function(){ 
+				mui.fire(main,'show_index',null);
+	   			mui.currentWebview.close(); 
+}
+		</script>
+	</body>
+
+</html>

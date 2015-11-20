@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<script src="js/config.js"></script>
+		<script src="js/zepto.min.js"></script>
+		<script src="js/mui.min.js"></script>
+	</head>
+
+	<body>
+		<style>
+		html,body,.mui-content {
+				background-color: #ffffff;
+				font-size:14px;
+			}
+			.mui-bar-nav{
+				background-color:#780005;
+			}
+			
+			.mui-title , .mui-icon-back{
+				color:#ffffff;
+			}
+			.mui-control-content {
+				min-height: 320px;
+			}
+			#back{color:#ffffff}
+			.mui-bar-nav ~ .mui-content {
+				padding-top: 40px;
+			}
+		</style>
+
+
+<!-- 主页面容器 -->
+			<div class="mui-inner-wrap">
+				<!-- 主页面标题 -->
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-action-back mui-icon-back mui-pull-left"></a>
+					<h1 class="mui-title detail-title"></h1>
+				</header>
+				<div id="pullrefresh" class="mui-content mui-scroll-wrapper" >
+					<div class="mui-scroll" >
+						<!-- 主界面具体展示内容 -->
+
+						<div class="mui-content-padded" >
+						
+							<div  style="background: #FFFFFF; padding: 10px;" >
+								<div id="content" class="mui-control-content mui-active">
+									正在加载内容...
+								</div>
+							</div>
+						</div>
+						<!--end detail-->
+					</div>
+				</div>
+
+		<script>
+			mui.init();
+			mui('#pullrefresh').scroll();
+			var sid = null;
+			var plusReady = function() {
+				var self = plus.webview.currentWebview();
+				sid = self.sid;
+				mui.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: baseDomain + "index.php?g=Api&m=Index&a=show",
+					data: 'id=' + sid,
+					success: function(json) {
+						var msg = eval(json);
+						var str = '';
+	 					Zepto('.detail-title').html(msg.title);
+	 					Zepto('#content').html(msg.content);
+
+					},error:function(xhr,type,errorThrown){
+						//异常处理
+						plus.nativeUI.toast(mylang['error_network']);
+						console.log(JSON.stringify(xhr));
+					}
+				});
+				plus.nativeUI.closeWaiting();
+			};
+			if (window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			 //页面加载完成需要等待load
+			var loadSuccess = function() {
+				//plus.nativeUI.closeWaiting();
+			};
+			window.addEventListener('load', loadSuccess, false);
+		</script>
+	</body>
+</html>

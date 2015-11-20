@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/zepto.min.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/config.js"></script>
+
+	</head>
+	<style>
+		html,
+		body,
+		.mui-content {
+			background-color: #ffffff;
+		}
+		
+		.mui-control-content {
+			min-height: 320px;
+		}
+		
+		.mui-bar-nav ~ .mui-content {
+			padding-top: 40px;
+		}
+		
+		.list_desc {
+			line-height: 25px;
+			font-size: 16px;
+			color: #333333;
+			margin-bottom: 15px;
+			font-size: 16px;
+		}
+		
+		.mui-table-view::before,
+		.mui-table-view::after {
+			background: none;
+		}
+		
+		.formart_t {
+			width: 100px;
+			text-align: right;
+			float: right;
+			font-size: 14px;
+		}
+		
+		#content {
+			height: 12em;
+		}
+		
+		.span_box {
+			font-size: 16px;
+		}
+	</style>
+
+	<body>
+		<!-- 侧滑导航根容器 -->
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title detail-title">关于</h1>
+			<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+				<div class="kele mui-action-back mui-icon-back">返回</div>
+			</button>
+		</header>
+		<div class="mui-content span_box">
+			<div class="mui-table-view">
+				<div class="row mui-input-row s_center">
+					<div class="list_desc"><img src="images/logo_3.png" width="50%"></div>
+					<p class="s_strong black_color">Version 1.0.1</p>
+				</div>
+				<div class="row mui-input-row">
+					会员号码 #:
+					<div class="blue_color formart_t" id="user_number">0000000000</div>
+				</div>
+				<div class="row mui-input-row">
+					援助中心电话＃:<span class="blue_color formart_t" id="sos_tel"></span>
+				</div>
+				<div class="row mui-input-row">
+					设备型号:<span class="blue_color formart_t" id="dev_no"></span>
+				</div>
+				<div class="row mui-input-row">
+					版本:<span class="blue_color formart_t" id="dev_bb"></span>
+				</div>
+				<!--<div class="row mui-input-row">
+					设备ID:<span class="blue_color formart_t" id="dev_id"></span>
+				</div>-->
+			</div>
+			<div class="mui-input-row s_center">
+				<button class="btn-color mui-btn-block" linkurl="feedback.html">发送反馈</button>
+				<button class="btn-color mui-btn-block" linkurl="1">评级本应用程序</button>
+				<p><a linkurl="detail.html">第三方法律信息</a></p>
+			</div>
+		</div>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					Zepto('#sos_tel').html(call_telphone);
+					Zepto('#dev_no').html(plus.device.model);
+					Zepto('#dev_bb').html(plus.runtime.version);
+					Zepto('#dev_id').html(plus.device.imei);
+				$('.s_center').on('tap', 'button',function() {
+					var linkurl= this.getAttribute('linkurl');
+					$.openWindow({
+						id: linkurl,
+						url: linkurl,
+						waiting: {
+							autoShow: true,
+							title: '正在加载...', //等待对话框上显示的提示内容
+						},
+						show: {
+							autoShow: false
+						},
+						styles: {
+							zindex: 1,
+						}
+//,
+//						extras: {
+//							sid: sid,
+//							type: type
+//						}
+					});
+				});
+					
+					
+					
+				});
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

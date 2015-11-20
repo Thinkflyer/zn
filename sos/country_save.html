@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<script src="js/zepto.min.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/config.js"></script>
+	</head>
+
+	<body>
+		<style>
+			html,
+			body,
+			.mui-content {
+				background-color: #ffffff;
+				font-size: 14px;
+			}
+			
+			.mui-control-content {
+				min-height: 320px;
+			}
+			
+			.mui-bar-nav ~ .mui-content {
+				padding-top: 40px;
+			}
+			
+			#title {
+				width: 80%;
+				margin: 0 auto;
+			}
+			
+			.mui-table-view-cell::after {
+				background-color: #c8c7cc;
+				bottom: 0;
+				content: "";
+				height: 1px;
+				left: 0;
+				position: absolute;
+				right: 0;
+				transform: scaleY(0.5);
+			}
+		</style>
+
+		<!-- 主页面容器 -->
+		<div class="mui-inner-wrap">
+			<!-- 主页面标题 -->
+			<header class="mui-bar mui-bar-nav">
+				<h1 class="mui-title detail-title" id="title">保存的国家</h1>
+				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+					<div class="kele mui-action-back mui-icon-back">返回</div>
+				</button>
+			</header>
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--media list-->
+					<ul class="mui-table-view list" id="newslist">
+					</ul>
+					<!--end media list-->
+				</div>
+
+			</div>
+			<input type="hidden" id="page" name="page" value="1" />
+			<input type="hidden" id="cid" name="cid" value="1" />
+			<script>
+				(function($, doc) {
+					$.init({
+						pullRefresh: {
+							container: '#pullrefresh', //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+							up: {
+								contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+								contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+								callback: app.get_countrylist //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+							}
+						},
+					});
+					if ($.os.plus) {
+						$.plusReady(function() {
+							plus.nativeUI.showWaiting();
+							setTimeout(function() {
+								$('#pullrefresh').pullRefresh().pullupLoading();
+								plus.nativeUI.closeWaiting();
+								plus.webview.currentWebview().show();
+							}, 500);
+						});
+					} else {
+						$.ready(function() {
+							Zepto('#page').val(1);
+							$('#pullrefresh').pullRefresh().pullupLoading();
+						});
+					}
+					//主列表点击事件main
+					$('#pullrefresh').on('tap', 'li', function() {
+						var type = this.getAttribute("open-type");
+						var linkurl = this.getAttribute('linkurl');
+						var sid = this.getAttribute('open-sid');
+						$.openWindow({
+							id: 'main',
+							url: linkurl,
+							waiting: {
+								autoShow: true,
+								title: '正在加载...', //等待对话框上显示的提示内容
+							},
+							styles: {
+								zindex: 1,
+							},
+							extras: {
+								sid: sid,
+								type: type
+							}
+						});
+						//alert(22);
+					
+						$.back();
+						//mui.fire(mui.currentWebview.opener(), "closeall");
+					});
+				}(mui, document));
+			</script>
+
+	</body>
+
+</html>

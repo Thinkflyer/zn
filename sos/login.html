@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/config.js"></script>
+		<style>
+			html,
+			body,
+			.mui-content {
+				background-color: #ffffff;
+			}
+			
+			#password {
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">使用您的E-MAIL邮箱登录</h1>
+			<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+				<div class="kele mui-action-back mui-icon-back">返回</div>
+			</button>
+		</header>
+		<div class="mui-content">
+
+			<div class="mui-input-row">
+				<h1 class="htitle">登录</h1>
+				<input id='account' type="text" class "mui-input-clear mui-input" placeholder="电子邮件">
+			</div>
+			<div class="mui-input-row">
+				<input id='password' type="password" class="mui-input-clear mui-input" placeholder="密码">
+				<p class="red_color"><a linkurl="forget_password.html" type="page" open-sid="1">忘记密码</a></p>
+			</div>
+
+			<div class="mui-input-row">
+				<button id='login' class="btn-color mui-btn-block ">登录</button>
+			</div>
+			<div class="mui-input-row">
+				<h1 class="htitle">注册账户</h1>
+				<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入您的E-mail地址">
+
+			</div>
+			<div class="mui-input-row">
+				<button id='reg' class="btn-color mui-btn-block ">注册账户</button>
+			</div>
+		</div>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					plus.nativeUI.closeWaiting();
+					plus.webview.currentWebview().show();
+				});
+				$('.mui-input-row').on('tap', 'a', function() {
+					var type = this.getAttribute("open-type");
+					var linkurl = this.getAttribute('linkurl');
+					var sid = this.getAttribute('open-sid');
+					mui.openWindow({
+						id: linkurl,
+						url: linkurl,
+						waiting: {
+							autoShow: true,
+							title: '正在加载...', //等待对话框上显示的提示内容
+						},
+						show: {
+							autoShow: false
+						},
+						styles: {
+							zindex: 1,
+						},
+						extras: {
+							sid: sid,
+							type: type
+						}
+					});
+				});
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

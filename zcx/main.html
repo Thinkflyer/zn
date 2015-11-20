@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/config.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mui.lazyload.js"></script>
+		<script src="js/mui.lazyload.img.js"></script>
+		<script src="js/app.js"></script>
+
+		<style>
+			html,
+			body,
+			.mui-content {
+				background-color: #ffffff;
+			}
+			.mui-bar-nav {
+				background-color: #780005;
+			}
+			#leftmenu,
+			#setting,
+			.mui-title {
+				color: #ffffff;
+			}
+			.mui-table-view::after {
+				background-color: #FFFFFF;
+			}
+			.mui-grid-view.mui-grid-9 {
+				background-color: #ffffff;
+				margin-top: -5px;
+			}
+			.mui-table-view.mui-grid-view .mui-table-view-cell {
+				display: inline-block;
+				font-size: 17px;
+				text-align: center;
+				font-size: 17px;
+				text-align: center;
+			}
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+				left: 1px;
+				padding: 0;
+				vertical-align: top;
+			}
+			.mui-media-title {
+				color: #ffffff;
+			}
+			
+			.mui-table-view.mui-grid-view .mui-table-view-cell > a:active:not(.mui-btn) {
+				background: none repeat scroll 0 0 #FF5053;
+			}
+			.mui-control-content table {
+				border-collapse: collapse;
+				border-spacing: 0;
+				empty-cells: show;
+				font-size: 12px;
+			}
+			.mui-control-content h3 {
+				color: #990000;
+				float: left;
+				font-size: 14px;
+				padding-bottom: 15px;
+			}
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell > a:not(.mui-btn) {
+				padding-top: 20px;
+			}	
+	.menu_box {
+			height: 25px;
+			line-height: 30px;
+			font-size: 0.9em
+	}
+	
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="padding-right: 15px;">
+			<h1 class="mui-title" >包创业</h1>
+			<a class="mui-icon mui-icon-bars mui-pull-left" id="leftmenu"></a>
+		<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-right "  >
+			<span id="right_login" class="mui-media-title hidden">登录</span>
+			<span id="right_logout" class="mui-media-title hidden" >退出</span>
+		</button>
+		</header>
+		<div class="mui-content">	
+			<div id="turn_img">
+				<img id="lazyload" data-lazyload="http://bf.didimama.com/Public/Mobile/img/_banner.png"  width="100%" />
+			</div>
+			<!--九宫格-->
+			<ul class="mui-table-view mui-grid-view mui-grid-9">
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+
+					<a href="search.html" class="iconfont icon icon-001 menu_ico1">
+						<div class="menu_box">
+							<span class="mui-media-title">公司查名</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="news.html" open-type="page" open-sid="26" class="iconfont icon icon-002 menu_ico2">
+						<div class="menu_box">
+							<span class="mui-media-title">公司注册</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="news.html" open-type="page" open-sid="27" class="iconfont icon icon-003 menu_ico3">
+						<div class="menu_box">
+							<span class="mui-media-title">财务代理</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="link.html" open-type="link" open-linkurl="Article/list/28.html" open-title="企业贷款" open-more="1" class="iconfont icon icon-004 menu_ico4">
+						<div class="menu_box">
+							<span class="mui-media-title">企业贷款</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="more.html" open-type="list" open-sid="43" open-more="1" open-title="企业融资" class="iconfont icon icon-005 menu_ico5">
+						<div class="menu_box">
+							<span class="mui-media-title">企业融资</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="more.html" open-type="list" open-sid="44" open-more="1" open-title="风投天地" class="iconfont icon icon-006 menu_ico6">
+						<div class="menu_box">
+							<span class="mui-media-title">风投天地</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="search_p.html" class="iconfont icon icon-007 menu_ico7">
+						<div class="menu_box">
+							<span class="mui-media-title">企业信用查询</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="link.html" open-type="link" open-linkurl="Article/list/32.html" open-title="人事代理"  class="iconfont icon icon-008 menu_ico8">
+						<div class="menu_box">
+							<span class="mui-media-title">人事代理</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="news.html" open-type="page" open-sid="33" class="iconfont icon icon-009 menu_ico9">
+						<div class="menu_box">
+							<span class="mui-media-title">商标注册</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="news.html" open-type="page" open-sid="34" class="iconfont icon icon-010 menu_ico10">
+						<div class="menu_box">
+							<span class="mui-media-title">法律服务</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="news.html" open-type="page" open-sid="35" class="iconfont icon icon-011 menu_ico11">
+						<div class="menu_box">
+							<span class="mui-media-title">关于我们</span>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+					<a href="list.html" open-type="list" open-sid="36" class="iconfont icon icon-012 menu_ico12">
+				   <div class="menu_box">
+							<span class="mui-media-title">常见问题</span>
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+		</div>
+		<script>
+			var menu = null,
+				main = null;
+			var showMenu = false;
+			var isInTransition = false;
+			 //处理右上角关于图标的点击事件；
+			var detailPage = null;
+			var state = app.getState();
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					 setTimeout(function(){
+				        var array = plus.webview.all();
+				        if(array){
+				            for(var i=0,len=array.length;i<len;i++){
+				                    console.log(array[i].id);
+				                }
+				        }
+//						plus.navigator.setStatusBarStyle( "UIStatusBarStyleBlackOpaque" );
+//						plus.navigator.setStatusBarBackground( "#780005");
+//				        mui.fire(main,"getstate_tab",null);     
+				    },100);
+					main = plus.webview.currentWebview();
+					main.addEventListener('maskClick', closeMenu);
+					//处理侧滑导航，为了避免和子页面初始化等竞争资源，延迟加载侧滑页面；
+					setTimeout(function() {
+						menu = $.preload({
+							id: 'index-menu',
+							url: 'index-menu.html',
+							styles: {
+								left: 0,
+								width: '70%',
+								zindex:-1
+							}
+						});
+					}, 200);
+					//--左侧菜单显示
+
+
+					var menuButton = doc.getElementById('leftmenu');
+					menuButton.addEventListener('tap', function(event) {
+						if (showMenu) {
+							closeMenu();
+						} else {
+							openMenu();
+						}
+					});
+					//--
+					$.oldBack = mui.back;
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+				});
+
+		
+		
+			}(mui, document));
+			
+				mui(document).imageLazyload({
+					placeholder: './images/holdplace.jpg'
+				});
+			/**
+			 * 显示侧滑菜单
+			 */
+			function openMenu() {
+				if (isInTransition) {
+					return;
+				}
+				if (!showMenu) {
+					//侧滑菜单处于隐藏状态，则立即显示出来；
+					isInTransition = true;
+					menu.setStyle({
+						mask: 'rgba(0,0,0,0)'
+					}); //menu设置透明遮罩防止点击
+					menu.show('none', 0, function() {
+						//主窗体开始侧滑并显示遮罩
+						main.setStyle({
+							mask: 'rgba(0,0,0,0.4)',
+							left: '70%',
+							transition: {
+								duration: 150
+							}
+						});
+						mui.later(function() {
+							isInTransition = false;
+							menu.setStyle({
+								mask: "none"
+							}); //移除menu的mask
+						}, 160);
+						showMenu = true;
+					});
+				}
+			};
+			/**
+			 * 关闭菜单
+			 */
+			function closeMenu() {
+				if (isInTransition) {
+					return;
+				}
+				if (showMenu) {
+					//关闭遮罩；
+					//主窗体开始侧滑；
+					isInTransition = true;
+					main.setStyle({
+						mask: 'none',
+						left: '0',
+						transition: {
+							duration: 200
+						}
+					});
+					showMenu = false;
+					//等动画结束后，隐藏菜单webview，节省资源；
+					mui.later(function() {
+						isInTransition = false;
+						menu.hide();
+					}, 300);
+				}
+			};
+			 //敲击顶部导航，内容区回到顶部
+			document.querySelector('header').addEventListener('doubletap', function() {
+				main.children()[0].evalJS('mui.scrollTo(0, 100)');
+			});
+			 //主界面向右滑动，若菜单未显示，则显示菜单；否则不做任何操作
+			window.addEventListener("swiperight", openMenu);
+			 //主界面向左滑动，若菜单已显示，则关闭菜单；否则，不做任何操作；
+			window.addEventListener("swipeleft", closeMenu);
+			 //侧滑菜单触发关闭菜单命令
+			window.addEventListener("menu:close", closeMenu);
+			window.addEventListener("menu:open", openMenu);
+			 //重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
+			mui.menu = function() {
+				if (showMenu) {
+					closeMenu();
+				} else {
+					openMenu();
+				}
+			}
+			document.getElementById('right_login').addEventListener('tap', function() {
+				mui.openWindow({
+					id: 'login',
+					url: 'login.html',
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+			}, false);
+			
+			
+			mui('.mui-content').on('tap', 'a', function() {
+				var id = this.getAttribute("href");
+				var sid = this.getAttribute("open-sid");
+				var type = this.getAttribute("open-type");
+				var more = this.getAttribute("open-more");
+				var linkurl = this.getAttribute("open-linkurl");
+				var title= this.getAttribute("open-title");
+				var href = this.href;
+					mui.openWindow({
+						id: id,
+						url: href,
+						show: {
+							aniShow: 'pop-in'
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							sid: sid,
+							linkurl:linkurl,
+	    						type: type,
+							title: title,
+							more: more
+						}
+					});
+			
+			});
+			
+		 //返回，并关闭B页面
+		mui.back = function(){  
+		    mui.currentWebview.close(); 
+		}
+		
+			
+		 //退出操作******************
+		document.getElementById('right_logout').addEventListener('tap', function() {
+			if (mui.os.ios) {
+				app.setState({});
+				mui.fire(main,'show',null);
+				mui.openWindow({
+					url: 'login.html',
+					id: 'login',
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+				return;
+			}
+			var btnArray = [{
+				title: "注销当前账号"
+			}, {
+				title: "直接关闭应用"
+			}];
+			plus.nativeUI.actionSheet({
+				cancel: "取消",
+				buttons: btnArray
+			}, function(event) {
+				var index = event.index;
+				switch (index) {
+					case 1:
+						app.setState({});
+						mui.fire(main,'show',null);
+						mui.openWindow({
+							url: 'login.html',
+							id: 'login',
+							show: {
+								aniShow: 'pop-in'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+						break;
+					case 2:
+						plus.runtime.quit();
+						break;
+				}
+			});
+		}, false);
+		
+		
+		window.addEventListener('closeall', function() {
+			
+			var wvs=plus.webview.all();
+            for(var i=0;i<wvs.length;i  ){
+                if(plus.webview.currentWebview().id!=wvs[i].id){
+                    plus.webview.close(wvs[i]);
+                }
+            }
+					
+		},false); 
+		
+		
+		
+		window.addEventListener('show_index', function() {
+					var state = app.getState();
+					showMenu = true;
+					isInTransition = false;
+					closeMenu();
+					mui.fire(menu,'refresh',null);
+		},false); 
+		
+	window.addEventListener('getstate_tab', function() {
+			var state = app.getState();
+					if(state.account){
+						document.getElementById("right_login").style.display="none";
+						document.getElementById("right_logout").style.display="block";
+					}else{
+						document.getElementById("right_login").style.display="block";
+						document.getElementById("right_logout").style.display="none";
+					}
+	},false);
+</script>
+</body>
+</html>

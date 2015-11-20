@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>新闻列表</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/zepto.min.js"></script>
+		<script src="js/config.js"></script>
+	</head>
+	<style>
+		html,
+		body,
+		.mui-content {
+			background-color: #ffffff;
+			font-size: 14px;
+		}
+		
+		#leftmenu,
+		#setting,
+		.mui-icon {
+			color: #ffffff;
+		}
+		
+		.mui-table-view.mui-grid-view .mui-table-view-cell > a:active:not(.mui-btn) {
+			background: none repeat scroll 0 0 #FF5053;
+		}
+		
+		.mui-table-view-cell::after {
+			left: 5px;
+			right: 5px;
+		}
+		
+		.mui-control-content table {
+			border-collapse: collapse;
+			border-spacing: 0;
+			empty-cells: show;
+			font-size: 12px;
+		}
+		
+		.mui-control-content h3 {
+			color: #990000;
+			float: left;
+			font-size: 14px;
+			padding-bottom: 15px;
+		}
+		
+		.menu_box {
+			height: 25px;
+			line-height: 30px;
+			font-size: 0.9em
+		}
+		
+		.nav_line {
+			border: 1px solid #EFEFF4;
+			height: 30px;
+			margin: 8px 8px 8px 10px;
+		}
+		
+		.tel-btn:enabled:active {
+			font-size: 18px;
+			font-weight: bold;
+			color: #20285A;
+		}
+		
+		.bg_color {
+			background-color: #832F32;
+			height: 70px;
+		}
+		
+		.s_list {
+			margin-top: 90px
+		}
+		
+		.li_list {
+			font-size: 12px;
+		}
+		
+		.s_date {
+			font-size: 12px;
+			font-weight: inherit;
+		}
+		
+		.s_des {
+			font-size: 12px;
+		}
+		
+		#newslist {
+			margin-bottom: 40px;
+		}
+		
+		.li_list span {
+			color: #F0AD4E;
+			font-weight: bold;
+			font-size: 9px;
+			line-height: 3px
+		}
+		
+		.mui-h6,
+		h6 {
+			margin-top: 0px;
+		}
+		
+		#newslist .icon_title {
+			font-size: 15px;
+		}
+	</style>
+
+	<body>
+
+		<div class="mui-title tit-sort">
+			<input type="hidden" id="page" name="page" value="1" />
+			<input type="hidden" id="cid" name="cid" value="1" />
+		</div>
+		<!-- 侧滑导航根容器 -->
+		<!-- 主页面容器 -->
+		<div class="mui-content">
+			<header class="mui-bar mui-bar-nav">
+				<h1 class="mui-title detail-title" id="title"></h1>
+				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+					<div class="kele mui-action-back mui-icon-back">返回</div>
+				</button>
+			</header>
+
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--media list-->
+					<div class="hd"></div>
+					<ul class="mui-table-view list" id="newslist">
+					</ul>
+					<!--end media list-->
+				</div>
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+				(function($, doc) {
+					$.init({
+						pullRefresh: {
+							container: '#pullrefresh', //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+							up: {
+								contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+								contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+								callback: app.get_globalnewslist //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+							}
+						},
+					});
+					if ($.os.plus) {
+						$.plusReady(function() {
+							plus.nativeUI.showWaiting();
+							var self = plus.webview.currentWebview();
+							Zepto('#title').html(self.title);//标题赋值
+							Zepto('#cid').val(self.sid);//分类
+							
+							setTimeout(function() {
+								$('#pullrefresh').pullRefresh().pullupLoading();
+								plus.nativeUI.closeWaiting();
+								plus.webview.currentWebview().show();
+							}, 500);
+						});
+					} else {
+						$.ready(function() {
+							Zepto('#page').val(1);
+							$('#pullrefresh').pullRefresh().pullupLoading();
+						});
+					}
+					//主列表点击事件main
+					$('#pullrefresh').on('tap', 'li', function() {
+						var type = this.getAttribute("open-type");
+						var linkurl = this.getAttribute('linkurl');
+						var sid = this.getAttribute('open-sid');
+						$.openWindow({
+							id: 'main',
+							url: linkurl,
+							show: {
+							 autoShow:false,	
+							},
+							waiting: {
+								autoShow: true,
+								title: '正在加载...', //等待对话框上显示的提示内容
+							},
+							styles: {
+								zindex: 1,
+							},
+							extras: {
+								sid: sid,
+								type: type
+							}
+						});
+						//alert(22);
+						//var self = plus.webview.currentWebview();
+						//$.back();
+						//mui.fire(mui.currentWebview.opener(), "closeall");
+					});
+				}(mui, document));
+			</script>
+		</script>
+	</body>
+
+</html>

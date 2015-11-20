@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/config.js"></script>
+		<style>
+			html,
+			body,
+			.mui-content {
+				background-color: #ffffff;
+			}
+			.mui-title,
+			.mui-bar .mui-btn-link {
+				color: #fff;
+			}
+			
+			.mui-bar-nav {
+				background: none;
+				box-shadow: none;
+			}
+			
+			.mui-switch-blue.mui-active {
+				background-color: #832F32;
+				border: 2px solid #832F32;
+			}
+			
+			.logo_name {
+				text-align: center;
+				width: 300px;
+				padding-bottom: 20px;
+				padding-top: 0px;
+				margin: 0 auto;
+			}
+			
+			.logo_name h1 {
+				font-weight: bold;
+				font-size: 14px;
+				float: left;
+			}
+			
+			.logo_name img {
+				margin-top: 10px;
+			}
+			
+			.mui-input-row {
+				margin: 0 auto;
+				position: relative;
+				width: 300px;
+			}
+			
+			.mui-input-row input {
+				background-color: #ffffff;
+				height: 40px;
+				border: 1px solid #D6D0CB;
+				border-radius: 5px;
+				line-height: 22px;
+				outline: 0 none;
+			}
+			
+			.btn-color {
+				background-color: #832F32;
+				border: none;
+				border-radius: 5px;
+				width: 300px;
+				padding: 8px;
+				font-size: 14px;
+				margin-top: 10px;
+				color: #ffffff;
+			}
+			
+			.auth_box {
+				float: left;
+			}
+			
+			.mui-input-row .mui-btn {
+				width: 100px;
+				text-align: center;
+			}
+			
+			.bottom_txt {
+				font-size: 12px;
+				float: left;
+				width: 50%;
+				font-weight: bold;
+				color: #272F60;
+			}
+			
+			.bottom_txt a {
+				color: #272F60;
+			}
+			
+			input[type="text"] {
+				margin-bottom: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div style="height:1em;"></div>
+			<div class="logo_name" style="text-align: left;">
+				<h1><img src="./images/logo_1.png" width="50%"></h1>
+				<div class="logo_s"><img src="./images/slogan.png" width="100%"></div>
+			</div>
+			<div class="mui-input-row">
+				<input id='account' type="text" class="mui-input-clear mui-input" placeholder="会员服务号码">
+				<div id="autoLogin" class="mui-switch mui-switch-blue mui-active">
+					<div class="mui-switch-handle"></div>
+				</div>
+
+				<p style="padding-top:10px;">记住我的用户名</p>
+			</div>
+			<div class="mui-input-row">
+				<button id='go_main' class="btn-color mui-btn-block ">登录</button>
+				<button class="btn_help btn-color mui-btn-block">帮助或寻求帮助</button>
+				<div class="bottom_txt s_left"><a linkurl="login.html" type="page" open-sid="1">注册账户/使用您的email邮箱登陆</a></div>
+				<div class="bottom_txt s_right"><a linkurl="detail.html" open-type="page" open-sid="4">条款及细则</a></div>
+			</div>
+		</div>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					var settings = app.getSettings(),
+						mainPage = null,
+						state = app.getState(),
+						autoLoginButton = doc.getElementById("autoLogin");
+					//*帮助或寻求帮助*/
+					$('.mui-input-row').on('tap', '.btn_help', function(event) {
+						var btnArray = [{
+							title: "我无法登录"
+						}, {
+							title: "立即致电寻求帮助"
+						}];
+						plus.nativeUI.actionSheet({
+							title: "我们有什么可以帮您?",
+							cancel: "取消",
+							buttons: btnArray
+						}, function(e) {
+							var index = e.index;
+							switch (index) {
+								case 0:
+									break;
+								case 1:
+									$.openWindow({
+										id: 'cantlogin',
+										url: 'cantlogin.html',
+										waiting: {
+											autoShow: true,
+											title: '正在加载...', //等待对话框上显示的提示内容
+										},
+										show: {
+											autoShow: false
+										},
+										styles: {
+											zindex: 1,
+										}
+									});
+									break;
+								case 2:
+									var btnArray = ['返回', '立即拨打'];
+									mui.confirm('你确定拨打电话' + call_telphone + '吗？', '提示', btnArray, function(e) {
+										if (e.index == 1) {
+											plus.device.dial(call_telphone);
+										}
+									});
+									break;
+							}
+						});
+					}, false);
+					//跳转到首页
+					var toMain = function() {
+						IndexLogin = plus.webview.getWebviewById("IndexLogin");
+						$.openWindow({
+							id: 'HBuilder',
+							url: 'main.html',
+							show: {
+								aniShow: 'pop-in',
+								autoShow: false
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+						IndexLogin.close();
+					};
+					//帮助或寻求帮助
+					doc.getElementById('go_main').addEventListener('tap', function(event) {
+						//toMain();
+						var loginInfo = {
+							account: 'demotest',
+							password: '123456'
+						};
+						app.login(loginInfo, function(err) {
+							if (err) {
+								plus.nativeUI.toast(err);
+								return;
+							}
+						});
+						toMain();
+					}, false);
+					autoLoginButton.classList[settings.autoLogin ? 'add' : 'remove']('mui-active')
+					autoLoginButton.addEventListener('toggle', function(event) {
+						setTimeout(function() {
+							var isActive = event.detail.isActive;
+							settings.autoLogin = isActive;
+							app.setSettings(settings);
+						}, 50);
+					}, false);
+					//*退出*/
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+					//*兼容链接跳转*/
+					$('.mui-input-row').on('tap', 'a', function() {
+						var type = this.getAttribute("open-type");
+						var linkurl = this.getAttribute('linkurl');
+						var sid = this.getAttribute('open-sid');
+						$.openWindow({
+							id: linkurl,
+							url: linkurl,
+							waiting: {
+								autoShow: true,
+								title: '正在加载...', //等待对话框上显示的提示内容
+							},
+							show: {
+								aniShow: 'pop-in',
+								autoShow: false
+							},
+							styles: {
+								zindex: 1,
+							},
+							extras: {
+								sid: sid,
+								type: type
+							}
+						});
+					});
+					plus.nativeUI.closeWaiting();
+					plus.webview.currentWebview().show();
+				});
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

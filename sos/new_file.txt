@@ -1,0 +1,106 @@
+(function($, doc) {
+        $.init();
+        var settings = app.getSettings();
+        var state = app.getState();
+        var autoLoginButton = doc.getElementById("autoLogin");
+        alert(4);
+        $.plusReady(function() {
+          var mainPage = $.preload({
+            "id": 'main',
+            "url": 'main.html'
+          });
+          //处理侧滑导航，为了避免和子页面初始化等竞争资源，延迟加载侧滑页面；
+          //console.log(settings);
+          var toMain = function() {
+            $.fire(mainPage, 'show', null);
+            setTimeout(function() {
+              $.openWindow({
+                id: 'main',
+                url: 'main.html',
+                show: {
+                  aniShow: 'pop-in'
+                },
+                waiting: {
+                  autoShow: false
+                }
+              });
+            }, 0);
+          };
+          if (settings.autoLogin && state.token) {
+            //处理侧滑栏遮挡
+            console.log(state.token);
+            console.log(settings.autoLogin);
+            toMain();
+          }
+          //帮助或寻求帮助
+          doc.getElementById('go_main').addEventListener('tap', function(event) {
+            toMain();
+          }, false);
+          autoLoginButton.classList[settings.autoLogin ? 'add' : 'remove']('mui-active')
+          autoLoginButton.addEventListener('toggle', function(event) {
+            setTimeout(function() {
+              var isActive = event.detail.isActive;
+              settings.autoLogin = isActive;
+              app.setSettings(settings);
+            }, 50);
+          }, false);
+          var backButtonPress = 0;
+          $.back = function(event) {
+            backButtonPress++;
+            if (backButtonPress > 1) {
+              plus.runtime.quit();
+            } else {
+              plus.nativeUI.toast('再按一次退出应用');
+            }
+            setTimeout(function() {
+              backButtonPress = 0;
+            }, 1000);
+            return false;
+          };
+        });
+        $('.mui-input-row').on('tap', '.btn_help', function(event) {
+          var btnArray = [{
+            title: "我无法登录"
+          }, {
+            title: "立即致电寻求帮助"
+          }];
+          plus.nativeUI.actionSheet({
+            title: "我们有什么可以帮您?",
+            cancel: "取消",
+            buttons: btnArray
+          }, function(e) {
+            var index = e.index;
+            switch (index) {
+              case 0:
+                break;
+              case 1:
+                alert(1);
+                break;
+              case 2:
+                alert(2);
+                break;
+            }
+          });
+        }, false);
+        /*对定制的页面进行详细*/
+        $('.mui-input-row').on('tap', 'a', function() {
+          var type = this.getAttribute("open-type");
+          var linkurl = this.getAttribute('linkurl');
+          var sid = this.getAttribute('open-sid');
+          $.openWindow({
+            id: linkurl,
+            url: linkurl,
+            waiting: {
+              autoShow: true,
+              title: '正在加载...', //等待对话框上显示的提示内容
+            },
+            styles: {
+              zindex: 1,
+            },
+            extras: {
+              sid: sid,
+              type: type
+            }
+          });
+        });
+      }(mui, document));
