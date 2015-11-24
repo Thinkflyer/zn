@@ -237,7 +237,8 @@
 		_userinfo = JSON.parse(_userinfo);
 		_nologin = _userinfo.userid;
 		var page = Zepto('#page').val(),
-			cid = Zepto('#cid').val();
+			cid = Zepto('#cid').val(),
+			keyword = Zepto('#seach_local').val();
 		Zepto('#page').val(parseInt(page) + 1);
 		mui.ajax({
 			type: 'GET',
@@ -245,14 +246,15 @@
 			url: baseDomain + "index.php?g=Api&m=Index&a=global_list",
 			data: {
 				cid: cid,
-				p: page
+				p: page,
+				keyword:keyword
 			},
 			success: function(json) {
 				var msg = eval(json);
 
 				if (msg.code == 200) {
 					Zepto.each(msg.data, function(i, v) {
-						var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.catid + '" >'+ v.catname+' <input name="checkbox" type="checkbox"></li>';
+						var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.typeid + '" >'+ v.name+' <input name="checkbox" type="checkbox"></li>';
 						Zepto('#newslist').append(str);
 					});
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
