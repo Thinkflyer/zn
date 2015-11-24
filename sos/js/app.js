@@ -229,7 +229,45 @@
 	}
 
 
+/**
+	 *  取回地区信息名称
+	 **/
+	owner.get_globallocalinfo = function() {
+		var _userinfo = plus.storage.getItem("$user") || "{}";
+		_userinfo = JSON.parse(_userinfo);
+		_nologin = _userinfo.userid;
+		var page = Zepto('#page').val(),
+			cid = Zepto('#cid').val();
+		Zepto('#page').val(parseInt(page) + 1);
+		mui.ajax({
+			type: 'GET',
+			dataType: 'json',
+			url: baseDomain + "index.php?g=Api&m=Index&a=global_list",
+			data: {
+				cid: cid,
+				p: page
+			},
+			success: function(json) {
+				var msg = eval(json);
 
+				if (msg.code == 200) {
+					Zepto.each(msg.data, function(i, v) {
+						var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.catid + '" >'+ v.catname+' <input name="checkbox" type="checkbox"></li>';
+						Zepto('#newslist').append(str);
+					});
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+				} else {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+				}
+			},
+			error: function(xhr, type, errorThrown) {
+				//异常处理；
+				plus.nativeUI.toast(mylang['error_network']);
+				console.log(JSON.stringify(xhr));
+			}
+		});
+		plus.nativeUI.closeWaiting();
+	}
 	/**
 	 * 找回密码
 	 **/

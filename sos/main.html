@@ -135,7 +135,7 @@
 			<h1 class="mui-title">中国</h1>
 			<span class="mui-icon mui-icon-bars mui-pull-left" id="leftmenu"></span>
 			<div class="mui-pull-left nav_line"></div>
-			<span class="mui-icon  mui-icon-search mui-pull-left"></span>
+			<span id="seach_local" class="mui-icon  mui-icon-search mui-pull-left" linkurl="search_local.html"></span>
 			<span class="mui-icon mui-icon-map mui-pull-right"></span>
 			<div class="mui-pull-right nav_line"></div>
 		</header>
@@ -351,6 +351,29 @@
 						}
 					});
 				});
+				
+					//主列表点击事件main
+					
+	doc.getElementById('seach_local').addEventListener('tap', function(event) {
+
+					var linkurl = this.getAttribute('linkurl');
+
+					$.openWindow({
+						id: linkurl,
+						url: linkurl,
+						show: {
+							aniShow: 'pop-in',
+							autoShow: true
+						},
+						waiting: {
+							autoShow: true,
+							title: '正在加载...', //等待对话框上显示的提示内容
+						},
+						styles: {
+							zindex: 1,
+						}
+					});
+				});
 				//指定刷新 
 				function getpullfresh() {
 					//业务逻辑代码，比如通过ajax从服务器获取新数据；
@@ -377,7 +400,7 @@
 					for (var i = 0; i < wvs.length; i) {
 						if (plus.webview.currentWebview().id != wvs[i].id) {
 							plus.webview.close(wvs[i]);
-							alert(wvs[i].id);
+							//alert(wvs[i].id);
 						}
 					}
 				}, false);
