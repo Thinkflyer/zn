@@ -1,6 +1,6 @@
 var _nologin= 0;
-var baseDomain="http://sos.test.com/";
-//var baseDomain="http://sos_server.didimama.com/";
+//var baseDomain="http://sos.test.com/";
+var baseDomain="http://sos_server.didimama.com/";
 var basepath="/";
 var jump_baseurl="main.html";
 var call_telphone= 10086;

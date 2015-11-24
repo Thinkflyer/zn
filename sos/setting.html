@@ -8,11 +8,14 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="./css/mui.min.css">
+		<link href="./css/mui.listpicker.css" rel="stylesheet" />
+		<link href="./css/mui.poppicker.css" rel="stylesheet" />
 		<script src="./js/mui.min.js "></script>
 		<script src="./js/mui.view.js "></script>
-		<script src="./js/app.js"></script>
+		<script src="./js/mui.listpicker.js"></script>
+		<script src="./js/mui.poppicker.js"></script>
 		<script src="./js/config.js"></script>
-
+		<script src="./js/app.js"></script>
 		<style>
 			html,
 			body {
@@ -31,12 +34,32 @@
 				bottom: 0;
 				width: 100%;
 				height: 100%;
-				background-color: #efeff4;
+				background-color: #FFFFFF;
 			}
 			
 			.mui-pages {
 				top: 30px;
 				height: auto;
+			}
+			
+			.mui-switch-blue.mui-active {
+				background-color: #832F32;
+				border: 2px solid #832F32;
+			}
+			
+			.mui-pages {
+				top: 46px;
+				height: auto;
+			}
+			
+			.mui-scroll-wrapper,
+			.mui-scroll {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-page.mui-transitioning {
+				-webkit-transition: -webkit-transform 200ms ease;
+				transition: transform 200ms ease;
 			}
 			
 			.mui-page {
@@ -45,35 +68,6 @@
 			
 			.mui-pages .mui-page {
 				display: block;
-			}
-			
-			.mui-page .mui-table-view:first-child {
-				margin-top: 15px;
-			}
-			
-			.mui-page .mui-table-view:last-child {
-				margin-bottom: 30px;
-			}
-			
-			.mui-table-view {
-				margin-top: 20px;
-			}
-			
-			.mui-table-view:after {
-				height: 0;
-			}
-			
-			.mui-table-view span.mui-pull-right {
-				color: #999;
-			}
-			
-			.mui-table-view-divider:before,
-			.mui-table-view-divider:after {
-				height: 0;
-			}
-			
-			.mui-content-padded {
-				margin: 10px 0px;
 			}
 		</style>
 	</head>
@@ -176,52 +170,87 @@
 
 		<div id="language_setting" class="mui-page">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
-				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
-					<div class="kele mui-action-back mui-icon-back">返回</div>
+				<button class="mui-btn mui-btn-link mui-action-back mui-btn-nav mui-pull-left">
+					<div class="kele  mui-icon-back">返回</div>
 				</button>
-				<h1 class="mui-center mui-title">同步设置</h1>
+
+				<h1 class="mui-center mui-title">内容设置</h1>
 			</div>
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
-					<div class="mui-input-row" style="padding-top:20px;">
-						<div id="autoLogin" class="mui-switch mui-switch-blue mui-active">
-							<div class="mui-switch-handle"></div>
-						</div>
-						<h4>开启时同步</h4>
-						<p>根据您的网路连接状况,本应用程序在开启时会自动同步最新的信息. 建议您在出行前,能完成同步</p>
+					<div class="mui-input-row" style="padding-top:10px;">
+						<h4>选择内容显示语言;部分内容可能无法以您选择的语言显示</h4>
+						<p>如果更改界面语言,请重新设置您的定位</p>
 					</div>
 					<div class="mui-input-row">
-						<button id='reg' class="btn-color mui-btn-block ">立即同步</button>
+						<button id='showUserPicker' class="mui-btn-block" type='button'>请选择语种 ...</button>
+						<div id='userResult' class="ui-alert"></div>
 					</div>
 
 				</div>
 			</div>
 		</div>
 	</body>
-
 	<script>
-		mui.init();
-		 //初始化单页view
-		var viewApi = mui('#app').view({
-			defaultPage: '#setting'
-		});
-		 //初始化单页的区域滚动
-		mui('.mui-scroll-wrapper').scroll();
-	
-		var view = viewApi.view;
-		(function($) {
-			//处理view的后退与webview后退
-			var oldBack = $.back;
-			$.back = function() {
-				if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
-					viewApi.back();
-				} else { //执行webview后退
-					oldBack();
-				}
-			};
-	
-			
-		})(mui);
+		(function($, doc) {
+			$.init();
+			var viewApi = mui('#app').view({
+				defaultPage: '#setting'
+			});
+			//初始化单页的区域滚动
+			$('.mui-scroll-wrapper').scroll();
+			//锁屏设置
+			var view = viewApi.view;
+			$.plusReady(function() {
+				//普通示例
+				var userPicker = new $.PopPicker();
+				userPicker.setData([{
+					value: 'ywj',
+					text: '董事长 叶文洁'
+				}, {
+					value: 'aaa',
+					text: '总经理 艾AA'
+				}, {
+					value: 'lj',
+					text: '罗辑'
+				}, {
+					value: 'ymt',
+					text: '云天明'
+				}, {
+					value: 'shq',
+					text: '史强'
+				}, {
+					value: 'zhbh',
+					text: '章北海'
+				}, {
+					value: 'zhy',
+					text: '庄颜'
+				}, {
+					value: 'gyf',
+					text: '关一帆'
+				}, {
+					value: 'zhz',
+					text: '智子'
+				}, {
+					value: 'gezh',
+					text: '歌者'
+				}]);
+				var userResult = doc.getElementById('userResult');
+				doc.getElementById('showUserPicker').addEventListener('tap', function(event) {
+					userPicker.show(function(items) {
+						userResult.innerText = JSON.stringify(items[0]);
+					});
+				}, false);
+				var oldBack = $.back;
+				$.back = function() {
+					if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+						viewApi.back();
+					} else { //执行webview后退
+						oldBack();
+					}
+				};
+			});
+		}(mui, document));
 	</script>
 
 </html>

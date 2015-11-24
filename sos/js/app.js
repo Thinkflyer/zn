@@ -128,7 +128,7 @@
 				var msg = eval(json);
 				if (msg.code == 200) {
 					Zepto.each(msg.data, function(i, v) {
-						var str = '<li class="mui-table-view-cell" linkurl="main.html"  open-sid="' + v.id + '"  ><a class="mui-navigate-right">' + v.title + '</a>';
+						var str = '<li class="mui-table-view-cell" linkurl="main.html"  open-sid="' + v.id + '"  ><a class="mui-navigate-right">' + v.localname + '</a>';
 
 						Zepto('#newslist').append(str);
 					});
