@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html class="ui-page-login">
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
@@ -14,27 +15,34 @@
 			.mui-content {
 				background: url('images/bg.png') repeat;
 			}
+			
 			.mui-title,
 			.mui-bar .mui-btn-link {
 				color: #fff;
 			}
+			
 			.reg-area {
 				float: right;
 			}
+			
 			.reg-area a {
 				color: #FF5053
 			}
+			
 			.forget-area {
 				float: left
 			}
+			
 			.forget-area a {
 				color: #FFFFFF;
 			}
+			
 			.mui-bar-nav {
 				background-color: #780005;
-				background:none;
-				box-shadow :none;
+				background: none;
+				box-shadow: none;
 			}
+			
 			.btn-color {
 				background-color: #780005;
 				border: none;
@@ -42,6 +50,7 @@
 				padding: 10px;
 				margin-top: 10px;
 			}
+			
 			.logo_name {
 				text-align: center;
 				width: 250px;
@@ -49,18 +58,22 @@
 				padding: 20px;
 				margin: 0 auto;
 			}
+			
 			.logo_name h1 {
 				font-weight: bold;
 				font-size: 52px;
 			}
+			
 			.logo_name img {
 				margin-top: 10px;
 			}
+			
 			.mui-input-row {
 				margin: 0 auto;
 				position: relative;
 				width: 250px;
 			}
+			
 			.mui-input-row input {
 				background-color: #D6D0CB;
 				height: 40px;
@@ -69,6 +82,7 @@
 				padding: 10px 15px;
 				border: none;
 			}
+			
 			.btn-color {
 				background-color: #780005;
 				border: none;
@@ -76,28 +90,36 @@
 				padding: 10px;
 				margin-top: 10px;
 			}
-
-		#login_now {
-			font-weight: bold;
-			color: #780005;
-		}
-		.auth_box {
-			float: left;
-		}
-		.mui-input-row .mui-btn {
-		   width: 100px;
-		   text-align: center;
-		}
-		.get_auth {
-			background-color: #780005;
-			color: #FFFFFF;
-			height:40px;
-			line-height:40px;
-			border: 0;
-			float:left;
-			font-size:0.7em;
-		}
-		#auth{float:left;width:140px;margin-right:10px;}
+			
+			#login_now {
+				font-weight: bold;
+				color: #780005;
+			}
+			
+			.auth_box {
+				float: left;
+			}
+			
+			.mui-input-row .mui-btn {
+				width: 100px;
+				text-align: center;
+			}
+			
+			.get_auth {
+				background-color: #780005;
+				color: #FFFFFF;
+				height: 40px;
+				line-height: 40px;
+				border: 0;
+				float: left;
+				font-size: 0.7em;
+			}
+			
+			#auth {
+				float: left;
+				width: 140px;
+				margin-right: 10px;
+			}
 		</style>
 	</head>
 
@@ -107,27 +129,27 @@
 				<span class="mui-icon mui-icon-left-nav"></span>
 			</button>
 		</header>
-		<div class="mui-content" >
+		<div class="mui-content">
 
 			<div class="logo_name ">
 				<h1>包创业</h1>
-				<span >WWW.100BF.NET</span>
+				<span>WWW.100BF.NET</span>
 				<div class="logo_s"><img src="./images/slogan.png" width="100%"></div>
 			</div>
 
 			<div class="mui-input-row" style="margin-top:10px;">
-				<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号码" >
+				<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号码">
 			</div>
 			<div class="mui-input-row">
-				<input  id="auth" type="text" class="mui-input" placeholder="验证码">
+				<input id="auth" type="text" class="mui-input" placeholder="验证码">
 				<button id="get_auth" class="get_auth mui-btn mui-btn-negative">获取验证码</button>
 			</div>
 
 			<div class="mui-input-row">
-				<input  id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+				<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
 			</div>
 			<div class="mui-input-row">
-				<input  id='password_confirm' type="password" class="mui-input-clear mui-input" placeholder="请确认密码">
+				<input id='password_confirm' type="password" class="mui-input-clear mui-input" placeholder="请确认密码">
 			</div>
 
 			<div class="mui-input-row">
@@ -142,26 +164,24 @@
 			(function($, doc) {
 				$.init();
 				$.plusReady(function() {
-								 setTimeout(function(){
-				        var array = plus.webview.all();
-
-				         console.log("==========1");
-				        if(array){
-				            for(var i=0,len=array.length;i<len;i++){
-				                    console.log(array[i].id);
-				                }
-				        }
-						console.log("==========2");
-						
+					setTimeout(function() {
+						//				        var array = plus.webview.all();
+						//
+						//				         console.log("==========1");
+						//				        if(array){
+						//				            for(var i=0,len=array.length;i<len;i++){
+						//				                    console.log(array[i].id);
+						//				                }
+						//				        }
+						//						console.log("==========2");
 						main = $.preload({
 							id: 'HBuilder',
 							url: 'main.html',
 						});
-												
-				    },100);
+					}, 100);
 					var settings = app.getSettings();
 					var regButton = doc.getElementById('reg');
-					var auth=doc.getElementById('auth');
+					var auth = doc.getElementById('auth');
 					var accountBox = doc.getElementById('account');
 					var passwordBox = doc.getElementById('password');
 					var passwordConfirmBox = doc.getElementById('password_confirm');
@@ -169,98 +189,85 @@
 						var regInfo = {
 							account: accountBox.value,
 							password: passwordBox.value,
-							auth:auth.value,
+							auth: auth.value,
 						};
 						var passwordConfirm = passwordConfirmBox.value;
-						
-						
 						if (passwordConfirm != regInfo.password) {
 							plus.nativeUI.toast('密码两次输入不一致');
 							return;
 						}
-						
 						app.reg(regInfo, function(err) {
 							if (err) {
 								plus.nativeUI.toast(err);
 								return;
 							}
 							//数据库提交服务器
-						var m_mobile=accountBox.value;
-						var m_password = passwordBox.value;
-						var m_auth = auth.value;
-					$.ajax({
-						type: 'POST',
-						dataType: 'json',
-						url: baseDomain + "index.php?g=Api&m=Index&a=register_done",
-						timeout: 5000, //超时时间设置为10秒；
-						data: {
-							m_mobile: m_mobile,
-							m_password: m_password,
-							m_auth: m_auth,
-						},
-						success: function(msg) {
-							if (msg.code == 0) {
-								plus.nativeUI.toast(msg.info);
-							} else {
-								plus.nativeUI.toast(msg.info);
-								//注册成功
-								console.log(msg.username+"==="+msg.auth);
-								app.createState(msg.username,msg.auth);
-								mui.fire(main,'show_index',null);
-//									$.openWindow({
-//										url: 'main.html',
-//										id: 'HBuilder',
-//										show: {
-//											aniShow: 'pop-in'
-//										},
-//										styles: {
-//											popGesture: 'hide'
-//										},
-//										waiting: {
-//											autoShow: true
-//										}
-//									});
-
-								main.show();
-								mui.currentWebview.close(); 
-
-							}
-						}
-					});
-					
-					
-
+							var m_mobile = accountBox.value;
+							var m_password = passwordBox.value;
+							var m_auth = auth.value;
+							$.ajax({
+								type: 'POST',
+								dataType: 'json',
+								url: baseDomain + "index.php?g=Api&m=Index&a=register_done",
+								timeout: 5000, //超时时间设置为10秒；
+								data: {
+									m_mobile: m_mobile,
+									m_password: m_password,
+									m_auth: m_auth,
+								},
+								success: function(msg) {
+									if (msg.code == 0) {
+										plus.nativeUI.toast(msg.info);
+									} else {
+										plus.nativeUI.toast(msg.info);
+										//注册成功
+										console.log(msg.username + "===" + msg.auth);
+										app.createState(msg.username, msg.auth);
+										mui.fire(main, 'show_index', null);
+										//									$.openWindow({
+										//										url: 'main.html',
+										//										id: 'HBuilder',
+										//										show: {
+										//											aniShow: 'pop-in'
+										//										},
+										//										styles: {
+										//											popGesture: 'hide'
+										//										},
+										//										waiting: {
+										//											autoShow: true
+										//										}
+										//									});
+										main.show();
+										mui.currentWebview.close();
+									}
+								}
+							});
 						});
 					});
 				});
-				
-		
 				doc.getElementById('login_now').addEventListener('tap', function(event) {
-						$.openWindow({
-							url: 'login.html',
-							id: 'login',
-							show: {
-								aniShow: 'pop-in'
-							},
-							styles: {
-								popGesture: 'hide'
-							},
-							waiting: {
-								autoShow: false,
-								title: '正在加载...', //等待对话框上显示的提示内容
-
-							}
-						});
-					}, false);
-				
-				
-		//提交获取短信
-			doc.getElementById('get_auth').addEventListener('tap', function(event) {
-				var _mobile=doc.getElementById('account').value;
-				if(!_mobile){
-					plus.nativeUI.toast('手机号码不能为空');
-					return;
-					}else {
+					$.openWindow({
+						url: 'login.html',
+						id: 'login',
+						show: {
+							aniShow: 'pop-in'
+						},
+						styles: {
+							popGesture: 'hide'
+						},
+						waiting: {
+							autoShow: false,
+							title: '正在加载...', //等待对话框上显示的提示内容
+						}
+					});
+				}, false);
+				//提交获取短信
+				doc.getElementById('get_auth').addEventListener('tap', function(event) {
+					var _mobile = doc.getElementById('account').value;
+					if (!_mobile) {
+						plus.nativeUI.toast('手机号码不能为空');
+						return;
+					} else {
 						var mflag = regBox.regMobile.test(_mobile);
 						if (!(mflag)) {
 							plus.nativeUI.toast("手机号码有误！");
@@ -269,7 +276,6 @@
 					}
 					timer(30);
 					//提交获取短信
-					
 					$.ajax({
 						type: 'POST',
 						dataType: 'json',
@@ -291,27 +297,24 @@
 							//console.log(JSON.stringify(xhr));
 						}
 					});
-					
 				}, false);
-
 			}(mui, document));
-			
-			
-function timer(time) {
-	var btn =Zepto('#get_auth');
-	btn.attr("disabled", true);  //按钮禁止点击
-	btn.html(time <= 0 ? "发送动态密码" : ((time) + "秒后可发送"));
-	var hander = setInterval(function() {
-		if (time <= 0) {
-			clearInterval(hander); //清除倒计时
-			btn.html("获取验证码");
-			btn.removeAttr("disabled"); 
-			return false;
-		}else {
-			btn.html((time--) + "秒后可发送");
-		}
-	}, 1000);
-}
+
+			function timer(time) {
+				var btn = Zepto('#get_auth');
+				btn.attr("disabled", true); //按钮禁止点击
+				btn.html(time <= 0 ? "发送动态密码" : ((time) + "秒后可发送"));
+				var hander = setInterval(function() {
+					if (time <= 0) {
+						clearInterval(hander); //清除倒计时
+						btn.html("获取验证码");
+						btn.removeAttr("disabled");
+						return false;
+					} else {
+						btn.html((time--) + "秒后可发送");
+					}
+				}, 1000);
+			}
 		</script>
 	</body>
 

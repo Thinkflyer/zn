@@ -6,10 +6,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<link rel="stylesheet" href="css/mui.min.css">
-		<script src="js/zepto.min.js"></script>
-		<script src="js/mui.min.js"></script>
-		<script src="js/md5.min.js"></script>
 		<script src="js/config.js"></script>
 		<script src="js/lazyload.js"></script>
 
@@ -89,33 +85,42 @@
 					$.init();
 					$('#pullrefresh').scroll();
 					var sid = null,
+						msg = null,
 						type = null;
 					$.plusReady(function() {
 						plus.nativeUI.showWaiting();
 						var self = plus.webview.currentWebview();
 						sid = self.sid;
 						type = self.type;
-						$.ajax({
-							type: 'POST',
-							dataType: 'json',
-							url: baseDomain + "index.php?g=Api&m=Index&a=show",
-							data: {
-								'id': sid,
-								'type': type,
-								'ishtml': 1
-							},
-							success: function(json) {
-								var msg = eval(json);
-								var str = '';
-								Zepto('.detail-title').html(msg.title);
-								Zepto('#content').html(msg.content);
-							},
-							error: function(xhr, type, errorThrown) {
-								//异常处理
-								plus.nativeUI.toast(mylang['error_network']);
-								console.log(JSON.stringify(xhr));
-							}
-						});
+						var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show&id=" + sid + "&type=" + type + "&ishtml=1";
+						msg = app.getcache(_geturl);
+						if (_isusecache && msg) {
+							Zepto('.detail-title').html(msg.title);
+							Zepto('#content').html(msg.content);
+						} else {
+							$.ajax({
+								type: 'GET',
+								dataType: 'json',
+								url: _geturl,
+								//							data: {
+								//								'id': sid,
+								//								'type': type,
+								//								'ishtml': 1
+								//							},
+								success: function(json) {
+									if (_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+									var msg = eval(json);
+									var str = '';
+									Zepto('.detail-title').html(msg.title);
+									Zepto('#content').html(msg.content);
+								},
+								error: function(xhr, type, errorThrown) {
+									//异常处理
+									plus.nativeUI.toast(mylang['error_network']);
+									console.log(JSON.stringify(xhr));
+								}
+							});
+						}
 						plus.nativeUI.closeWaiting();
 					});
 					doc.getElementById('call_tel').addEventListener('tap', function(event) {
@@ -126,19 +131,15 @@
 							}
 						});
 					}, false); //--左侧菜单显示
-					
-					
-						//主列表点击事件main
-				$('#pullrefresh').on('tap', 'a', function() {
-					var btnArray = ['返回', '立即拨打'];
+					//主列表点击事件main
+					$('#pullrefresh').on('tap', 'a', function() {
+						var btnArray = ['返回', '立即拨打'];
 						mui.confirm('你确定拨打电话' + this.innerText + '吗？', '提示', btnArray, function(e) {
 							if (e.index == 1) {
 								plus.device.dial(this.innerText);
 							}
 						});
-				
-				},false);
-					
+					}, false);
 				}(mui, document));
 			</script>
 

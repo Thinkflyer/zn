@@ -5,12 +5,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>首页</title>
-		<link href="css/mui.min.css" rel="stylesheet" />
-		<script src="js/mui.min.js"></script>
-		<script src="js/app.js"></script>
-		<script src="js/zepto.min.js"></script>
 		<script src="js/config.js"></script>
-		<style> 
+		<style>
 			#leftmenu,
 			#setting,
 			.mui-icon {
@@ -123,11 +119,17 @@
 				background-position: left 1.4em;
 				background-repeat: no-repeat;
 				background-size: 20px 20px;
-				margin:0 auto;
-				padding-left:25px;
-				margin-left:5px;
+				margin: 0 auto;
+				padding-left: 25px;
+				margin-left: 5px;
 			}
-			.mui-badge{background-color:#F0AD4E;color:#fff;top:7px;position: absolute;}
+			
+			.mui-badge {
+				background-color: #F0AD4E;
+				color: #fff;
+				top: 7px;
+				position: absolute;
+			}
 		</style>
 	</head>
 
@@ -188,7 +190,7 @@
 						up: {
 							contentrefresh: "正在加载...",
 							contentnomore: '没有更多数据了',
-							callback: add_more
+							callback: app.add_more
 						}
 					}
 				});
@@ -352,22 +354,18 @@
 						}
 					});
 				});
-				
-					//主列表点击事件main
-					
-	doc.getElementById('seach_local').addEventListener('tap', function(event) {
-
+				//主列表点击事件main
+				doc.getElementById('seach_local').addEventListener('tap', function(event) {
 					var linkurl = this.getAttribute('linkurl');
-
 					$.openWindow({
 						id: linkurl,
 						url: linkurl,
 						show: {
 							aniShow: 'pop-in',
-							autoShow: true
+							autoShow: false
 						},
 						waiting: {
-							autoShow: true,
+							autoShow: false,
 							title: '正在加载...', //等待对话框上显示的提示内容
 						},
 						styles: {
@@ -396,46 +394,18 @@
 					}, 1000);
 					return false;
 				};
-				window.addEventListener('closeall', function() {
-					var wvs = plus.webview.all();
-					for (var i = 0; i < wvs.length; i) {
-						if (plus.webview.currentWebview().id != wvs[i].id) {
-							plus.webview.close(wvs[i]);
-							//alert(wvs[i].id);
-						}
-					}
-				}, false);
+//				window.addEventListener('closeall', function() {
+//					var wvs = plus.webview.all();
+//					for (var i = 0; i < wvs.length; i) {
+//						if (plus.webview.currentWebview().id != wvs[i].id) {
+//							plus.webview.close(wvs[i]);
+//							//alert(wvs[i].id);
+//						}
+//					}
+//				}, false);
 			}(mui, document));
 
-			function add_more() {
-				//*判断网络链接状态*/
-				var page = Zepto('#page').val(),
-					cid = Zepto('#cid').val();
-				Zepto('#page').val(parseInt(page) + 1);
-				mui.ajax({
-					type: 'GET',
-					dataType: 'json',
-					url: baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid,
-					data: 'p=' + page,
-					success: function(json) {
-						var msg = eval(json);
-						if (msg.code == 200) {
-							Zepto.each(msg.data, function(i, v) {
-								var str = '<li class="mui-table-view-cell li_list icon_' + v.catid + '" linkurl="detail.html" open-type="article" open-sid="' + v.id + '"  ><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
-								Zepto('#newslist').append(str);
-							});
-							mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
-						} else {
-							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-						}
-					},
-					error: function(xhr, type, errorThrown) {
-						//异常处理；
-						plus.nativeUI.toast(mylang['error_network']);
-						console.log(JSON.stringify(xhr));
-					}
-				});
-			}
+
 		</script>
 	</body>
 

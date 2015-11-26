@@ -1,6 +1,6 @@
-var _nologin= 0;
-//var baseDomain="http://sos.test.com/";
-var baseDomain="http://sos_server.didimama.com/";
+var _isusecache= 1;//优先使用缓存数据
+var baseDomain="http://sos.test.com/";
+//var baseDomain="http://sos_server.didimama.com/";
 var basepath="/";
 var jump_baseurl="main.html";
 var call_telphone= 10086;
@@ -27,5 +27,12 @@ var regBox = {
         regName : /^[0-9_-]{6}$/,//用户名
         regMobile : /^0?1[3|4|5|6|8][0-9]\d{8}$/,//手机
  }
-//引用其他css 样式表
+//引用其他css 样式表 注意上下顺序
+document.write("<link href=\"css/mui.min.css\" rel='stylesheet' />");
 document.write("<link href=\"css/ext.css\" rel='stylesheet' />");
+
+//引入 md5  和 app.js
+document.write("<script src=\"js/zepto.min.js\"></script>");
+document.write("<script src=\"js/md5.min.js\"></script>");
+document.write("<script src=\"js/mui.min.js\"></script>");
+document.write("<script src=\"js/app.js\"></script>");

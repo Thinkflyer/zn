@@ -7,15 +7,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<link rel="stylesheet" href="./css/mui.min.css">
 		<link href="./css/mui.listpicker.css" rel="stylesheet" />
-		<link href="./css/mui.poppicker.css" rel="stylesheet" />
-		<script src="./js/mui.min.js "></script>
+		<link href="./css/mui.poppicker.css" rel="stylesheet" />		
+		<script src="./js/config.js"></script>
 		<script src="./js/mui.view.js "></script>
 		<script src="./js/mui.listpicker.js"></script>
 		<script src="./js/mui.poppicker.js"></script>
-		<script src="./js/config.js"></script>
-		<script src="./js/app.js"></script>
 		<style>
 			html,
 			body {
@@ -68,6 +65,16 @@
 			
 			.mui-pages .mui-page {
 				display: block;
+			}
+			
+			.mui-table-view-cell::after {
+				left: 5px;
+				right: 5px;
+			}
+			
+			.mui-table-view::after {
+				left: 5px;
+				right: 5px;
 			}
 		</style>
 	</head>
@@ -127,23 +134,20 @@
 			</div>
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								<a class="mui-navigate-right">会员权益 </a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a class="mui-navigate-right">条款及细则</a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a class="mui-navigate-right">隐私政策</a>
-							</li>
-						</ul>
-					</div>
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell ">
+							<a class="mui-navigate-right" linkurl="detail.html" type="page" open-sid="12">会员权益 </a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right" linkurl="detail.html" type="page" open-sid="4">条款及细则</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right" linkurl="detail.html" type="page" open-sid="13">隐私政策</a>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
-
 		<div id="sync_data" class="mui-page">
 			<div class="mui-navbar-inner mui-bar mui-bar-nav">
 				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
@@ -173,18 +177,16 @@
 				<button class="mui-btn mui-btn-link mui-action-back mui-btn-nav mui-pull-left">
 					<div class="kele  mui-icon-back">返回</div>
 				</button>
-
 				<h1 class="mui-center mui-title">内容设置</h1>
 			</div>
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-input-row" style="padding-top:10px;">
-						<h4>选择内容显示语言;部分内容可能无法以您选择的语言显示</h4>
+						<h4 style="line-height:25px">选择内容显示语言;部分内容可能无法以您选择的语言显示</h4>
 						<p>如果更改界面语言,请重新设置您的定位</p>
 					</div>
 					<div class="mui-input-row">
-						<button id='showUserPicker' class="mui-btn-block" type='button'>请选择语种 ...</button>
-						<div id='userResult' class="ui-alert"></div>
+						<button id='changeLanguage' class="mui-btn-block" type='button'>请选择语种 ...</button>
 					</div>
 
 				</div>
@@ -201,44 +203,20 @@
 			$('.mui-scroll-wrapper').scroll();
 			//锁屏设置
 			var view = viewApi.view;
+			var str = "";
 			$.plusReady(function() {
+				var state = app.getState();
+				doc.getElementById('changeLanguage').innerText = state.language;
 				//普通示例
 				var userPicker = new $.PopPicker();
-				userPicker.setData([{
-					value: 'ywj',
-					text: '董事长 叶文洁'
-				}, {
-					value: 'aaa',
-					text: '总经理 艾AA'
-				}, {
-					value: 'lj',
-					text: '罗辑'
-				}, {
-					value: 'ymt',
-					text: '云天明'
-				}, {
-					value: 'shq',
-					text: '史强'
-				}, {
-					value: 'zhbh',
-					text: '章北海'
-				}, {
-					value: 'zhy',
-					text: '庄颜'
-				}, {
-					value: 'gyf',
-					text: '关一帆'
-				}, {
-					value: 'zhz',
-					text: '智子'
-				}, {
-					value: 'gezh',
-					text: '歌者'
-				}]);
-				var userResult = doc.getElementById('userResult');
-				doc.getElementById('showUserPicker').addEventListener('tap', function(event) {
+				app.get_language_info(function(e) {
+					userPicker.setData(e);
+				});
+				doc.getElementById('changeLanguage').addEventListener('tap', function(event) {
 					userPicker.show(function(items) {
-						userResult.innerText = JSON.stringify(items[0]);
+						doc.getElementById('changeLanguage').innerText = items[0].text;
+						//设置语种类型
+						app.setLanguage(items[0].text);
 					});
 				}, false);
 				var oldBack = $.back;
@@ -249,6 +227,31 @@
 						oldBack();
 					}
 				};
+				//*兼容链接跳转*/
+				$('#notifications_disturb').on('tap', 'a', function() {
+					var type = this.getAttribute("open-type");
+					var linkurl = this.getAttribute('linkurl');
+					var sid = this.getAttribute('open-sid');
+					$.openWindow({
+						id: linkurl,
+						url: linkurl,
+						waiting: {
+							autoShow: true,
+							title: '正在加载...', //等待对话框上显示的提示内容
+						},
+						show: {
+							aniShow: 'pop-in',
+							autoShow: false
+						},
+						styles: {
+							zindex: 1,
+						},
+						extras: {
+							sid: sid,
+							type: type
+						}
+					});
+				});
 			});
 		}(mui, document));
 	</script>

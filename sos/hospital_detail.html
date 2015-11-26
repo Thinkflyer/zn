@@ -6,13 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<link rel="stylesheet" href="css/mui.min.css">
-		<script src="js/zepto.min.js"></script>
-		<script src="js/mui.min.js"></script>
-		<script src="js/md5.min.js"></script>
 		<script src="js/config.js"></script>
 		<script src="js/lazyload.js"></script>
-
 	</head>
 
 	<body>
@@ -49,7 +44,7 @@
 		<div class="mui-inner-wrap">
 			<!-- 主页面标题 -->
 			<header class="mui-bar mui-bar-nav">
-				<h1 class="mui-title detail-title" id="title"></h1>
+				<h1 class="mui-title detail-title" id="title">诊所信息</h1>
 				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
 					<div class="kele mui-action-back mui-icon-back">返回</div>
 				</button>
@@ -91,33 +86,46 @@
 						var self = plus.webview.currentWebview();
 						sid = self.sid;
 						type = self.type;
-						$.ajax({
-							type: 'POST',
-							dataType: 'json',
-							url: baseDomain + "index.php?g=Api&m=Index&a=show",
-							data: {
-								'id': sid,
-								'type': type
-							},
-							success: function(json) {
-								var msg = eval(json);
-								var str = '';
-								Zepto('.detail-title').html('诊所信息');
-								Zepto('#m_local').html(msg.local_id);
-								Zepto('#m_title').html(msg.title);
-								Zepto('#m_tel').html("<a title='" + msg.tel + "'>呼叫</a>");
-								Zepto('#m_email').html("<a title='" + msg.email + "'>使用邮件联系</a>");
-								Zepto('#m_address').html(msg.address);
-								Zepto('#m_service').html(msg.service);
-								Zepto('#m_fax').html(msg.fax);
-								Zepto('#m_note').html(msg.telnote);
-							},
-							error: function(xhr, type, errorThrown) {
-								//异常处理
-								plus.nativeUI.toast(mylang['error_network']);
-								console.log(JSON.stringify(xhr));
-							}
-						});
+						var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show&id=" + sid + "&type=" + type;
+						msg = app.getcache(_geturl);
+						if (_isusecache && msg) {
+							Zepto('#m_local').html(msg.local_id);
+							Zepto('#m_title').html(msg.title);
+							Zepto('#m_tel').html("<a title='" + msg.tel + "'>呼叫</a>");
+							Zepto('#m_email').html("<a title='" + msg.email + "'>使用邮件联系</a>");
+							Zepto('#m_address').html(msg.address);
+							Zepto('#m_service').html(msg.service);
+							Zepto('#m_fax').html(msg.fax);
+							Zepto('#m_note').html(msg.telnote);
+						} else {
+							$.ajax({
+								type: 'GET',
+								dataType: 'json',
+								url: _geturl,
+								//							data: {
+								//								'id': sid,
+								//								'type': type
+								//							},
+								success: function(json) {
+									if(_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+									var msg = eval(json);
+									var str = '';
+									Zepto('#m_local').html(msg.local_id);
+									Zepto('#m_title').html(msg.title);
+									Zepto('#m_tel').html("<a title='" + msg.tel + "'>呼叫</a>");
+									Zepto('#m_email').html("<a title='" + msg.email + "'>使用邮件联系</a>");
+									Zepto('#m_address').html(msg.address);
+									Zepto('#m_service').html(msg.service);
+									Zepto('#m_fax').html(msg.fax);
+									Zepto('#m_note').html(msg.telnote);
+								},
+								error: function(xhr, type, errorThrown) {
+									//异常处理
+									plus.nativeUI.toast(mylang['error_network']);
+									console.log(JSON.stringify(xhr));
+								}
+							});
+						}
 						plus.nativeUI.closeWaiting();
 						plus.webview.currentWebview().show();
 					});
