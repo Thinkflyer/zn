@@ -1,6 +1,6 @@
-var _isusecache= 1;//优先使用缓存数据
+var _isusecache= 1;//强制使用缓存数据当为0时 缓存将不自动写入
 var baseDomain="http://sos.test.com/";
-//var baseDomain="http://sos_server.didimama.com/";
+//var baseDomain="http:/sos_server.didimama.com/";
 var basepath="/";
 var jump_baseurl="main.html";
 var call_telphone= 10086;
@@ -18,7 +18,6 @@ var mylang={
 		'error_network' : "网络异常,操作失败",
 		'login_success' : "登陆成功",
 		'error_empty' : "暂无内容",
-	
 }
 var time=10;//验证码 延时
 var mcro_time=1000;//毫秒

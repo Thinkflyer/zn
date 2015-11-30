@@ -63,7 +63,7 @@
 		<div class="mui-inner-wrap">
 			<!-- 主页面标题 -->
 			<header class="mui-bar mui-bar-nav">
-				<h1 class="mui-title detail-title" id="title"></h1>
+				<h1 class="mui-title detail-title" id="title">立刻联系我们</h1>
 				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
 					<div class="kele mui-action-back mui-icon-back">返回</div>
 				</button>
@@ -108,7 +108,8 @@
 								//								'ishtml': 1
 								//							},
 								success: function(json) {
-									if (_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+									app.setcache(_geturl,json);
+									//if (_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
 									var msg = eval(json);
 									var str = '';
 									Zepto('.detail-title').html(msg.title);

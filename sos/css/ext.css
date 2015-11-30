@@ -100,9 +100,13 @@
 .mui-input-row {
 	margin: 0 auto;
 	position: relative;
-	width: 300px;
+	min-width: 300px;
+	margin:0px 10px 0px 10px;
 }
-
+.mui-btn-block {
+   
+    padding: 10px 0;
+}
 .mui-input-row input {
 	background-color: #ffffff;
 	height: 40px;
@@ -110,7 +114,7 @@
 	outline: 0 none;
 	border-radius: 5px;
 	line-height: 22px;
-	width: 300px;
+	min-width: 300px;
 }
 
 .icon_2 {

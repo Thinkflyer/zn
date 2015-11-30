@@ -130,7 +130,7 @@
 		Zepto('#page').val(parseInt(page) + 1);
 		//第一步 定义路径
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page;
-		var msg = app.getcache(_geturl);
+		var msg = owner.getcache(_geturl);
 
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
@@ -152,7 +152,7 @@
 				//data: 'p=' + page,
 				success: function(json) {
 					//缓存数据 此处会移植到 批量中 测试使用
-					if (_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+					owner.setcache(_geturl, json);
 					var msg = eval(json);
 					if (msg.code == 200) {
 						Zepto.each(msg.data, function(i, v) {
@@ -188,7 +188,7 @@
 		Zepto('#page').val(parseInt(page) + 1);
 
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=favourite_list&p=" + page;
-		var msg = app.getcache(_geturl);
+		var msg = owner.getcache(_geturl);
 
 		if (_isusecache && msg) {
 
@@ -206,13 +206,15 @@
 
 		} else {
 
+
 			mui.ajax({
+				timeout: 5000,
 				type: 'GET',
 				dataType: 'json',
 				url: _geturl,
 				//data: 'p=' + page,
 				success: function(json) {
-					if (_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+					owner.setcache(_geturl, json);
 					var msg = eval(json);
 					if (msg.code == 200) {
 						Zepto.each(msg.data, function(i, v) {
@@ -251,7 +253,7 @@
 		Zepto('#page').val(parseInt(page) + 1);
 
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page;
-		var msg = app.getcache(_geturl);
+		var msg = owner.getcache(_geturl);
 
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
@@ -265,6 +267,7 @@
 			}
 		} else {
 			mui.ajax({
+				timeout: 5000,
 				type: 'GET',
 				dataType: 'json',
 				url: _geturl,
@@ -273,7 +276,7 @@
 				//				p: page
 				//			},
 				success: function(json) {
-					if (_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+					owner.setcache(_geturl, json);
 					var msg = eval(json);
 					if (msg.code == 200) {
 						Zepto.each(msg.data, function(i, v) {
@@ -308,7 +311,7 @@
 			cid = Zepto('#cid').val();
 		Zepto('#page').val(parseInt(page) + 1);
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=hospital_list&cid=" + cid + "&p=" + page;
-		var msg = app.getcache(_geturl);
+		var msg = owner.getcache(_geturl);
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
 				Zepto.each(msg.data, function(i, v) {
@@ -322,6 +325,7 @@
 			}
 		} else {
 			mui.ajax({
+				timeout: 5000,
 				type: 'GET',
 				dataType: 'json',
 				url: _geturl,
@@ -330,7 +334,7 @@
 				//				p: page
 				//			},
 				success: function(json) {
-					if (_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+					owner.setcache(_geturl, json);
 					var msg = eval(json);
 					if (msg.code == 200) {
 						Zepto.each(msg.data, function(i, v) {
@@ -361,25 +365,33 @@
 
 	owner.get_language_info = function(callback) {
 
-			mui.ajax({
-				type: 'GET',
-				dataType: 'json',
-				url: baseDomain + "index.php?g=Api&m=Index&a=language_list",
-				success: function(json) {
-					return callback(json);
 
-					//var msg = eval(json);
+			var _geturl = baseDomain + "index.php?g=Api&m=Index&a=language_list";
+			var msg = owner.getcache(_geturl);
+			if (_isusecache && msg) {
+				return callback(msg);
+			} else {
+				mui.ajax({
+					timeout: 5000,
+					type: 'GET',
+					dataType: 'json',
+					url: _geturl,
+					success: function(json) {
+						owner.setcache(_geturl, json);
+						return callback(json);
+						//var msg = eval(json);
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						plus.nativeUI.toast(mylang['error_network']);
 
-				},
-				error: function(xhr, type, errorThrown) {
-					//异常处理；
-					plus.nativeUI.toast(mylang['error_network']);
-				}
-			});
+					}
+				});
+			}
 			plus.nativeUI.closeWaiting();
 		}
 		/**
-		 *  取回地区信息名称
+		 *  取回地区信息名称 //不缓存
 		 **/
 	owner.get_globallocalinfo = function() {
 			var _userinfo = plus.storage.getItem("$user") || "{}";
@@ -390,6 +402,7 @@
 				keyword = Zepto('#seach_local').val();
 			Zepto('#page').val(parseInt(page) + 1);
 			mui.ajax({
+				timeout: 5000,
 				type: 'GET',
 				dataType: 'json',
 				url: baseDomain + "index.php?g=Api&m=Index&a=global_list",
@@ -399,6 +412,7 @@
 					keyword: keyword
 				},
 				success: function(json) {
+
 					var msg = eval(json);
 
 					if (msg.code == 200) {
@@ -454,21 +468,61 @@
 		return JSON.parse(settingsText);
 	}
 
+
 	/**
-	 * 加载离线缓存开关
+	 *  返回更新列表
+	 **/
+
+
+	owner.get_sync_info = function() {
+		mui.ajax({
+			timeout: 5000,
+			type: 'GET',
+			dataType: 'json',
+			url: baseDomain + "index.php?g=Api&m=Index&a=sync_list",
+			success: function(json) {
+				var msg = eval(json);
+				if (msg.code == 200) {
+					alert(2);
+				}
+			},
+			error: function(xhr, type, errorThrown) {
+				//异常处理；
+				plus.nativeUI.toast(mylang['error_network']);
+				console.log(JSON.stringify(xhr));
+			}
+		});
+
+	}
+
+
+
+	/**
+	 * 读取离线缓存开
 	 **/
 	owner.getcache = function(_requesturl) {
+		//alert(owner.getSettings);
+		var settings = owner.getSettings();
+		//alert(settings.autoSync);
 		var offline_article = offline_article || {};
 		var _md5_requesturl = md5(_requesturl); //请求地址格式化
 		var articleinfo = localStorage.getItem(_md5_requesturl) || ''; //获取现有数据
-		if (articleinfo) {
-			plus.nativeUI.toast('cache');
+		if (articleinfo && settings.autoSync) { //当缓存信息存在 并且启用缓存功能时有效.
+			plus.nativeUI.toast('CacheData');
 			var articleinfo = JSON.parse(articleinfo);
 			return articleinfo;
 		} else {
-			plus.nativeUI.toast('ajax');
+			plus.nativeUI.toast('AjaxData');
 
 		}
 	}
 
+
+	/**
+	 * 写入离线缓存
+	 **/
+	owner.setcache = function(_requesturl, json) {
+		var settings = owner.getSettings();
+		if (_isusecache && settings.autoSync) localStorage.setItem(md5(_requesturl), JSON.stringify(json));
+	}
 }(mui, window.app = {}));
