@@ -95,9 +95,10 @@
 						var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show&id=" + sid + "&type=" + type + "&ishtml=1";
 						msg = app.getcache(_geturl);
 						if (_isusecache && msg) {
-							Zepto('.detail-title').html(msg.title);
-							Zepto('#content').html(msg.content);
+							Zepto('.detail-title').html(msg.data.title);
+							Zepto('#content').html(msg.data.content);
 						} else {
+
 							$.ajax({
 								type: 'GET',
 								dataType: 'json',
@@ -108,12 +109,11 @@
 								//								'ishtml': 1
 								//							},
 								success: function(json) {
-									app.setcache(_geturl,json);
-									//if (_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+									app.setcache(_geturl, JSON.stringify(json));
 									var msg = eval(json);
 									var str = '';
-									Zepto('.detail-title').html(msg.title);
-									Zepto('#content').html(msg.content);
+									Zepto('.detail-title').html(msg.data.title);
+									Zepto('#content').html(msg.data.content);
 								},
 								error: function(xhr, type, errorThrown) {
 									//异常处理

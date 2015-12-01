@@ -90,6 +90,22 @@
 		localStorage.setItem('$state', JSON.stringify(state));
 	};
 
+	/**
+	 * 获取默认选择的国家
+	 **/
+	owner.getLocal = function() {
+		var localText = localStorage.getItem('$local') || "";
+		if (localText == "") localText = "cn"; //默认设置为 中国  
+		return JSON.parse(localText);
+	};
+	/**
+	 * 设置选择的国家
+	 **/
+	owner.setLocal = function(state) {
+		state = state || {};
+		localStorage.setItem('$local', JSON.stringify(state));
+	};
+
 	var checkEmail = function(email) {
 		email = email || '';
 		return (email.length > 3 && email.indexOf('@') > -1);
@@ -122,8 +138,6 @@
 
 	/*首页*/
 	owner.add_more = function() {
-
-		//	function add_more() {
 		//*判断网络链接状态*/
 		var page = Zepto('#page').val(),
 			cid = Zepto('#cid').val();
@@ -131,7 +145,6 @@
 		//第一步 定义路径
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page;
 		var msg = owner.getcache(_geturl);
-
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
 				Zepto.each(msg.data, function(i, v) {
@@ -251,14 +264,12 @@
 		var page = Zepto('#page').val(),
 			cid = Zepto('#cid').val();
 		Zepto('#page').val(parseInt(page) + 1);
-
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page;
 		var msg = owner.getcache(_geturl);
-
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
 				Zepto.each(msg.data, function(i, v) {
-					var str = '<li   class="mui-table-view-cell li_list "' + v.catid + '" linkurl="detail.html" open-type="article" open-type="article" open-sid="' + v.id + '"  >	<span class="mui-icon-' + v.catdir + ' mui-icon icon_title"></span><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
+					var str = '<li class="mui-table-view-cell li_list icon_' + v.catid + '" linkurl="detail.html" open-type="article" open-sid="' + v.id + '"  ><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
 					Zepto('#newslist').append(str);
 				});
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
@@ -280,7 +291,7 @@
 					var msg = eval(json);
 					if (msg.code == 200) {
 						Zepto.each(msg.data, function(i, v) {
-							var str = '<li   class="mui-table-view-cell li_list "' + v.catid + '" linkurl="detail.html" open-type="article" open-type="article" open-sid="' + v.id + '"  >	<span class="mui-icon-' + v.catdir + ' mui-icon icon_title"></span><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
+							var str = '<li class="mui-table-view-cell li_list icon_' + v.catid + '" linkurl="detail.html" open-type="article" open-sid="' + v.id + '"  ><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
 							Zepto('#newslist').append(str);
 						});
 						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
@@ -394,51 +405,56 @@
 		 *  取回地区信息名称 //不缓存
 		 **/
 	owner.get_globallocalinfo = function() {
-			var _userinfo = plus.storage.getItem("$user") || "{}";
-			_userinfo = JSON.parse(_userinfo);
-			_nologin = _userinfo.userid;
-			var page = Zepto('#page').val(),
-				cid = Zepto('#cid').val(),
-				keyword = Zepto('#seach_local').val();
-			Zepto('#page').val(parseInt(page) + 1);
-			mui.ajax({
-				timeout: 5000,
-				type: 'GET',
-				dataType: 'json',
-				url: baseDomain + "index.php?g=Api&m=Index&a=global_list",
-				data: {
-					cid: cid,
-					p: page,
-					keyword: keyword
-				},
-				success: function(json) {
-
-					var msg = eval(json);
-
-					if (msg.code == 200) {
-						Zepto.each(msg.data, function(i, v) {
-							var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.typeid + '" >' + v.name + ' <input name="checkbox" type="checkbox"></li>';
-							Zepto('#newslist').append(str);
-						});
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
-					} else {
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-					//异常处理；
-					plus.nativeUI.toast(mylang['error_network']);
-					console.log(JSON.stringify(xhr));
+		var _checked=app.getLocal();
+		var _userinfo = plus.storage.getItem("$user") || "{}";
+		_userinfo = JSON.parse(_userinfo);
+		_nologin = _userinfo.userid;
+		var page = Zepto('#page').val(),
+			cid = Zepto('#cid').val(),
+			keyword = Zepto('#seach_local').val();
+		Zepto('#page').val(parseInt(page) + 1);
+		mui.ajax({
+			timeout: 5000,
+			type: 'GET',
+			dataType: 'json',
+			url: baseDomain + "index.php?g=Api&m=Index&a=global_list",
+			data: {
+				cid: cid,
+				p: page,
+				keyword: keyword
+			},
+			success: function(json) {
+				var bool="";
+				var msg = eval(json);
+				if (msg.code == 200) {
+					Zepto.each(msg.data, function(i, v) {
+						//if (_checked.indexOf(v.typeid +",")) bool='checked' else bool='';
+						
+						var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.typeid + '" >' + v.typeid + v.name + ' <input name="local_list" type="checkbox"  value="' + v.typeid +'></li>';
+						Zepto('#newslist').append(str);
+					});
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+				} else {
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-
-
 				}
-			});
-			plus.nativeUI.closeWaiting();
-		}
-		/**
-		 * 找回密码
-		 **/
+			},
+			error: function(xhr, type, errorThrown) {
+				//异常处理；
+				plus.nativeUI.toast(mylang['error_network']);
+				//console.log(JSON.stringify(xhr));
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+
+
+			}
+		});
+		plus.nativeUI.closeWaiting();
+	}
+
+
+
+	/**
+	 * 找回密码
+	 **/
 	owner.submitPassword = function(password_1, password_2, callback) {
 			callback = callback || $.noop;
 			if (!password_1 || !password_2) {
@@ -474,27 +490,60 @@
 	 **/
 
 
-	owner.get_sync_info = function() {
+	owner.get_sync_info = function(self, callback) {
+		var time = 10;
 		mui.ajax({
 			timeout: 5000,
+			async: false,
 			type: 'GET',
 			dataType: 'json',
 			url: baseDomain + "index.php?g=Api&m=Index&a=sync_list",
 			success: function(json) {
 				var msg = eval(json);
 				if (msg.code == 200) {
-					alert(2);
+					Zepto.each(msg.data, function(i, v) {
+						var _requesturl = baseDomain + v; //需要缓存的地址
+						mui.ajax({
+							type: 'GET',
+							dataType: 'json',
+							async: false,
+							url: _requesturl,
+							success: function(json) {
+								var msg = eval(json);
+								if (msg.code == 200) {
+									localStorage.setItem(md5(_requesturl), JSON.stringify(msg));
+								}
+							}
+						});
+
+					});
+					//修改状态
+
 				}
 			},
 			error: function(xhr, type, errorThrown) {
 				//异常处理；
-				plus.nativeUI.toast(mylang['error_network']);
-				console.log(JSON.stringify(xhr));
+				//plus.nativeUI.toast(mylang['error_network']);
+				//console.log(JSON.stringify(xhr));
+				return callback(mylang['error_network'] + ',同步异常!');
 			}
 		});
-
+		return callback();
 	}
 
+
+
+	/**
+	 * 返回点中的内容
+	 **/
+	owner.retrun_checkboxed = function(obj, callback) {
+		var str="";
+		for (var i = 0; i < obj.length; i++) {
+			if (obj[i].checked) str += obj[i].value + ','; //如果选中，将value添加到变量s中 
+		}
+		str = str.substring(0, str.length - 1); //返回点中的值
+		return callback(str);
+	}
 
 
 	/**
@@ -522,6 +571,7 @@
 	 * 写入离线缓存
 	 **/
 	owner.setcache = function(_requesturl, json) {
+		//alert(_requesturl);
 		var settings = owner.getSettings();
 		if (_isusecache && settings.autoSync) localStorage.setItem(md5(_requesturl), JSON.stringify(json));
 	}

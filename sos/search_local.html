@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<script src="js/config.js"></script>
+	
+
+	</head>
+
+	<body>
+		<style>
+			#leftmenu,
+			#setting,
+			.mui-icon {
+				color: #ffffff;
+			}
+			
+			.mui-table-view.mui-grid-view .mui-table-view-cell > a:active:not(.mui-btn) {
+				background: none repeat scroll 0 0 #FF5053;
+			}
+			
+			.top_text {
+				height: 30px;
+				text-align: left;
+				font-size: 14px;
+				padding-left: 10px;
+				background-color: #F9F9F9;
+				line-height: 30px;
+			}
+			
+			.icon-target {
+				font-size: 20px;
+				line-height: 45px;
+				color: #FFFFFF;
+			}
+			
+			#seach_local {
+				width: 200px;
+				height: 30px;
+				border-radius: 12px;
+				margin-top: 8px;
+				font-size: 14px;
+				background-color: #ffffff;
+			}
+			
+			.s_list {
+				margin-top: 75px
+			}
+		</style>
+		<div class="mui-title tit-sort">
+			<input type="hidden" id="page" name="page" value="1" />
+			<input type="hidden" id="cid" name="cid" value="1" />
+		</div>
+		<!-- 主页面容器 -->
+		<div class="mui-inner-wrap">
+			<!-- 主页面标题 -->
+			<header class="mui-bar mui-bar-nav">
+				<h1 class="mui-title detail-title" id="title"></h1>
+				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+					<div class="kele mui-action-back mui-icon-back">返回</div>
+				</button>
+				<input id='seach_local' type="text" class="mui-input-clear mui-input top_search" placeholder="搜索位置">
+				<span class="iconfont icon-target mui-pull-right" id="local_btn"></span>
+				<div class="mui-pull-right nav_line"></div>
+			</header>
+			<div class="mui-content">
+				<div class="top_text">
+					最近位置
+				</div>
+
+				<div id="pullrefresh" class="mui-content mui-scroll-wrapper s_list">
+					<div class="mui-scroll">
+						<!--media list-->
+						<div class="hd"></div>
+						<ul class="mui-table-view list mui-table-view mui-table-view-radio" id="newslist">
+						</ul>
+
+						<!--end media list-->
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">
+				(function($, doc) {
+					$.init({
+						pullRefresh: {
+							container: '#pullrefresh',
+							up: {
+								contentrefresh: "正在加载...",
+								contentnomore: '没有更多数据了',
+								callback: app.get_globallocalinfo
+							}
+						},
+					});
+					if ($.os.plus) {
+						$.plusReady(function() {
+							plus.nativeUI.showWaiting();
+							var self = plus.webview.currentWebview();
+							Zepto('#cid').val(self.sid); //分类
+							setTimeout(function() {
+								refresh_list();
+								plus.nativeUI.closeWaiting();
+								plus.webview.currentWebview().show();
+							}, 500);
+							//获取选择的位置
+							//var local = app.getLocal(); 
+							//alert(local);
+						});
+					} else {
+						$.ready(function() {
+							Zepto('#page').val(1);
+							$('#pullrefresh').pullRefresh().pullupLoading();
+						});
+					}
+					//主列表点击事件main
+					$('#pullrefresh').on('tap', 'li', function() {
+						var obj=document.getElementsByName('local_list'); //选择所有name="'test'"的对象，返回数组 
+						//取到对象数组后，我们来循环检测它是不是被选中 
+						app.retrun_checkboxed(obj,function(e) {
+							app.setLocal(e);
+						});
+					});
+
+					function refresh_list() {
+						$('#pullrefresh').pullRefresh().pullupLoading();
+					}
+					Zepto('#seach_local').on('change', function(e) {
+						refresh_list();
+					});
+					//点击定位按钮
+					doc.getElementById('local_btn').addEventListener('tap', function(event) {
+						plus.nativeUI.showWaiting('正在获取地理位置信息');
+						plus.geolocation.getCurrentPosition(geoInf, function(e) {
+							alert("获取位置信息失败!");
+						});
+						plus.nativeUI.closeWaiting();
+
+					});
+				}(mui, document));
+				var watchId;
+
+				function geoInf(position) {
+					var codns = position.coords; //获取地理坐标信息；
+					var lat = codns.latitude; //获取到当前位置的纬度；
+					var longt = codns.longitude; //获取到当前位置的经度
+					mui.ajax({
+						type: 'GET',
+						dataType: 'json',
+						url: baseDomain + "index.php?g=Api&m=Index&a=get_local",
+						data: {
+							'lat': lat,
+							'lng': longt
+						},
+						success: function(json) {
+							var msg = eval(json);
+							if (msg.code == 200) {
+								var bts = ["否","是"];
+								plus.nativeUI.confirm("检测到您当前在" + msg.info + ",您要将此作为您的首选国家吗?", function(e) {
+									var i = e.index;
+									if(i>0){//点了是 
+										refresh_list();
+									}
+									
+								}, "信息提示", bts);
+								
+								
+							} else {
+								plus.nativeUI.toast(mylang['error_network']);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.nativeUI.toast(mylang['error_network']);
+						}
+					});
+					plus.nativeUI.closeWaiting();
+				}
+			</script>
+	</body>
+
+</html>

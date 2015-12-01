@@ -137,13 +137,13 @@
 				<div class="mui-scroll-wrapper">
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell ">
-							<a class="mui-navigate-right" linkurl="detail.html" type="page" open-sid="12">会员权益 </a>
+							<a class="mui-navigate-right" linkurl="detail.html" open-type="page" open-sid="12">会员权益 </a>
 						</li>
 						<li class="mui-table-view-cell">
-							<a class="mui-navigate-right" linkurl="detail.html" type="page" open-sid="4">条款及细则</a>
+							<a class="mui-navigate-right" linkurl="detail.html" open-type="page" open-sid="4">条款及细则</a>
 						</li>
 						<li class="mui-table-view-cell">
-							<a class="mui-navigate-right" linkurl="detail.html" type="page" open-sid="13">隐私政策</a>
+							<a class="mui-navigate-right" linkurl="detail.html" open-type="page" open-sid="13">隐私政策</a>
 						</li>
 					</ul>
 				</div>
@@ -159,7 +159,7 @@
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-input-row" style="padding-top:20px;">
-						<div id="autosyncButton" class="mui-switch mui-switch-blue mui-active ">
+						<div id="autosyncButton" class="mui-switch mui-switch-blue mui-active">
 							<div class="mui-switch-handle"></div>
 						</div>
 						<h4>开启时同步</h4>
@@ -257,15 +257,24 @@
 						}
 					});
 				});
-		
 				doc.getElementById('syncnow').addEventListener('tap', function(event) {
 					//处理更新同步
-					alert(222);
+					plus.nativeUI.showWaiting('正在离线缓存文件...');
+					app.get_sync_info(this,function(err) {
+							if (err) {
+								plus.nativeUI.toast(err);
+								plus.nativeUI.closeWaiting();
+								return;
+							}else{
+							plus.nativeUI.toast("同步成功");
+						}
+						plus.nativeUI.closeWaiting();
+					});
 				}, false);
 				//同步开启
 				var settings = app.getSettings();
 				autosyncButton = doc.getElementById("autosyncButton");
-				autosyncButton.classList[settings.autoLogin ? 'add' : 'remove']('mui-active')
+				autosyncButton.classList[settings.autoSync ? 'add' : 'remove']('mui-active')
 				autosyncButton.addEventListener('toggle', function(event) {
 					setTimeout(function() {
 						var isSync = event.detail.isActive;

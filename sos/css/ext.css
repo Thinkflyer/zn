@@ -4,50 +4,39 @@
 .s_left {
 	text-align: left;
 }
-
 .s_right {
 	text-align: right;
 }
-
 .s_center {
 	text-align: center;
 }
-
 .s_label {
 	font-size: 16px;
 }
-
 .s_strong {
 	font-weight: bold;
 	font-size: 14px;
 	line-height: 20px;
 }
-
 .s_date {
 	font-size: 12px;
 	font-weight: inherit;
 }
-
 .s_des {
 	font-size: 12px;
 }
-
 .mui-bar-nav {
 	background-color: #832F32;
 }
-
 .blue_color {
 	color: #232762;
 }
-
 .black_color {
 	color: #3B4047;
 }
-
 .red_color {
 	color: #232762;
 }
-
 .kele:before {
 	position: absolute;
 	content: " ";
@@ -126,7 +115,7 @@
 }
 
 .icon_6 {
-	background-image: url("../images/li_icon2.png");
+	background-image: url("../images/li_icon6.png");
 }
 
 

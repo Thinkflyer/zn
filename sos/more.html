@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<title>新闻列表</title>
@@ -104,6 +105,15 @@
 		#newslist .icon_title {
 			font-size: 15px;
 		}
+		
+		#newslist li {
+			background-position: left 1.4em;
+			background-repeat: no-repeat;
+			background-size: 20px 20px;
+			margin: 0 auto;
+			padding-left: 25px;
+			margin-left: 5px;
+		}
 	</style>
 
 	<body>
@@ -135,66 +145,65 @@
 		</div>
 
 		<script type="text/javascript">
-				(function($, doc) {
-					$.init({
-						pullRefresh: {
-							container: '#pullrefresh', //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
-							up: {
-								contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
-								contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
-								callback: app.get_globalnewslist //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
-							}
-						},
-					});
-					if ($.os.plus) {
-						$.plusReady(function() {
-							plus.nativeUI.showWaiting();
-							var self = plus.webview.currentWebview();
-							Zepto('#title').html(self.title);//标题赋值
-							Zepto('#cid').val(self.sid);//分类
-							
-							setTimeout(function() {
-								$('#pullrefresh').pullRefresh().pullupLoading();
-								plus.nativeUI.closeWaiting();
-								plus.webview.currentWebview().show();
-							}, 500);
-						});
-					} else {
-						$.ready(function() {
-							Zepto('#page').val(1);
+			(function($, doc) {
+				$.init({
+					pullRefresh: {
+						container: '#pullrefresh', //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+						up: {
+							contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+							contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+							callback: app.get_globalnewslist //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+						}
+					},
+				});
+				if ($.os.plus) {
+					$.plusReady(function() {
+						plus.nativeUI.showWaiting();
+						var self = plus.webview.currentWebview();
+						Zepto('#title').html(self.title); //标题赋值
+						Zepto('#cid').val(self.sid); //分类
+						setTimeout(function() {
 							$('#pullrefresh').pullRefresh().pullupLoading();
-						});
-					}
-					//主列表点击事件main
-					$('#pullrefresh').on('tap', 'li', function() {
-						var type = this.getAttribute("open-type");
-						var linkurl = this.getAttribute('linkurl');
-						var sid = this.getAttribute('open-sid');
-						$.openWindow({
-							id: 'main',
-							url: linkurl,
-							show: {
-							 autoShow:false,	
-							},
-							waiting: {
-								autoShow: true,
-								title: '正在加载...', //等待对话框上显示的提示内容
-							},
-							styles: {
-								zindex: 1,
-							},
-							extras: {
-								sid: sid,
-								type: type
-							}
-						});
-						//alert(22);
-						//var self = plus.webview.currentWebview();
-						//$.back();
-						//mui.fire(mui.currentWebview.opener(), "closeall");
+							plus.nativeUI.closeWaiting();
+							plus.webview.currentWebview().show();
+						}, 500);
 					});
-				}(mui, document));
-			</script>
+				} else {
+					$.ready(function() {
+						Zepto('#page').val(1);
+						$('#pullrefresh').pullRefresh().pullupLoading();
+					});
+				}
+				//主列表点击事件main
+				$('#pullrefresh').on('tap', 'li', function() {
+					var type = this.getAttribute("open-type");
+					var linkurl = this.getAttribute('linkurl');
+					var sid = this.getAttribute('open-sid');
+					$.openWindow({
+						id: 'main',
+						url: linkurl,
+						show: {
+							autoShow: false,
+						},
+						waiting: {
+							autoShow: true,
+							title: '正在加载...', //等待对话框上显示的提示内容
+						},
+						styles: {
+							zindex: 1,
+						},
+						extras: {
+							sid: sid,
+							type: type
+						}
+					});
+					//alert(22);
+					//var self = plus.webview.currentWebview();
+					//$.back();
+					//mui.fire(mui.currentWebview.opener(), "closeall");
+				});
+			}(mui, document));
+		</script>
 	</body>
 
 </html>

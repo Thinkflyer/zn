@@ -89,35 +89,36 @@
 						var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show&id=" + sid + "&type=" + type;
 						msg = app.getcache(_geturl);
 						if (_isusecache && msg) {
-							Zepto('#m_local').html(msg.local_id);
-							Zepto('#m_title').html(msg.title);
-							Zepto('#m_tel').html("<a title='" + msg.tel + "'>呼叫</a>");
-							Zepto('#m_email').html("<a title='" + msg.email + "'>使用邮件联系</a>");
-							Zepto('#m_address').html(msg.address);
-							Zepto('#m_service').html(msg.service);
-							Zepto('#m_fax').html(msg.fax);
-							Zepto('#m_note').html(msg.telnote);
+							Zepto('#m_local').html(msg.data.local_id);
+							Zepto('#m_title').html(msg.data.title);
+							Zepto('#m_tel').html("<a title='" + msg.data.tel + "'>呼叫</a>");
+							Zepto('#m_email').html("<a title='" + msg.data.email + "'>使用邮件联系</a>");
+							Zepto('#m_address').html(msg.data.address);
+							Zepto('#m_service').html(msg.data.service);
+							Zepto('#m_fax').html(msg.data.fax);
+							Zepto('#m_note').html(msg.data.telnote);
 						} else {
 							$.ajax({
 								type: 'GET',
 								dataType: 'json',
 								url: _geturl,
-								//							data: {
-								//								'id': sid,
-								//								'type': type
-								//							},
+								//data: {
+								//	'id': sid,
+								//	'type': type
+								//	},
 								success: function(json) {
-									if(_isusecache) localStorage.setItem(md5(_geturl), JSON.stringify(json));
+									
+									app.setcache(_geturl, JSON.stringify(json));
 									var msg = eval(json);
 									var str = '';
-									Zepto('#m_local').html(msg.local_id);
-									Zepto('#m_title').html(msg.title);
-									Zepto('#m_tel').html("<a title='" + msg.tel + "'>呼叫</a>");
-									Zepto('#m_email').html("<a title='" + msg.email + "'>使用邮件联系</a>");
-									Zepto('#m_address').html(msg.address);
-									Zepto('#m_service').html(msg.service);
-									Zepto('#m_fax').html(msg.fax);
-									Zepto('#m_note').html(msg.telnote);
+									Zepto('#m_local').html(msg.data.local_id);
+									Zepto('#m_title').html(msg.data.title);
+									Zepto('#m_tel').html("<a title='" + msg.data.tel + "'>呼叫</a>");
+									Zepto('#m_email').html("<a title='" + msg.data.email + "'>使用邮件联系</a>");
+									Zepto('#m_address').html(msg.data.address);
+									Zepto('#m_service').html(msg.data.service);
+									Zepto('#m_fax').html(msg.data.fax);
+									Zepto('#m_note').html(msg.data.telnote);
 								},
 								error: function(xhr, type, errorThrown) {
 									//异常处理
