@@ -132,7 +132,7 @@
 					if (msg.code <= 0) {
 						return callback(msg.info);
 					} else {
-						mui.alert('重置密码成功');
+						mui.alert(msg.info);
 						return callback(0);
 					}
 				},

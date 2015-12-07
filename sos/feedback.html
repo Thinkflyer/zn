@@ -36,7 +36,7 @@
 			background: none;
 		}
 		
-		#content {
+		#m_content {
 			height: 12em;
 		}
 	</style>
@@ -56,11 +56,11 @@
 				</div>
 
 				<div class="row mui-input-row">
-					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="您的电子邮箱">
+					<input id='m_email' type="text" class="mui-input-clear mui-input" placeholder="您的电子邮箱">
 				</div>
 
 				<div class="row mui-input-row">
-					<textarea id="content" class="mui-input-clear" placeholder="输入您的反馈...*"></textarea>
+					<textarea id="m_content" class="mui-input-clear" placeholder="输入您的反馈...*"></textarea>
 				</div>
 			</div>
 			<div class="mui-input-row">
@@ -71,19 +71,23 @@
 			(function($, doc) {
 				$.init();
 				$.plusReady(function() {
-//					var self = plus.webview.currentWebview();
-//					var m_type = self.sid;
-					var state = app.getState();
-//					var self = plus.webview.currentWebview();
-//					sid = self.sid;
-//					type = self.type;
-					
+					//					var self = plus.webview.currentWebview();
+					//					var m_type = self.sid;
+					var loginInfo = app.getCommon('loginInfo');
+
+					//					var self = plus.webview.currentWebview();
+					//					sid = self.sid;
+					//					type = self.type;
 					document.getElementById('postButton').addEventListener('tap', function(event) {
-						var m_token = state.token;
-						var content = document.getElementById('content');
-						var m_content = content.value;
+						var m_token = loginInfo.auth;
+						var m_email = document.getElementById('m_email').value;
+						var m_content = document.getElementById('m_content').value;
+						if (!m_email) {
+							mui.alert('电子邮箱不能为空', '提示信息');
+							return false;
+						}
 						if (!m_content) {
-							plus.nativeUI.toast(mylang['error_no_empty']);
+							mui.alert(mylang['error_no_empty'], '提示信息');
 							return false;
 						}
 						$.ajax({
@@ -91,13 +95,12 @@
 							dataType: 'json',
 							url: baseDomain + "index.php?g=Api&m=Index&a=post_content",
 							data: {
-								'm_type': m_type,
+								'm_email': m_email,
 								'm_content': m_content,
 								'm_token': m_token
 							},
 							success: function(json) {
 								var msg = eval(json);
-								//console.log(msg.debug);
 								plus.nativeUI.toast(msg.info);
 								mui.back();
 							},
