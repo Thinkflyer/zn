@@ -2,26 +2,81 @@
 	/**
 	 * 用户登录
 	 **/
+	//var _authed;
 	owner.login = function(loginInfo, callback) {
 		callback = callback || $.noop;
 		loginInfo = loginInfo || {};
 		loginInfo.account = loginInfo.account || '';
 		loginInfo.password = loginInfo.password || '';
+		loginInfo.cardnumber = loginInfo.cardnumber || '';
+		loginInfo.is_cardnumber = loginInfo.is_cardnumber;
+		var _posturl = baseDomain + "index.php?g=Api&m=Index&a=ajaxlogin";
+		if (loginInfo.is_cardnumber) {
+			if (loginInfo.cardnumber.length != 12) {
+				return callback('会员卡格式不符合');
+			} else {
+				//会员卡登陆方法
+				mui.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: _posturl,
+					data: {
+						cardnumber: loginInfo.cardnumber
+					},
+					success: function(json) {
+						var msg = eval(json);
+						if (msg.code <= 0) {
+							return callback(msg.info);
+						} else {
+							//成功返回 保存
+							loginInfo.account = msg.username;
+							loginInfo.auth = msg.auth;
+							loginInfo.cardnumber = msg.cardnumber;
+							owner.setCommon('loginInfo',loginInfo);
+							return callback(0); //登陆成功
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						plus.nativeUI.toast(mylang['error_network']);
+					}
+				});
+			}
+			//return callback('会员卡录入');
 
-		if (loginInfo.account.length < 6) {
-			return callback('用户名输入格式错误');
-		}
-		if (loginInfo.password.length < 4) {
-			return callback('密码最短为 4 个字符');
-		}
-
-
-
-		var authed = 1; //为1 验证成功  0 验证失败
-		if (authed) {
-			return owner.createState(loginInfo.account, callback);
 		} else {
-			return callback('用户名或密码错误');
+			//账户密码登陆方式
+			if (loginInfo.account.length == 0) return callback('账户不能为空');
+			if (!checkEmail(loginInfo.account)) return callback('账户邮件格式有误');
+			if (loginInfo.password.length < 6) return callback('密码最短不能小于 6 个字符');
+
+			mui.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: _posturl,
+				async: false,
+				data: {
+					m_account: loginInfo.account,
+					m_password: loginInfo.password,
+				},
+				success: function(json) {
+					var msg = eval(json);
+					if (msg.code <= 0) {
+						return callback(msg.info);
+					} else {
+						//成功返回 保存
+						//alert(msg.cardnumber);
+						loginInfo.account = msg.username;
+						loginInfo.auth = msg.auth;
+						loginInfo.cardnumber = msg.cardnumber;
+						owner.setCommon('loginInfo',loginInfo);
+						return callback(0); //登陆成功
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					plus.nativeUI.toast(mylang['error_network']);
+				}
+			});
+
 		}
 
 	};
@@ -45,33 +100,91 @@
 	};
 
 
+
+	/**
+	 * 用户重置修改密码
+	 **/
+
+	owner.send_password = function(re_passwdInfo, callback) {
+		callback = callback || $.noop;
+		re_passwdInfo = re_passwdInfo || {};
+		re_passwdInfo.getemail = re_passwdInfo.getemail || '';
+		re_passwdInfo.new_passwd = re_passwdInfo.new_passwd || '';
+		re_passwdInfo.new_passwd2 = re_passwdInfo.new_passwd2 || '';
+		re_passwdInfo.auth = re_passwdInfo.auth || '';
+		if (!checkEmail(re_passwdInfo.getemail)) return callback('请填写合法邮件地址');
+		if (re_passwdInfo.new_passwd.length < 6) return callback('密码最短不能小于 6 个字符');
+		if (re_passwdInfo.new_passwd2.length < 6) return callback('重复密码最短不能小于 6 个字符');
+		if (re_passwdInfo.new_passwd!=re_passwdInfo.new_passwd2) return callback('两次密码输入不相同');
+		if (re_passwdInfo.auth.length < 6) return callback('请输入6位验证码');
+			//注册邮件开始
+			mui.ajax({
+				type: 'GET',
+				dataType: 'json',
+				url: baseDomain + "index.php?g=Api&m=Index&a=ajax_repasswd",
+				data: {
+					getemail: re_passwdInfo.getemail ,
+					new_passwd: re_passwdInfo.new_passwd ,
+					auth : re_passwdInfo.auth,
+				},
+				success: function(json) {
+					var msg = eval(json);
+					if (msg.code <= 0) {
+						return callback(msg.info);
+					} else {
+						mui.alert('重置密码成功');
+						return callback(0);
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					plus.nativeUI.toast(mylang['error_network']);
+				}
+			});
+		
+	
+	};
+
 	/**
 	 * 新用户注册
 	 **/
-	owner.reg = function(regInfo, callback) {
+	owner.reg = function(reg_email, callback) {
 		callback = callback || $.noop;
-		regInfo = regInfo || {};
-		regInfo.account = regInfo.account || '';
-		regInfo.password = regInfo.password || '';
-		regInfo.auth = regInfo.auth || '';
-		if (regInfo.auth.length < 4) {
-			return callback('验证码位数不符');
+		reg_email = reg_email || {};
+		if (!reg_email.length) return callback('注册邮箱地址不能为空');
+		if (!checkEmail(reg_email)) {
+			return callback('注册邮箱地址不正确');
+		} else {
+			//注册邮件开始
+			mui.ajax({
+				async: false,
+				type: 'POST',
+				dataType: 'json',
+				url: baseDomain + "index.php?g=Api&m=Index&a=ajax_reg",
+				data: {
+					reg_email: reg_email,
+				},
+				success: function(json) {
+					var msg = eval(json);
+					
+					if (msg.code <= 0) {
+						return callback(msg.info);
+					} else {
+						//保存登陆状态
+						var regInfo = {
+								account: msg.username,
+								auth: msg.auth,
+								cardnumber: msg.cardnumber,
+							};
+						owner.setCommon('loginInfo',regInfo);
+						return callback(0);
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					plus.nativeUI.toast(mylang['error_network']);
+				}
+			});
 		}
-
-		if (regInfo.account.length < 11) {
-			return callback('手机号码需要11个字符');
-		}
-
-		if (regInfo.password.length < 6) {
-			return callback('密码最短需要 6 个字符');
-		}
-
-
-		//var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		//users.push(regInfo);
-		//localStorage.setItem('$users', JSON.stringify(users));
-
-		return callback();
+	
 	};
 
 	/**
@@ -90,13 +203,14 @@
 		localStorage.setItem('$state', JSON.stringify(state));
 	};
 
+
+
 	/**
 	 * 获取默认选择的国家
 	 **/
 	owner.getLocal = function() {
-		var localText = localStorage.getItem('$local') || "";
-		if (localText == "") localText = "cn"; //默认设置为 中国  
-		return JSON.parse(localText);
+		var localText = localStorage.getItem('$local') || "\"2,\""; //2为默认中国
+		return localText;
 	};
 	/**
 	 * 设置选择的国家
@@ -199,26 +313,19 @@
 		var page = Zepto('#page').val(),
 			cid = Zepto('#cid').val();
 		Zepto('#page').val(parseInt(page) + 1);
-
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=favourite_list&p=" + page;
 		var msg = owner.getcache(_geturl);
-
 		if (_isusecache && msg) {
-
 			if (msg.code == 200) {
 				Zepto.each(msg.data, function(i, v) {
 					var str = '<li class="mui-table-view-cell" linkurl="main.html"  open-sid="' + v.id + '"  ><a class="mui-navigate-right">' + v.localname + '</a>';
-
 					Zepto('#newslist').append(str);
 				});
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
 			} else {
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 			}
-
-
 		} else {
-
 
 			mui.ajax({
 				timeout: 5000,
@@ -404,8 +511,9 @@
 		/**
 		 *  取回地区信息名称 //不缓存
 		 **/
-	owner.get_globallocalinfo = function() {
-		var _checked=app.getLocal();
+	owner.get_globallocalinfo_save = function() {
+		var _checked = owner.getLocal();
+		var is_checked = "";
 		var _userinfo = plus.storage.getItem("$user") || "{}";
 		_userinfo = JSON.parse(_userinfo);
 		_nologin = _userinfo.userid;
@@ -413,24 +521,24 @@
 			cid = Zepto('#cid').val(),
 			keyword = Zepto('#seach_local').val();
 		Zepto('#page').val(parseInt(page) + 1);
+
 		mui.ajax({
 			timeout: 5000,
 			type: 'GET',
 			dataType: 'json',
-			url: baseDomain + "index.php?g=Api&m=Index&a=global_list",
+			url: baseDomain + "index.php?g=Api&m=Index&a=favourite_list",
 			data: {
 				cid: cid,
 				p: page,
-				keyword: keyword
+				userid: _nologin
 			},
 			success: function(json) {
-				var bool="";
 				var msg = eval(json);
 				if (msg.code == 200) {
 					Zepto.each(msg.data, function(i, v) {
-						//if (_checked.indexOf(v.typeid +",")) bool='checked' else bool='';
-						
-						var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.typeid + '" >' + v.typeid + v.name + ' <input name="local_list" type="checkbox"  value="' + v.typeid +'></li>';
+						if (_checked.indexOf(v.local_id + ",") >= 0) is_checked = 'checked';
+						else is_checked = '';
+						var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.local_id + '" >' + v.local_id + v.localname + ' <input name="local_list" type="checkbox" value="' + v.local_id + '" ' + is_checked + '></li>';
 						Zepto('#newslist').append(str);
 					});
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
@@ -450,6 +558,54 @@
 		plus.nativeUI.closeWaiting();
 	}
 
+	/**
+	 *  取回地区信息名称 //不缓存
+	 **/
+	owner.get_globallocalinfo = function() {
+		var _checked = owner.getLocal();
+		var is_checked = "";
+		var _userinfo = plus.storage.getItem("$user") || "{}";
+		_userinfo = JSON.parse(_userinfo);
+		_nologin = _userinfo.userid;
+		var page = Zepto('#page').val(),
+			cid = Zepto('#cid').val(),
+			keyword = Zepto('#seach_local').val();
+		Zepto('#page').val(parseInt(page) + 1);
+		mui.ajax({
+			timeout: 5000,
+			type: 'GET',
+			dataType: 'json',
+			url: baseDomain + "index.php?g=Api&m=Index&a=global_list",
+			data: {
+				cid: cid,
+				p: page,
+				keyword: keyword
+			},
+			success: function(json) {
+				var msg = eval(json);
+				if (msg.code == 200) {
+					Zepto.each(msg.data, function(i, v) {
+						if (_checked.indexOf(v.typeid + ",") >= 0) is_checked = 'checked';
+						else is_checked = '';
+						var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.typeid + '" >' + v.name + ' <input name="local_list" type="checkbox" value="' + v.typeid + '" ' + is_checked + '></li>';
+						Zepto('#newslist').append(str);
+					});
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+				} else {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+				}
+			},
+			error: function(xhr, type, errorThrown) {
+				//异常处理；
+				plus.nativeUI.toast(mylang['error_network']);
+				//console.log(JSON.stringify(xhr));
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+
+
+			}
+		});
+		plus.nativeUI.closeWaiting();
+	}
 
 
 	/**
@@ -488,8 +644,6 @@
 	/**
 	 *  返回更新列表
 	 **/
-
-
 	owner.get_sync_info = function(self, callback) {
 		var time = 10;
 		mui.ajax({
@@ -533,18 +687,74 @@
 
 
 
+
+	/**
+	 * 找回密码 通过邮件
+	 **/
+	owner.get_password = function(_email, callback) {
+		callback = callback || $.noop;
+		if(!_email) return callback('邮箱不能为空');
+		if (!checkEmail(_email)) {
+			return callback('您输入的邮箱格式不正确');
+		} else {
+			//找回密码
+			mui.ajax({
+				type: 'GET',
+				dataType: 'json',
+				url: baseDomain + "index.php?g=Api&m=Index&a=get_password",
+				data: {
+					email: _email
+				},
+				success: function(json) {
+					var msg = eval(json);
+					if (msg.code <= 0) {
+						return callback(msg.info);
+					} else {
+						plus.nativeUI.toast('验证码已经成功发送至'+_email);
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					plus.nativeUI.toast(mylang['error_network']);
+				}
+			});
+
+			return callback(0);
+		}
+		return callback(str);
+	}
+
+
 	/**
 	 * 返回点中的内容
 	 **/
 	owner.retrun_checkboxed = function(obj, callback) {
-		var str="";
+		var str = "";
 		for (var i = 0; i < obj.length; i++) {
 			if (obj[i].checked) str += obj[i].value + ','; //如果选中，将value添加到变量s中 
 		}
-		str = str.substring(0, str.length - 1); //返回点中的值
+		//str = str.substring(0, str.length - 1); //返回点中的值
 		return callback(str);
 	}
 
+
+	/*用户登陆*/
+	owner.toMain = function(current_view) {
+		//IndexLogin = plus.webview.getWebviewById("IndexLogin");
+		$.openWindow({
+			id: 'HBuilder',
+			url: 'main.html',
+			show: {
+				aniShow: 'pop-in',
+				autoShow: false
+			},
+			waiting: {
+				autoShow: false
+			}
+		});
+		//mui.fire(mui.currentWebview.opener(), "show_index");
+		current_view.close();
+		//IndexLogin.close();
+	}
 
 	/**
 	 * 读取离线缓存开
@@ -575,4 +785,25 @@
 		var settings = owner.getSettings();
 		if (_isusecache && settings.autoSync) localStorage.setItem(md5(_requesturl), JSON.stringify(json));
 	}
+
+
+	/**
+	 * * 获取当前状态 通用模式
+	 **/
+	owner.getCommon = function(common) {
+		var stateText = localStorage.getItem('$' + common) || "{}";
+		return JSON.parse(stateText);
+	};
+	/**
+	 * * 设置当前状态 通用模式
+	 * * var common 缓存变量命名
+	 * * var state  内容设置 @json
+	 * * retrun null
+	 **/
+	owner.setCommon = function(common,state) {
+		state = state || {};
+		localStorage.setItem('$' + common, JSON.stringify(state));
+	};
+
+
 }(mui, window.app = {}));

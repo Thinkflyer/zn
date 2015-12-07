@@ -108,6 +108,7 @@
 			mui.init();
 			mui('#pullrefresh').scroll();
 			var plusReady = function() {
+				plus.nativeUI.closeWaiting();
 				var self = plus.webview.currentWebview();
 				var sid = self.sid;
 				var type = self.type;

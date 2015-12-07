@@ -37,7 +37,7 @@
 		}
 		
 		.formart_t {
-			width: 100px;
+			width: 60%;
 			text-align: right;
 			float: right;
 			font-size: 14px;
@@ -67,8 +67,12 @@
 					<p class="s_strong black_color">Version 1.0.1</p>
 				</div>
 				<div class="row mui-input-row">
+					账号#:
+					<div class="blue_color formart_t" id="user_name"></div>
+				</div>
+				<div class="row mui-input-row">
 					会员号码 #:
-					<div class="blue_color formart_t" id="user_number">0000000000</div>
+					<div class="blue_color formart_t" id="user_number"></div>
 				</div>
 				<div class="row mui-input-row">
 					援助中心电话＃:<span class="blue_color formart_t" id="sos_tel"></span>
@@ -85,43 +89,48 @@
 			</div>
 			<div class="mui-input-row s_center">
 				<button class="btn-color mui-btn-block" linkurl="feedback.html">发送反馈</button>
-				<button class="btn-color mui-btn-block">评级本应用程序</button>
-				<p><a linkurl="detail.html">第三方法律信息</a></p>
+				<button class="btn-color mui-btn-block" linkurl="feedback.html">评级本应用程序</button>
+				<p>
+					<button class="mui-btn-link" linkurl="detail.html" open-type="page" open-sid="4">第三方法律信息</button>
+				</p>
+
 			</div>
 		</div>
 		<script>
 			(function($, doc) {
 				$.init();
 				$.plusReady(function() {
+					var loginInfo = app.getCommon('loginInfo');
+					Zepto('#user_name').html(loginInfo.account);
+					Zepto('#user_number').html(loginInfo.cardnumber);
+
 					Zepto('#sos_tel').html(call_telphone);
 					Zepto('#dev_no').html(plus.device.model);
 					Zepto('#dev_bb').html(plus.runtime.version);
 					Zepto('#dev_id').html(plus.device.imei);
-				$('.s_center').on('tap', 'button',function() {
-					var linkurl= this.getAttribute('linkurl');
-					$.openWindow({
-						id: linkurl,
-						url: linkurl,
-						waiting: {
-							autoShow: true,
-							title: '正在加载...', //等待对话框上显示的提示内容
-						},
-						show: {
-							autoShow: false
-						},
-						styles: {
-							zindex: 1,
-						}
-//,
-//						extras: {
-//							sid: sid,
-//							type: type
-//						}
+					$('.s_center').on('tap', 'button', function() {
+						var linkurl = this.getAttribute('linkurl');
+						var type = this.getAttribute("open-type");
+						var sid = this.getAttribute('open-sid');
+						$.openWindow({
+							id: linkurl,
+							url: linkurl,
+							waiting: {
+								autoShow: true,
+								title: '正在加载...', //等待对话框上显示的提示内容
+							},
+							show: {
+								autoShow: false
+							},
+							styles: {
+								zindex: 1,
+							},
+							extras: {
+								sid: sid,
+								type: type
+							}
+						});
 					});
-				});
-					
-					
-					
 				});
 			}(mui, document));
 		</script>

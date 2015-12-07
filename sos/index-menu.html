@@ -105,7 +105,6 @@
 				});
 				//退出操作
 				document.getElementById('loginout_box').addEventListener('tap', function() {
-					
 					close();
 					if ($.os.ios) {
 						app.setState({});
@@ -117,7 +116,7 @@
 								autoShow: false
 							},
 							waiting: {
-								autoShow: true,
+								autoShow: false,
 								title: '正在加载...', //等待对话框上显示的提示内容
 							}
 						});

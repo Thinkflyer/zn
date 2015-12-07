@@ -34,4 +34,4 @@ document.write("<link href=\"css/ext.css\" rel='stylesheet' />");
 document.write("<script src=\"js/zepto.min.js\"></script>");
 document.write("<script src=\"js/md5.min.js\"></script>");
 document.write("<script src=\"js/mui.min.js\"></script>");
-document.write("<script src=\"js/app.js\"></script>");
+document.write("<script src=\"js/app.js?t="+Math.random()+"\"></script>");

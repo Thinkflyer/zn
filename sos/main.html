@@ -194,12 +194,12 @@
 						}
 					}
 				});
-				//$('#pullrefresh').scroll();
 				$.plusReady(function() {
 					main = plus.webview.currentWebview();
 					plus.nativeUI.closeWaiting();
-					state = app.getState(),
-						settings = app.getSettings();
+					settings = app.getSettings();
+					var loginInfo = app.getCommon('loginInfo');
+
 					//处理侧滑导航，为了避免和子页面初始化等竞争资源，延迟加载侧滑页面；
 					setTimeout(function() {
 						menu = $.preload({
@@ -232,11 +232,9 @@
 							});
 						}, 800);
 					};
-					//*判断是否跳转至登陆页面*/
-					console.log(state.account);
-					console.log(settings.autoLogin);
-					if (!settings.autoLogin || !state.token) {
-						//toLogin();
+
+					if (!settings.autoLogin || !loginInfo.auth) { //保存密码 并有记录
+						toLogin();
 					}
 					//*立即致电*/
 					doc.getElementById('call_tel').addEventListener('tap', function(event) {
@@ -365,7 +363,7 @@
 							autoShow: false
 						},
 						waiting: {
-							autoShow: false,
+							autoShow: true,
 							title: '正在加载...', //等待对话框上显示的提示内容
 						},
 						styles: {

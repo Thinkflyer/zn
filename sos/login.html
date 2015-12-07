@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html class="ui-page-login">
-
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-
 		<script src="js/config.js"></script>
 		<style>
 			html,
@@ -16,6 +14,7 @@
 			#password {
 				margin-bottom: 5px;
 			}
+			.htitle{margin-left:10px;}
 		</style>
 	</head>
 
@@ -28,22 +27,23 @@
 			</button>
 		</header>
 		<div class="mui-content">
+				<h1 class="htitle">登录</h1>
 
 			<div class="mui-input-row">
-				<h1 class="htitle">登录</h1>
-				<input id='account' type="text" class "mui-input-clear mui-input" placeholder="电子邮件">
+				<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入您的E-mail地址">
 			</div>
 			<div class="mui-input-row">
 				<input id='password' type="password" class="mui-input-clear mui-input" placeholder="密码">
-				<p class="red_color"><a linkurl="forget_password.html" type="page" open-sid="1">忘记密码</a></p>
+				<p class="red_color"><a linkurl="forget_password.html" type="page" open-sid="1">找回密码</a></p>
 			</div>
 
 			<div class="mui-input-row">
 				<button id='login' class="btn-color mui-btn-block ">登录</button>
-			</div>
+			</div>				
+			
+			<h1 class="htitle">注册账户</h1>
 			<div class="mui-input-row">
-				<h1 class="htitle">注册账户</h1>
-				<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入您的E-mail地址">
+				<input id='reg_email' type="text" value="1987661@qq.com" placeholder="请输入您的E-mail地址">
 
 			</div>
 			<div class="mui-input-row">
@@ -56,6 +56,8 @@
 				$.plusReady(function() {
 					plus.nativeUI.closeWaiting();
 					plus.webview.currentWebview().show();
+					//删除默认登陆
+					plus.webview.getWebviewById('IndexLogin').close();
 				});
 				$('.mui-input-row').on('tap', 'a', function() {
 					var type = this.getAttribute("open-type");
@@ -65,7 +67,7 @@
 						id: linkurl,
 						url: linkurl,
 						waiting: {
-							autoShow: true,
+							autoShow: false,
 							title: '正在加载...', //等待对话框上显示的提示内容
 						},
 						show: {
@@ -80,6 +82,36 @@
 						}
 					});
 				});
+				//用户登陆
+				doc.getElementById('login').addEventListener('tap', function(event) {
+					var loginInfo = {
+						account: doc.getElementById('account').value,
+						password: doc.getElementById('password').value,
+					};
+					app.login(loginInfo, function(err) {
+						if (err) {
+							mui.alert(err, '信息提示');
+							return false;
+						}
+						app.toMain(plus.webview.currentWebview()); //返回首页 并关闭当前页面
+					});
+				}, false);
+				
+					//用户快速注册
+				doc.getElementById('reg').addEventListener('tap', function(event) {
+					var reg_email=doc.getElementById('reg_email').value;
+					app.reg(reg_email, function(err) {
+						if (err) {
+							mui.alert(err, '信息提示');
+							return false;
+						}
+						mui.alert("会员注册成功", '信息提示');
+						app.toMain(plus.webview.currentWebview()); //返回首页 并关闭当前页面
+					});
+					//
+					//
+
+				}, false);
 			}(mui, document));
 		</script>
 	</body>
