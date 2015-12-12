@@ -107,7 +107,8 @@
 				document.getElementById('loginout_box').addEventListener('tap', function() {
 					close();
 					if ($.os.ios) {
-						app.setState({});
+						//app.setState({});
+						app.setCommon('loginInfo');
 						$.openWindow({
 							id: 'IndexLogin',
 							url: 'IndexLogin.html',
@@ -209,7 +210,7 @@
 							aniShow: aniShow
 						},
 						waiting: {
-							autoShow: true
+							autoShow: showloading
 						},
 						extras: {
 							sid: sid,
@@ -250,7 +251,7 @@
 			});
 			 //监听左滑事件，若菜单已展开，左滑要关闭菜单；
 			window.addEventListener("swipeleft", function(e) {
-				if (Math.abs(e.detail.angle) > 170) {
+				if (Math.abs(e.detail.angle) > 120) {
 					close();
 				}
 			});

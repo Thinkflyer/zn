@@ -31,7 +31,7 @@
 		.mui-table-view::after {
 			background: none;
 		}
-		#content {
+		#m_content {
 			height: 6em;
 		}
 	</style>
@@ -51,24 +51,24 @@
 				</div>
 					<div class="mui-input-row mui-radio mui-left s_label">
 						<label>我忘记会员编号</label>
-						<input name="radio1" type="radio">
+						<input name="m_type" type="radio" value="我忘记会员编号">
 					</div>
 					<div class="mui-input-row mui-radio mui-left s_label">
 						<label>我无法登录</label>
-						<input name="radio1" type="radio" checked>
+						<input name="m_type" type="radio" checked  value="我无法登录">
 					</div>
 					
 				<div class="row mui-input-row" style="margin-top:10px;">
-					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="您的电子邮箱">
+					<input id='m_email' type="text" class="mui-input-clear mui-input" placeholder="您的电子邮箱">
 				</div>
 				<div class="row mui-input-row">
-					<input id='username' type="text" class="mui-input-clear mui-input" placeholder="姓名">
+					<input id='m_username' type="text" class="mui-input-clear mui-input" placeholder="姓名">
 				</div>
 				<div class="row mui-input-row">
-					<input id='company' type="text" class="mui-input-clear mui-input" placeholder="公司">
+					<input id='m_company' type="text" class="mui-input-clear mui-input" placeholder="公司">
 				</div>
 				<div class="row mui-input-row">
-					<textarea id="content" class="mui-input-clear" placeholder="请在这里填写具体问题...*"></textarea>
+					<textarea id="m_content" class="mui-input-clear" placeholder="请在这里填写具体问题...*"></textarea>
 				</div>
 			</div>
 			<div class="mui-input-row">
@@ -76,57 +76,60 @@
 			</div>
 		</div>
 		<script>
-			mui.init();
-			var plusReady = function() {
-				var self = plus.webview.currentWebview();
-				var m_type = self.sid;
-				var state = app.getState();
-				Zepto('#title').html(self.title);
-				document.getElementById('postButton').addEventListener('tap', function(event) {
-					var m_token = state.token;
-					var content = document.getElementById('content');
-					var m_content = content.value;
-					if (!m_content) {
-						plus.nativeUI.toast(mylang['error_no_empty']);
-						return false;
-					}
-					mui.ajax({
-						type: 'POST',
-						dataType: 'json',
-						url: baseDomain + "index.php?g=Api&m=Index&a=post_content",
-						data: {
-							'm_type': m_type,
-							'm_content': m_content,
-							'm_token': m_token
-						},
-						success: function(json) {
-							var msg = eval(json);
-							//console.log(msg.debug);
-							plus.nativeUI.toast(msg.info);
-							mui.back();
-						},
-						error: function(xhr, type, errorThrown) {
-							//异常处理
-							plus.nativeUI.toast(mylang['error_network']);
-							//console.log(JSON.stringify(xhr));
-						}
-					});
-				});
-				plus.nativeUI.closeWaiting();
-				plus.webview.currentWebview().show();
-			};
-			if (window.plus) {
-				plusReady();
-			} else {
-				document.addEventListener('plusready', plusReady, false);
-			}
-			 //页面加载完成需要等待load
-			var loadSuccess = function() {
-				plus.nativeUI.closeWaiting();
-				plus.webview.currentWebview().show();
+		(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+	
+					var loginInfo = app.getCommon('loginInfo');
+					document.getElementById('postButton').addEventListener('tap', function(event) {
+						var m_token = loginInfo.auth;
+						var m_email = document.getElementById('m_email').value;
+						var m_username = document.getElementById('m_username').value;
+						var m_company = document.getElementById('m_company').value;
+						var m_content = document.getElementById('m_content').value;
+						var m_type =  Zepto('input[name="m_type"]:checked').val();
 
-			};
-			window.addEventListener('load', loadSuccess, false);
+						if (!m_email) {
+							mui.alert('电子邮箱不能为空', '提示信息');
+							return false;
+						}
+						if (!m_username) {
+							mui.alert('名称不能为空', '提示信息');
+							return false;
+						}
+					
+						if (!m_content) {
+							mui.alert(mylang['error_no_empty'], '提示信息');
+							return false;
+						}
+						$.ajax({
+							type: 'POST',
+							dataType: 'json',
+							url: baseDomain + "index.php?g=Api&m=Index&a=post_content",
+							data: {
+								'm_type': m_type,
+								'm_email': m_email,
+								'm_username': m_username,
+								'm_company': m_company,
+								'm_content': m_content,
+								'm_token': m_token
+							},
+							success: function(json) {
+								var msg = eval(json);
+								plus.nativeUI.toast(msg.info);
+								mui.back();
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理
+								plus.nativeUI.toast(mylang['error_network']);
+								//console.log(JSON.stringify(xhr));
+							}
+						});
+					});
+					plus.nativeUI.closeWaiting();
+					plus.webview.currentWebview().show();
+				});
+			}(mui, document));
 		</script>
 	</body>
 

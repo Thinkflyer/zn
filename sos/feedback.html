@@ -71,16 +71,11 @@
 			(function($, doc) {
 				$.init();
 				$.plusReady(function() {
-					//					var self = plus.webview.currentWebview();
-					//					var m_type = self.sid;
 					var loginInfo = app.getCommon('loginInfo');
-
-					//					var self = plus.webview.currentWebview();
-					//					sid = self.sid;
-					//					type = self.type;
 					document.getElementById('postButton').addEventListener('tap', function(event) {
 						var m_token = loginInfo.auth;
 						var m_email = document.getElementById('m_email').value;
+						var m_type = "用户反馈";
 						var m_content = document.getElementById('m_content').value;
 						if (!m_email) {
 							mui.alert('电子邮箱不能为空', '提示信息');
@@ -97,6 +92,7 @@
 							data: {
 								'm_email': m_email,
 								'm_content': m_content,
+								'm_type': m_type,
 								'm_token': m_token
 							},
 							success: function(json) {

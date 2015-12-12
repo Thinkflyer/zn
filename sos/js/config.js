@@ -1,6 +1,6 @@
 var _isusecache= 1;//强制使用缓存数据当为0时 缓存将不自动写入
-var baseDomain="http://sos.test.com/";
-//var baseDomain="http:/sos_server.didimama.com/";
+//var baseDomain="http://sos.test.com/";
+var baseDomain="http://sos_server.didimama.com/";
 var basepath="/";
 var jump_baseurl="main.html";
 var call_telphone= 10086;
@@ -21,6 +21,7 @@ var mylang={
 }
 var time=10;//验证码 延时
 var mcro_time=1000;//毫秒
+var showloading=false; //关闭过渡不会显示 loadding 
 var regBox = {
         regmcode : /^[0-9_-]{6}$/,//验证码
         regName : /^[0-9_-]{6}$/,//用户名

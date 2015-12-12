@@ -134,17 +134,18 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<h1 class="mui-title">中国<span class="mui-badge">5</span></h1>
+		<header class="mui-bar mui-bar-nav" id="nav_menu">
+			<h1 class="mui-title"><span id="local_name">国家</span><span class="mui-badge hidden" id="news_nums">0</span></h1>
 			<span class="mui-icon mui-icon-bars mui-pull-left" id="leftmenu"></span>
-			<div class="mui-pull-left nav_line"></div>
-			<span id="seach_local" class="mui-icon  mui-icon-search mui-pull-left" linkurl="search_local.html"></span>
-			<span class="mui-icon mui-icon-map mui-pull-right"></span>
+			<div class="mui-pull-left nav_line" id="btn_refresh">
+			</div>
+			<div id="seach_local" class="mui-icon  mui-icon-search mui-pull-left" linkurl="search_local.html"></div>
+			<div class="mui-icon mui-icon-map mui-pull-right" linkurl="country_save.html"></div>
 			<div class="mui-pull-right nav_line"></div>
 		</header>
 		<div class="mui-content">
 			<div class="top_button">
-				<button class="mui-btn top_button_text">国家概览</button>
+				<button id="country" class="mui-btn top_button_text" href="weblink.html" open-type="link" linkurl="index.php?m=Article&a=index&id=14">国家概览</button>
 			</div>
 			<div id="pullrefresh" class="mui-content mui-scroll-wrapper s_list">
 				<div class="mui-scroll">
@@ -167,6 +168,7 @@
 		<script>
 			var menu = null,
 				main = null,
+				loginbox = null,
 				showMenu = false,
 				isInTransition = false,
 				detailPage = null;
@@ -197,9 +199,8 @@
 				$.plusReady(function() {
 					main = plus.webview.currentWebview();
 					plus.nativeUI.closeWaiting();
-					settings = app.getSettings();
+					app.checklogin();
 					var loginInfo = app.getCommon('loginInfo');
-
 					//处理侧滑导航，为了避免和子页面初始化等竞争资源，延迟加载侧滑页面；
 					setTimeout(function() {
 						menu = $.preload({
@@ -212,30 +213,41 @@
 							}
 						});
 					}, 500);
+					
+//					setTimeout(function() {
+//						loginbox = $.preload({
+//							id: 'loginbox',
+//							url: 'IndexLogin.html',
+//							 styles:{
+//      popGesture:"hide"
+//  }
+//						});
+//					}, 500);
+					
+					
 					main.addEventListener('maskClick', closeMenu);
 					main.addEventListener("swiperight", openMenu);
 					main.addEventListener("swipeleft", closeMenu);
 					main.addEventListener("menu:close", closeMenu);
 					main.addEventListener("menu:open", openMenu);
-					//跳转至登陆页面
-					var toLogin = function() {
-						setTimeout(function() {
-							$.openWindow({
-								id: 'IndexLogin',
-								url: 'IndexLogin.html',
-								show: {
-									aniShow: 'pop-in',
-								},
-								waiting: {
-									autoShow: true
-								}
-							});
-						}, 800);
-					};
+					
+					window.addEventListener('refresh_index', function(event) {
+						plus.nativeUI.showWaiting("正在加载数据");
+						var self = plus.webview.currentWebview();
+						Zepto('#local_name').html(event.detail.local_name);
+					
+						//alert(event.detail.local_id);
+						//标注local
+						plus.webview.currentWebview().reload();
+						
+						plus.nativeUI.closeWaiting();
+					}, false);
+					window.addEventListener('refresh', function() {
+						app.checklogin();
+					}, false);
+				
 
-					if (!settings.autoLogin || !loginInfo.auth) { //保存密码 并有记录
-						toLogin();
-					}
+				
 					//*立即致电*/
 					doc.getElementById('call_tel').addEventListener('tap', function(event) {
 						var btnArray = ['返回', '立即拨打'];
@@ -245,6 +257,26 @@
 							}
 						});
 					}, false); //--左侧菜单显示
+					//*国家概况*/
+					doc.getElementById('country').addEventListener('tap', function(event) {
+						var href = this.getAttribute("href");
+						var type = this.getAttribute("open-type");
+						var linkurl = this.getAttribute("linkurl");
+						mui.openWindow({
+							id: href,
+							url: href,
+							show: {
+								aniShow: 'pop-in',
+								autoShow: false
+							},
+							waiting: {
+								autoShow: showloading
+							},
+							extras: {
+								linkurl: linkurl,
+							}
+						});
+					}, false);
 					var menuButton = doc.getElementById('leftmenu');
 					menuButton.addEventListener('tap', function(event) {
 						if (showMenu) {
@@ -332,6 +364,7 @@
 					var type = this.getAttribute("open-type");
 					var linkurl = this.getAttribute('linkurl');
 					var sid = this.getAttribute('open-sid');
+
 					$.openWindow({
 						id: linkurl,
 						url: linkurl,
@@ -340,11 +373,8 @@
 							autoShow: false
 						},
 						waiting: {
-							autoShow: true,
+							autoShow: showloading,
 							title: '正在加载...', //等待对话框上显示的提示内容
-						},
-						styles: {
-							zindex: 1,
 						},
 						extras: {
 							sid: sid,
@@ -353,23 +383,21 @@
 					});
 				});
 				//主列表点击事件main
-				doc.getElementById('seach_local').addEventListener('tap', function(event) {
+				$('#nav_menu').on('tap', 'div', function(e) {
+					//doc.getElementById('seach_local').addEventListener('tap', function(event) {
 					var linkurl = this.getAttribute('linkurl');
 					$.openWindow({
 						id: linkurl,
 						url: linkurl,
 						show: {
 							aniShow: 'pop-in',
-							autoShow: false
 						},
 						waiting: {
-							autoShow: true,
+							autoShow: showloading,
 							title: '正在加载...', //等待对话框上显示的提示内容
-						},
-						styles: {
-							zindex: 1,
 						}
 					});
+
 				});
 				//指定刷新 
 				function getpullfresh() {
@@ -392,18 +420,23 @@
 					}, 1000);
 					return false;
 				};
-//				window.addEventListener('closeall', function() {
-//					var wvs = plus.webview.all();
-//					for (var i = 0; i < wvs.length; i) {
-//						if (plus.webview.currentWebview().id != wvs[i].id) {
-//							plus.webview.close(wvs[i]);
-//							//alert(wvs[i].id);
-//						}
-//					}
-//				}, false);
+	
+				/*刷新重新加载*/
+				window.addEventListener('refresh_index', function(event) {
+					plus.nativeUI.showWaiting("正在加载数据");
+					var self = plus.webview.currentWebview();
+					Zepto('#local_name').html(event.detail.local_name);
+					Zepto('#news_nums').html(event.detail.news_num);
+					if (event.detail.news_num > 0) {
+						Zepto('#news_nums').show();
+					} else {
+						Zepto('#news_nums').hide();
+					}
+					//标注local
+					plus.webview.currentWebview().reload();
+					plus.nativeUI.closeWaiting();
+				}, false);
 			}(mui, document));
-
-
 		</script>
 	</body>
 

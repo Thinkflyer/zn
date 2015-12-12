@@ -29,7 +29,7 @@
 			
 			.icon-target {
 				font-size: 20px;
-				margin-right:5px;
+				margin-right: 5px;
 			}
 			
 			#seach_local {
@@ -65,7 +65,7 @@
 				<div class="mui-pull-right nav_line"></div>
 			</header>
 			<div class="mui-content">
-				<div class="top_text">
+				<div class="top_text" id="result_top">
 					最近位置
 				</div>
 				<div id="pullrefresh" class="mui-content mui-scroll-wrapper s_list">
@@ -108,78 +108,67 @@
 							$('#pullrefresh').pullRefresh().pullupLoading();
 						});
 					}
-					//主列表点击事件main
-					$('#pullrefresh').on('tap', 'li', function() {
+					//主列表跳转
+					$('#pullrefresh').on('tap', 'div', function(e) {
+						var settings = app.getSettings();
+						//跳转到首页 筛选
+						var	local_id = this.getAttribute('local_id'),
+							local_name = this.getAttribute('local_name');
+						settings.local_id = local_id; //设置一个地区属性 默认中国 2
+						settings.local_name = local_name; //设置一个地区属性 默认中国 2
+						app.setSettings(settings);
+						mui.fire(plus.webview.getWebviewById('HBuilder'), "refresh_index", {
+							local_name: local_name,
+							local_id: local_id
+						});
+						app.toMain(plus.webview.currentWebview()); //关闭本事 并跳转至首页
+						e.stopPropagation(); //防止事件冒泡
+					});
+					//主列表点击事件main 
+					$('#pullrefresh').on('tap', 'input', function(event) {
 						var obj = document.getElementsByName('local_list'); //选择所有name="'test'"的对象，返回数组 
 						//取到对象数组后，我们来循环检测它是不是被选中 
-						app.retrun_checkboxed(obj, function(e) {
+						app.retrun_checkboxed(obj, function(e){
 							app.setLocal(e);
 						});
+						e.stopPropagation();
 					});
 
 					function refresh_list() {
 						$('#pullrefresh').pullRefresh().pullupLoading();
 					}
 					Zepto('#seach_local').on('change', function(e) {
-						refresh_list();
+						//弹出谈层
+						//修改过最近位置
+						Zepto('#result_top').html("搜索结果");
+						//获取input 内容
+						var keyword = this.value;
+						app.search_list(keyword);
 					});
-					//点击定位按钮
-					//$('#local_btn').on('tap', 'span', function(event) {
-						
+					//点击定位按钮						
 					doc.getElementById('local_btn').addEventListener('tap', function(event) {
 						plus.nativeUI.showWaiting('正在获取地理位置信息');
-						plus.geolocation.getCurrentPosition(geoInf, function(e) {
-							("获取位置信息失败!");
+						plus.geolocation.getCurrentPosition(app.geoInf, function(e) {
+							mui.alert("获取位置信息失败!","信息提示");
 						});
-						//plus.nativeUI.closeWaiting();
 					});
 				}(mui, document));
-				
-				var watchId;
-				function geoInf(position) {
-					var codns = position.coords; //获取地理坐标信息；
-					var lat = codns.latitude; //获取到当前位置的纬度；
-					var longt = codns.longitude; //获取到当前位置的经度
-					mui.ajax({
-						type: 'GET',
-						dataType: 'json',
-						url: baseDomain + "index.php?g=Api&m=Index&a=get_local",
-						data: {
-							'lat': lat,
-							'lng': longt
-						},
-						success: function(json) {
-							var msg = eval(json);
-							if (msg.code == 200) {
-								var bts = ["否", "是"];
-								plus.nativeUI.confirm("检测到您当前在" + msg.info + ",您要将此作为您的首选国家吗?", function(e) {
-									var i = e.index;
-									if (i > 0) { //点了是 
-										refresh_list();
-									} else {
-										plus.nativeUI.closeWaiting();
-									}
-								}, "信息提示", bts);
-							} else {
-								plus.nativeUI.toast(mylang['error_network']);
-							}
-						},
-						error: function(xhr, type, errorThrown) {
-							plus.nativeUI.toast(mylang['error_network']);
-						}
-					});
-					plus.nativeUI.closeWaiting();
-				}
-				
+			
 				mui.back = function() {
+					var settings = app.getSettings();
 					var obj = document.getElementsByName('local_list'); //选择所有name="'test'"的对象，返回数组 
 					//取到对象数组后，我们来循环检测它是不是被选中 
 					app.retrun_checkboxed(obj, function(e) {
-						app.setLocal(e);
+						app.setLocal(e);//记录选中位置
 						//刷新首页
 					});
-					mui.currentWebview.close(); 
-
+					mui.fire(plus.webview.getWebviewById('HBuilder'), "refresh_index", {
+						local_name: settings.local_name,
+						local_id: settings.local_id,
+						//news_num: settings.newnum
+					});
+					app.toMain(plus.webview.currentWebview()); //关闭本事 并跳转至首页
+					//mui.currentWebview.close();
 				}
 			</script>
 	</body>

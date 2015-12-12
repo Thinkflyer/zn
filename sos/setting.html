@@ -205,23 +205,24 @@
 			//锁屏设置
 			var view = viewApi.view;
 			var str = "";
+
 			$.plusReady(function() {
 				var state = app.getState();
 				if (typeof(state.language) == "undefined") {
 					doc.getElementById('changeLanguage').innerText = 'Chinese'; //default Chinese language
 				} else {
-					doc.getElementById('changeLanguage').innerText = state.language;
+					doc.getElementById('changeLanguage').innerText = state.language.text;
 				}
 				//普通示例
 				var userPicker = new $.PopPicker();
 				app.get_language_info(function(e) {
-					userPicker.setData(e);
+					userPicker.setData(e.data);//填充语种信息
 				});
 				doc.getElementById('changeLanguage').addEventListener('tap', function(event) {
 					userPicker.show(function(items) {
 						doc.getElementById('changeLanguage').innerText = items[0].text;
 						//设置语种类型
-						app.setLanguage(items[0].text);
+						app.setLanguage(items[0]);
 					});
 				}, false);
 				var oldBack = $.back;
@@ -237,11 +238,12 @@
 					var type = this.getAttribute("open-type");
 					var linkurl = this.getAttribute('linkurl');
 					var sid = this.getAttribute('open-sid');
+
 					$.openWindow({
 						id: linkurl,
 						url: linkurl,
 						waiting: {
-							autoShow: true,
+							autoShow: showloading,
 							title: '正在加载...', //等待对话框上显示的提示内容
 						},
 						show: {

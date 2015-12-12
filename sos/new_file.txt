@@ -1,106 +1,455 @@
-(function($, doc) {
-        $.init();
-        var settings = app.getSettings();
-        var state = app.getState();
-        var autoLoginButton = doc.getElementById("autoLogin");
-        alert(4);
-        $.plusReady(function() {
-          var mainPage = $.preload({
-            "id": 'main',
-            "url": 'main.html'
-          });
-          //处理侧滑导航，为了避免和子页面初始化等竞争资源，延迟加载侧滑页面；
-          //console.log(settings);
-          var toMain = function() {
-            $.fire(mainPage, 'show', null);
-            setTimeout(function() {
-              $.openWindow({
-                id: 'main',
-                url: 'main.html',
-                show: {
-                  aniShow: 'pop-in'
-                },
-                waiting: {
-                  autoShow: false
-                }
-              });
-            }, 0);
-          };
-          if (settings.autoLogin && state.token) {
-            //处理侧滑栏遮挡
-            console.log(state.token);
-            console.log(settings.autoLogin);
-            toMain();
-          }
-          //帮助或寻求帮助
-          doc.getElementById('go_main').addEventListener('tap', function(event) {
-            toMain();
-          }, false);
-          autoLoginButton.classList[settings.autoLogin ? 'add' : 'remove']('mui-active')
-          autoLoginButton.addEventListener('toggle', function(event) {
-            setTimeout(function() {
-              var isActive = event.detail.isActive;
-              settings.autoLogin = isActive;
-              app.setSettings(settings);
-            }, 50);
-          }, false);
-          var backButtonPress = 0;
-          $.back = function(event) {
-            backButtonPress++;
-            if (backButtonPress > 1) {
-              plus.runtime.quit();
-            } else {
-              plus.nativeUI.toast('再按一次退出应用');
-            }
-            setTimeout(function() {
-              backButtonPress = 0;
-            }, 1000);
-            return false;
-          };
-        });
-        $('.mui-input-row').on('tap', '.btn_help', function(event) {
-          var btnArray = [{
-            title: "我无法登录"
-          }, {
-            title: "立即致电寻求帮助"
-          }];
-          plus.nativeUI.actionSheet({
-            title: "我们有什么可以帮您?",
-            cancel: "取消",
-            buttons: btnArray
-          }, function(e) {
-            var index = e.index;
-            switch (index) {
-              case 0:
-                break;
-              case 1:
-                alert(1);
-                break;
-              case 2:
-                alert(2);
-                break;
-            }
-          });
-        }, false);
-        /*对定制的页面进行详细*/
-        $('.mui-input-row').on('tap', 'a', function() {
-          var type = this.getAttribute("open-type");
-          var linkurl = this.getAttribute('linkurl');
-          var sid = this.getAttribute('open-sid');
-          $.openWindow({
-            id: linkurl,
-            url: linkurl,
-            waiting: {
-              autoShow: true,
-              title: '正在加载...', //等待对话框上显示的提示内容
-            },
-            styles: {
-              zindex: 1,
-            },
-            extras: {
-              sid: sid,
-              type: type
-            }
-          });
-        });
-      }(mui, document));
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<script src="js/config.js"></script>
+		<style>
+			#left_menu,
+			#setting,
+			.mui-icon {
+				color: #ffffff;
+			}
+			
+			.mui-table-view.mui-grid-view .mui-table-view-cell > a:active:not(.mui-btn) {
+				background: none repeat scroll 0 0 #FF5053;
+			}
+			
+			.mui-table-view-cell::after {
+				left: 5px;
+				right: 5px;
+			}
+			
+			.mui-control-content table {
+				border-collapse: collapse;
+				border-spacing: 0;
+				empty-cells: show;
+				font-size: 12px;
+			}
+			
+			.mui-control-content h3 {
+				color: #990000;
+				float: left;
+				font-size: 14px;
+				padding-bottom: 15px;
+			}
+			
+			.menu_box {
+				height: 25px;
+				line-height: 30px;
+				font-size: 0.9em
+			}
+			
+			.nav_line {
+				border: 1px solid #EFEFF4;
+				height: 30px;
+				margin: 8px 8px 8px 10px;
+			}
+			
+			.tel-btn:enabled:active {
+				font-size: 18px;
+				font-weight: bold;
+				color: #20285A;
+			}
+			
+			.bg_color {
+				background-color: #832F32;
+				height: 70px;
+			}
+			
+			.buttom_button {
+				background-image: url(images/bg_button.png);
+				background-size: 310px;
+				background-position: center;
+				background-repeat: no-repeat;
+				text-align: center;
+			}
+			
+			.top_button {
+				background-image: url(images/bg_topbutton_rep.png);
+				height: 45px;
+				background-position: center;
+				background-repeat: repeat-x;
+				text-align: center;
+				border-bottom: 1px solid #cccccc;
+			}
+			
+			.top_button_text {
+				height: 35px;
+				background-position: center;
+				text-align: center;
+				border-bottom: 2px solid #cccccc;
+				background-color: #EFEFEF;
+				margin: 5px;
+				width: 80%;
+				border-radius: 5px;
+			}
+			
+			.s_list {
+				margin-top: 90px
+			}
+			
+			.li_list {
+				font-size: 12px;
+			}
+			
+			#newslist {
+				margin-bottom: 40px;
+			}
+			
+			.li_list span {
+				color: #F0AD4E;
+				font-weight: bold;
+				font-size: 10px;
+				line-height: 3px;
+			}
+			
+			.mui-h6,
+			h6 {
+				margin-top: 0px;
+			}
+			
+			#newslist .icon_title {
+				font-size: 15px;
+			}
+			
+			#newslist li {
+				background-position: left 1.4em;
+				background-repeat: no-repeat;
+				background-size: 20px 20px;
+				margin: 0 auto;
+				padding-left: 25px;
+				margin-left: 5px;
+			}
+			
+			.mui-badge {
+				background-color: #F0AD4E;
+				color: #fff;
+				top: 7px;
+				position: absolute;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="nav_menu">
+			<h1 class="mui-title"><span id="local_name">中国</span><span class="mui-badge " id="news_nums">0</span></h1>
+			<span class="mui-icon mui-icon-bars mui-pull-left" id="left_menu"></span>
+			<div class="mui-pull-left nav_line" id="btn_refresh">
+			</div>
+			<span id="seach_local" class="mui-icon  mui-icon-search mui-pull-left" linkurl="search_local.html"></span>
+			<span class="mui-icon mui-icon-map mui-pull-right" linkurl="country_save.html"></span>
+			<div class="mui-pull-right nav_line"></div>
+		</header>
+		<div class="mui-content">
+			<div class="top_button">
+				<button id="country" class="mui-btn top_button_text" href="weblink.html" open-type="link" linkurl="index.php/Article/list/14.html">国家概览</button>
+			</div>
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper s_list">
+				<div class="mui-scroll">
+					<!--media list-->
+					<ul class="mui-table-view list" id="newslist">
+
+					</ul>
+					<!--end media list-->
+				</div>
+			</div>
+		</div>
+		<div class="mui-title tit-sort">
+			<input type="hidden" id="page" name="page" value="1" />
+			<input type="hidden" id="cid" name="cid" value="1" />
+		</div>
+		<div class="mui-bar mui-bar-tab bg_color buttom_button">
+			<button class="mui-btn mui-btn-block mui-btn-link tel-btn" style="padding-bottom:35px;color:#000000;" id="call_tel">+86 139XXXXXXXX
+			</button>
+		</div>
+		<script>
+			var menu = null,
+				main = null,
+				showMenu = false,
+				isInTransition = false,
+				detailPage = null;
+			//触发第一页
+			if (mui.os.plus) {
+				mui.plusReady(function() {
+					setTimeout(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					}, 500);
+				});
+			} else {
+				mui.ready(function() {
+					Zepto('#page').val(1);
+					$('#pullrefresh').pullRefresh().pullupLoading();
+				});
+			}
+			
+			
+			
+	(function($, doc) {
+				$.init({
+					pullRefresh: {
+						container: '#pullrefresh',
+						up: {
+							contentrefresh: "正在加载...",
+							contentnomore: '没有更多数据了',
+							callback: app.add_more
+						}
+					}
+				});
+				$.plusReady(function() {
+					main = plus.webview.currentWebview();
+					plus.nativeUI.closeWaiting();
+					//settings.autoLogin settings.cardnumber 
+					var loginInfo = app.getCommon('loginInfo');
+					//处理侧滑导航，为了避免和子页面初始化等竞争资源，延迟加载侧滑页面；
+					setTimeout(function() {
+						menu = $.preload({
+							id: 'index-menu',
+							url: 'index-menu.html',
+							styles: {
+								left: 0,
+								width: '70%',
+								zindex: -1
+							}
+						});
+					}, 500);
+					
+					if (!settings.autoLogin || !loginInfo.auth) { //保存密码 并有记录
+						toLogin();
+					}
+					main.addEventListener('maskClick', closeMenu);
+					main.addEventListener("swiperight", openMenu);
+					main.addEventListener("swipeleft", closeMenu);
+					main.addEventListener("menu:close", closeMenu);
+					main.addEventListener("menu:open", openMenu);
+					
+					
+					window.addEventListener('refresh', function() {
+						checklogin();
+					}, false);
+					//跳转至登陆页面
+					var toLogin = function() {
+						var settings = app.getSettings();
+						//setTimeout(function() {
+							$.openWindow({
+								id: 'IndexLogin',
+								url: 'IndexLogin.html',
+								show: {
+									aniShow: 'pop-in',
+								},
+								waiting: {
+									autoShow: false
+								}
+							});
+						//}, 800);
+					};
+					
+
+					$.menu = function() {
+							if (showMenu) {
+								closeMenu();
+							} else {
+								openMenu();
+							}
+						}
+						//--
+					
+				});
+				
+					function checklogin() {
+						var loginInfo = app.getCommon('loginInfo');
+						var settings = app.getSettings();
+						if (!settings.autoLogin || !loginInfo.auth) { //保存密码 并有记录
+							toLogin();
+						}
+					};
+					/**
+					 * 显示侧滑菜单
+					 */
+					function openMenu() {
+						if (isInTransition) {
+							return;
+						}
+						if (!showMenu) {
+							//侧滑菜单处于隐藏状态，则立即显示出来；
+							isInTransition = true;
+							menu.setStyle({
+								mask: 'rgba(0,0,0,0)'
+							}); //menu设置透明遮罩防止点击
+							menu.show('none', 0, function() {
+								//主窗体开始侧滑并显示遮罩
+								main.setStyle({
+									mask: 'rgba(0,0,0,0.4)',
+									left: '70%',
+									transition: {
+										duration: 150
+									}
+								});
+								$.later(function() {
+									isInTransition = false;
+									menu.setStyle({
+										mask: "none"
+									}); //移除menu的mask
+								}, 160);
+								showMenu = true;
+							});
+						}
+					};
+					/** 
+					 * 关闭菜单
+					 */
+					function closeMenu() {
+						if (isInTransition) {
+							return;
+						}
+						if (showMenu) {
+							//关闭遮罩；
+							//主窗体开始侧滑；
+							isInTransition = true;
+							main.setStyle({
+								mask: 'none',
+								left: '0',
+								transition: {
+									duration: 200
+								}
+							});
+							showMenu = false;
+							//等动画结束后，隐藏菜单webview，节省资源；
+							$.later(function() {
+								isInTransition = false;
+								menu.hide();
+							}, 300);
+						}
+					};
+				window.addEventListener('show_index', function() {
+						getpullfresh();
+						showMenu = true;
+						isInTransition = false;
+						closeMenu();
+					}, false);
+					
+				//*刷新*/
+				//主列表点击事件main
+				$('#pullrefresh').on('tap', 'li', function() {
+					var type = this.getAttribute("open-type");
+					var linkurl = this.getAttribute('linkurl');
+					var sid = this.getAttribute('open-sid');
+					$.openWindow({
+						id: linkurl,
+						url: linkurl,
+						show: {
+							aniShow: 'pop-in',
+							autoShow: false
+						},
+						waiting: {
+							autoShow: showloading,
+							title: '正在加载...', //等待对话框上显示的提示内容
+						},
+						styles: {
+							zindex: 1,
+						},
+						extras: {
+							sid: sid,
+							type: type
+						}
+					});
+				});
+				//主列表点击事件main
+				$('#nav_menu').on('tap', 'span', function() {
+					//doc.getElementById('seach_local').addEventListener('tap', function(event) {
+					var linkurl = this.getAttribute('linkurl');
+					$.openWindow({
+						id: linkurl,
+						url: linkurl,
+						show: {
+							aniShow: 'pop-in',
+							autoShow: false
+						},
+						waiting: {
+							autoShow: showloading,
+							title: '正在加载...', //等待对话框上显示的提示内容
+						},
+						styles: {
+							zindex: 1,
+						}
+					});
+				});
+				//指定刷新 
+				function getpullfresh() {
+					//业务逻辑代码，比如通过ajax从服务器获取新数据；
+					//注意，加载完新数据后，必须执行如下代码，注意：若为ajax请求，则需将如下代码放置在处理完ajax响应数据之后
+					console.log('refresh');
+					$('#pullrefresh').pullRefresh().endPulldownToRefresh();
+				}
+				$.oldBack = $.back;
+				var backButtonPress = 0;
+				$.back = function(event) {
+					backButtonPress++;
+					if (backButtonPress > 1) {
+						plus.runtime.quit();
+					} else {
+						plus.nativeUI.toast('再按一次退出应用');
+					}
+					setTimeout(function() {
+						backButtonPress = 0;
+					}, 1000);
+					return false;
+				};
+				/*刷新重新加载*/
+				window.addEventListener('refresh_index', function(event) {
+					plus.nativeUI.showWaiting("正在加载数据");
+					var self = plus.webview.currentWebview();
+					Zepto('#local_name').html(event.detail.local_name);
+					Zepto('#news_nums').html(event.detail.news_num);
+					if (event.detail.news_num > 0) {
+						Zepto('#news_nums').show();
+					} else {
+						Zepto('#news_nums').hide();
+					}
+					//标注local
+					plus.webview.currentWebview().reload();
+					plus.nativeUI.closeWaiting();
+				}, false);
+				//*国家概况*/
+				doc.getElementById('country').addEventListener('tap', function(event) {
+					var href = this.getAttribute("href");
+					var type = this.getAttribute("open-type");
+					var linkurl = this.getAttribute("linkurl");
+					mui.openWindow({
+						id: href,
+						url: href,
+						show: {
+							aniShow: 'pop-in',
+							autoShow: false
+						},
+						waiting: {
+							autoShow: showloading
+						},
+						extras: {
+							linkurl: linkurl,
+						}
+					});
+				}, false);
+				//*立即致电*/
+				doc.getElementById('call_tel').addEventListener('tap', function(event) {
+					var btnArray = ['返回', '立即拨打'];
+					mui.confirm('你确定拨打电话' + call_telphone + '吗？', '提示', btnArray, function(e) {
+						if (e.index == 1) {
+							plus.device.dial(call_telphone);
+						}
+					});
+				}, false); //--左侧菜单显示
+				doc.getElementById('left_menu').addEventListener('tap', function(event) {
+					if (showMenu) {
+						closeMenu();
+					} else {
+						openMenu();
+					}
+				});
+	}(mui, document));
+		</script>
+	</body>
+
+</html>

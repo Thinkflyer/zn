@@ -88,31 +88,28 @@
 							$('#pullrefresh').pullRefresh().pullupLoading();
 						});
 					}
-					
-				
-					
+	
 					//主列表点击事件main
 					$('#pullrefresh').on('tap', 'li', function() {
-						var type = this.getAttribute("open-type");
-						var linkurl = this.getAttribute('linkurl');
-						var sid = this.getAttribute('open-sid');
-						$.openWindow({
-							id: 'main',
-							url: linkurl,
-							waiting: {
-								autoShow: true,
-								title: '正在加载...', //等待对话框上显示的提示内容
-							},
-							styles: {
-								zindex: 1,
-							},
-							extras: {
-								sid: sid,
-								type: type
-							}
+						
+						var settings = app.getSettings();
+						//跳转到首页 筛选
+						var newnum = this.getAttribute('newnum'),
+							local_id = this.getAttribute('local_id'),
+							local_name = this.getAttribute('local_name');
+						settings.local_id = local_id; //设置一个地区属性 默认中国 2
+						settings.local_name = local_name; //设置一个地区属性 默认中国 2
+						settings.newnum = newnum;
+						app.setSettings(settings);
+						mui.fire(plus.webview.getWebviewById('HBuilder'), "refresh_index", {
+							local_name: local_name,
+							local_id: local_id,
+							news_num: newnum
 						});
-						$.back();
-						//mui.fire(mui.currentWebview.opener(), "closeall");
+						//plus.webview.currentWebview().close();
+						app.toMain(plus.webview.currentWebview()); //关闭本事 并跳转至首页
+						e.stopPropagation(); //防止事件冒泡
+	
 					});
 				}(mui, document));
 			</script>

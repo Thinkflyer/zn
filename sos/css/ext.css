@@ -4,39 +4,50 @@
 .s_left {
 	text-align: left;
 }
+
 .s_right {
 	text-align: right;
 }
+
 .s_center {
 	text-align: center;
 }
+
 .s_label {
 	font-size: 16px;
 }
+
 .s_strong {
 	font-weight: bold;
 	font-size: 14px;
 	line-height: 20px;
 }
+
 .s_date {
 	font-size: 12px;
 	font-weight: inherit;
 }
+
 .s_des {
 	font-size: 12px;
 }
+
 .mui-bar-nav {
 	background-color: #832F32;
 }
+
 .blue_color {
 	color: #232762;
 }
+
 .black_color {
 	color: #3B4047;
 }
+
 .red_color {
 	color: #232762;
 }
+
 .kele:before {
 	position: absolute;
 	content: " ";
@@ -74,6 +85,10 @@
 	width: 0;
 }
 
+.hidden {
+	display: none;
+}
+
 .btn-color {
 	background-color: #832f32;
 	border: none;
@@ -90,12 +105,13 @@
 	margin: 0 auto;
 	position: relative;
 	min-width: 300px;
-	margin:0px 10px 0px 10px;
+	margin: 0px 10px 0px 10px;
 }
+
 .mui-btn-block {
-   
-    padding: 10px 0;
+	padding: 10px 0;
 }
+
 .mui-input-row input {
 	background-color: #ffffff;
 	height: 40px;
