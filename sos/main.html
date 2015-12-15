@@ -145,7 +145,7 @@
 		</header>
 		<div class="mui-content">
 			<div class="top_button">
-				<button id="country" class="mui-btn top_button_text" href="weblink.html" open-type="link" linkurl="index.php?m=Article&a=index&id=14">国家概览</button>
+				<button id="country" class="mui-btn top_button_text" linkurl="nation.html" open-sid="14">国家概览</button>
 			</div>
 			<div id="pullrefresh" class="mui-content mui-scroll-wrapper s_list">
 				<div class="mui-scroll">
@@ -213,41 +213,32 @@
 							}
 						});
 					}, 500);
-					
-//					setTimeout(function() {
-//						loginbox = $.preload({
-//							id: 'loginbox',
-//							url: 'IndexLogin.html',
-//							 styles:{
-//      popGesture:"hide"
-//  }
-//						});
-//					}, 500);
-					
-					
+					//					setTimeout(function() {
+					//						loginbox = $.preload({
+					//							id: 'loginbox',
+					//							url: 'IndexLogin.html',
+					//							 styles:{
+					//      popGesture:"hide"
+					//  }
+					//						});
+					//					}, 500);
 					main.addEventListener('maskClick', closeMenu);
 					main.addEventListener("swiperight", openMenu);
 					main.addEventListener("swipeleft", closeMenu);
 					main.addEventListener("menu:close", closeMenu);
 					main.addEventListener("menu:open", openMenu);
-					
 					window.addEventListener('refresh_index', function(event) {
 						plus.nativeUI.showWaiting("正在加载数据");
 						var self = plus.webview.currentWebview();
 						Zepto('#local_name').html(event.detail.local_name);
-					
 						//alert(event.detail.local_id);
 						//标注local
 						plus.webview.currentWebview().reload();
-						
 						plus.nativeUI.closeWaiting();
 					}, false);
 					window.addEventListener('refresh', function() {
 						app.checklogin();
 					}, false);
-				
-
-				
 					//*立即致电*/
 					doc.getElementById('call_tel').addEventListener('tap', function(event) {
 						var btnArray = ['返回', '立即拨打'];
@@ -258,25 +249,46 @@
 						});
 					}, false); //--左侧菜单显示
 					//*国家概况*/
-					doc.getElementById('country').addEventListener('tap', function(event) {
-						var href = this.getAttribute("href");
+					$('.mui-content').on('tap', '#country', function() {
 						var type = this.getAttribute("open-type");
-						var linkurl = this.getAttribute("linkurl");
-						mui.openWindow({
-							id: href,
-							url: href,
+						var linkurl = this.getAttribute('linkurl');
+						var sid = this.getAttribute('open-sid');
+						$.openWindow({
+							id: linkurl,
+							url: linkurl,
 							show: {
 								aniShow: 'pop-in',
 								autoShow: false
 							},
 							waiting: {
-								autoShow: showloading
+								autoShow: showloading,
+								title: '正在加载...', //等待对话框上显示的提示内容
 							},
 							extras: {
-								linkurl: linkurl,
+								sid: sid,
+								type: type
 							}
 						});
-					}, false);
+					});
+					//					doc.getElementById('country').addEventListener('tap', function(event) {
+					//						var href = this.getAttribute("href");
+					//						var type = this.getAttribute("open-type");
+					//						var linkurl = this.getAttribute("linkurl");
+					//						mui.openWindow({
+					//							id: href,
+					//							url: href,
+					//							show: {
+					//								aniShow: 'pop-in',
+					//								autoShow: false
+					//							},
+					//							waiting: {
+					//								autoShow: showloading
+					//							},
+					//							extras: {
+					//								linkurl: linkurl,
+					//							}
+					//						});
+					//					}, false);
 					var menuButton = doc.getElementById('leftmenu');
 					menuButton.addEventListener('tap', function(event) {
 						if (showMenu) {
@@ -364,7 +376,6 @@
 					var type = this.getAttribute("open-type");
 					var linkurl = this.getAttribute('linkurl');
 					var sid = this.getAttribute('open-sid');
-
 					$.openWindow({
 						id: linkurl,
 						url: linkurl,
@@ -397,7 +408,6 @@
 							title: '正在加载...', //等待对话框上显示的提示内容
 						}
 					});
-
 				});
 				//指定刷新 
 				function getpullfresh() {
@@ -420,7 +430,6 @@
 					}, 1000);
 					return false;
 				};
-	
 				/*刷新重新加载*/
 				window.addEventListener('refresh_index', function(event) {
 					plus.nativeUI.showWaiting("正在加载数据");

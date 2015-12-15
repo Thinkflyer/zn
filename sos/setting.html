@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<title>Hello MUI</title>
@@ -270,8 +269,9 @@
 							}else{
 							plus.nativeUI.toast("同步成功");
 						}
-						plus.nativeUI.closeWaiting();
 					});
+					plus.nativeUI.closeWaiting();
+
 				}, false);
 				//同步开启
 				var settings = app.getSettings();

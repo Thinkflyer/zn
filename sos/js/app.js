@@ -242,82 +242,83 @@
 
 	/*首页*/
 	owner.add_more = function() {
-			//*判断网络链接状态*/
-			var page = Zepto('#page').val(),
-				str_sql = "",
-				cid = Zepto('#cid').val();
-			Zepto('#page').val(parseInt(page) + 1);
-			var settings = owner.getSettings();
-			if (settings.local_id) str_sql = "&local_id=" + settings.local_id;
-			else str_sql = "";
-			var state = app.getState();
-			//语种筛选条件
-			if (state.language) str_sql += "&language_id=" + state.language.value;
-			else str_sql += "";
+		//*判断网络链接状态*/
+		var page = Zepto('#page').val(),
+			str_sql = "",
+			cid = Zepto('#cid').val();
+		Zepto('#page').val(parseInt(page) + 1);
+		var settings = owner.getSettings();
+		if (settings.local_id) str_sql = "&local_id=" + settings.local_id;
+		else str_sql = "";
+		var state = owner.getState();
+		//语种筛选条件
+		if (state.language) str_sql += "&language_id=" + state.language.value;
+		else str_sql += "";
 
-			if (settings.local_name) Zepto('#local_name').html(settings.local_name);
-			if (settings.news_num) Zepto('#news_nums').html(settings.news_num);
-			//第一步 定义路径
-			var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page + str_sql;
-			var msg = owner.getcache(_geturl);
-			if (_isusecache && msg) {
-				if (msg.code == 200) {
-					if (msg.newnum > 0) {
-						Zepto('#news_nums').html(msg.newnum);
-						Zepto('#news_nums').show();
-					} else {
-						Zepto('#news_nums').hide();
-					}
-					Zepto.each(msg.data, function(i, v) {
-						var str = '<li class="mui-table-view-cell li_list icon_' + v.catid + '" linkurl="detail.html" open-type="article" open-sid="' + v.id + '"  ><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
-						Zepto('#newslist').append(str);
-					});
-					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+		if (settings.local_name) Zepto('#local_name').html(settings.local_name);
+		if (settings.news_num) Zepto('#news_nums').html(settings.news_num);
+		//第一步 定义路径
+		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page + str_sql;
+		var msg = owner.getcache(_geturl);
+		if (_isusecache && msg) {
+			if (msg.code == 200) {
+				if (msg.newnum > 0) {
+					Zepto('#news_nums').html(msg.newnum);
+					Zepto('#news_nums').show();
 				} else {
-					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+					Zepto('#news_nums').hide();
 				}
+				Zepto.each(msg.data, function(i, v) {
+					var str = '<li class="mui-table-view-cell li_list icon_' + v.catid + '" linkurl="detail.html" open-type="article" open-sid="' + v.id + '"  ><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
+					Zepto('#newslist').append(str);
+				});
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
 			} else {
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+			}
+		} else {
 
-				mui.ajax({
-					timeout: 5000,
-					type: 'GET',
-					dataType: 'json',
-					url: _geturl,
-					//data: 'p=' + page,
-					success: function(json) {
-						//缓存数据 此处会移植到 批量中 测试使用
-						owner.setcache(_geturl, json);
-						var msg = eval(json);
-						if (msg.code == 200) {
-							//最新新闻提示
-							if (msg.newnum > 0) {
-								Zepto('#news_nums').html(msg.newnum);
-								Zepto('#news_nums').show();
-							} else {
-								Zepto('#news_nums').hide();
-							}
-							Zepto.each(msg.data, function(i, v) {
-								var str = '<li class="mui-table-view-cell li_list icon_' + v.catid + '" linkurl="detail.html" open-type="article" open-sid="' + v.id + '"  ><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
-								Zepto('#newslist').append(str);
-							});
-							mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+			mui.ajax({
+				timeout: 5000,
+				type: 'GET',
+				dataType: 'json',
+				url: _geturl,
+				//data: 'p=' + page,
+				success: function(json) {
+					//缓存数据 此处会移植到 批量中 测试使用
+					owner.setcache(_geturl, json);
+					var msg = eval(json);
+					if (msg.code == 200) {
+						//最新新闻提示
+						if (msg.newnum > 0) {
+							Zepto('#news_nums').html(msg.newnum);
+							Zepto('#news_nums').show();
 						} else {
-							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+							Zepto('#news_nums').hide();
 						}
-					},
-					error: function(xhr, type, errorThrown) {
-						//if(type=='abort') alert(1);
-						//异常处理；
-						plus.nativeUI.toast(mylang['error_network']);
-						console.log(JSON.stringify(xhr));
+						Zepto.each(msg.data, function(i, v) {
+							var str = '<li class="mui-table-view-cell li_list icon_' + v.catid + '" linkurl="detail.html" open-type="article" open-sid="' + v.id + '"  ><span>' + v.catname + '</span><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
+							Zepto('#newslist').append(str);
+						});
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+					} else {
 						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 					}
-				});
-			}
+				},
+				error: function(xhr, type, errorThrown) {
+					//if(type=='abort') alert(1);
+					//异常处理；
+					plus.nativeUI.toast(mylang['error_network']);
+					console.log(JSON.stringify(xhr));
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+				}
+			});
 		}
-		/**
-		 *  取回保存国际
-		 **/
+	}
+
+	/**
+	 *  取回保存国际
+	 **/
 	owner.get_countrylist = function() {
 		var loginInfo = owner.getCommon('loginInfo');
 		var page = Zepto('#page').val(),
@@ -1033,7 +1034,7 @@
 					});
 					app.setLocal(settings.local_id + ","); //选中信息筛选状态
 					app.setSettings(settings);
-					
+
 					mui.fire(plus.webview.getWebviewById('HBuilder'), "refresh_index", {
 						local_name: settings.local_id,
 						local_id: settings.local_name,

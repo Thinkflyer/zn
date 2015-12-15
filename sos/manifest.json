@@ -1,6 +1,6 @@
 ﻿{
 	"@platforms": ["android", "iPhone", "iPad"],
-	"id": "H5EC4A253",/*应用的标识，创建应用时自动生成，勿手动修改*/
+	"id": "cn.frun.assistance",/*应用的标识，创建应用时自动生成，勿手动修改*/
 	"name": "Assistance Demo",/*应用名称，程序桌面图标名称*/
 	"version": {
 		"name": "1.0.1",/*应用版本名称*/
@@ -169,9 +169,9 @@
 					"iphone": {
 						 /*iPhone3启动图片选，分辨率：320x480*/
 						/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
-						"retina40": "/MAC_DISK/网站文案/老姚SOS/demo_bg.imageset/demo_bg@3x.png",/*4.0 英寸设备(iPhone5/iPhone5s)启动图片，分辨率：640x1136*/
-						"retina47": "/MAC_DISK/网站文案/老姚SOS/demo_bg.imageset/demo_bg@3x.png",/*4.7 英寸设备(iPhone6)启动图片，分辨率：750x1334*/
-						"retina55": "/MAC_DISK/网站文案/老姚SOS/demo_bg.imageset/demo_bg@3x.png",/*5.5 英寸设备(iPhone6 Plus)启动图片，分辨率：1242x2208*/
+						/*4.0 英寸设备(iPhone5/iPhone5s)启动图片，分辨率：640x1136*/
+						/*4.7 英寸设备(iPhone6)启动图片，分辨率：750x1334*/
+						/*5.5 英寸设备(iPhone6 Plus)启动图片，分辨率：1242x2208*/
 						"retina55l": ""
 					},
 					"ipad": {
@@ -188,9 +188,9 @@
 				"android": {
 					 /*普通屏启动图片，分辨率：240x282*/
 					 /*大屏启动图片，分辨率：320x442*/
-					"hdpi": "/MAC_DISK/网站文案/老姚SOS/demo_bg.imageset/demo_bg@3x.png", /*高分屏启动图片，分辨率：480x762*/
-					"xhdpi": "/MAC_DISK/网站文案/老姚SOS/demo_bg.imageset/demo_bg@3x.png", /*720P高分屏启动图片，分辨率：720x1242*/
-					"xxhdpi": "/MAC_DISK/网站文案/老姚SOS/demo_bg.imageset/demo_bg@3x.png"
+					 /*高分屏启动图片，分辨率：480x762*/
+					 /*720P高分屏启动图片，分辨率：720x1242*/
+					
 				}
 			},
 			"debug": false

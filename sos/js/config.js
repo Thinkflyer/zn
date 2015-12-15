@@ -21,7 +21,7 @@ var mylang={
 }
 var time=10;//验证码 延时
 var mcro_time=1000;//毫秒
-var showloading=false; //关闭过渡不会显示 loadding 
+var showloading=true; //关闭过渡不会显示 loadding 
 var regBox = {
         regmcode : /^[0-9_-]{6}$/,//验证码
         regName : /^[0-9_-]{6}$/,//用户名
