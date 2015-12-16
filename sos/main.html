@@ -3,10 +3,23 @@
 
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>首页</title>
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<script src="js/config.js"></script>
 		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			/*******/
+			
 			#leftmenu,
 			#setting,
 			.mui-icon {
@@ -87,10 +100,6 @@
 				border-radius: 5px;
 			}
 			
-			.s_list {
-				margin-top: 90px
-			}
-			
 			.li_list {
 				font-size: 12px;
 			}
@@ -144,27 +153,33 @@
 			<div class="mui-pull-right nav_line"></div>
 		</header>
 		<div class="mui-content">
-			<div class="top_button">
-				<button id="country" class="mui-btn top_button_text" linkurl="nation.html" open-sid="14">国家概览</button>
-			</div>
-			<div id="pullrefresh" class="mui-content mui-scroll-wrapper s_list">
-				<div class="mui-scroll">
-					<!--media list-->
-					<ul class="mui-table-view list" id="newslist">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div class="top_button">
+						<button id="country" class="mui-btn top_button_text" linkurl="nation.html" open-sid="14">国家概览</button>
+					</div>
+				</div>
+				<input type="hidden" id="page" name="page" value="1" />
+				<input type="hidden" id="cid" name="cid" value="1" />
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active ">
+						<div id="pullrefresh" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="hd"></div>
+								<ul class="mui-table-view" id="newslist">
 
-					</ul>
-					<!--end media list-->
+								</ul>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
+			<div class="mui-bar mui-bar-tab bg_color buttom_button">
+				<button class="mui-btn mui-btn-block mui-btn-link tel-btn" style="padding-bottom:35px;color:#000000;" id="call_tel">+86 139XXXXXXXX
+				</button>
+			</div>
 		</div>
-		<div class="mui-title tit-sort">
-			<input type="hidden" id="page" name="page" value="1" />
-			<input type="hidden" id="cid" name="cid" value="1" />
-		</div>
-		<div class="mui-bar mui-bar-tab bg_color buttom_button">
-			<button class="mui-btn mui-btn-block mui-btn-link tel-btn" style="padding-bottom:35px;color:#000000;" id="call_tel">+86 139XXXXXXXX
-			</button>
-		</div>
+
 		<script>
 			var menu = null,
 				main = null,
@@ -186,6 +201,12 @@
 				});
 			}
 			(function($, doc) {
+				if (!mui.os.ios) {
+					$('.mui-scroll-wrapper').scroll({
+						bounce: false,
+						indicators: true //是否显示滚动条
+					});
+				}
 				$.init({
 					pullRefresh: {
 						container: '#pullrefresh',
@@ -213,20 +234,7 @@
 							}
 						});
 					}, 500);
-					//					setTimeout(function() {
-					//						loginbox = $.preload({
-					//							id: 'loginbox',
-					//							url: 'IndexLogin.html',
-					//							 styles:{
-					//      popGesture:"hide"
-					//  }
-					//						});
-					//					}, 500);
-					main.addEventListener('maskClick', closeMenu);
-					main.addEventListener("swiperight", openMenu);
-					main.addEventListener("swipeleft", closeMenu);
-					main.addEventListener("menu:close", closeMenu);
-					main.addEventListener("menu:open", openMenu);
+			
 					window.addEventListener('refresh_index', function(event) {
 						plus.nativeUI.showWaiting("正在加载数据");
 						var self = plus.webview.currentWebview();
@@ -257,7 +265,7 @@
 							id: linkurl,
 							url: linkurl,
 							show: {
-								aniShow: 'pop-in',
+								aniShow: 'fade-in',
 								autoShow: false
 							},
 							waiting: {
@@ -270,25 +278,6 @@
 							}
 						});
 					});
-					//					doc.getElementById('country').addEventListener('tap', function(event) {
-					//						var href = this.getAttribute("href");
-					//						var type = this.getAttribute("open-type");
-					//						var linkurl = this.getAttribute("linkurl");
-					//						mui.openWindow({
-					//							id: href,
-					//							url: href,
-					//							show: {
-					//								aniShow: 'pop-in',
-					//								autoShow: false
-					//							},
-					//							waiting: {
-					//								autoShow: showloading
-					//							},
-					//							extras: {
-					//								linkurl: linkurl,
-					//							}
-					//						});
-					//					}, false);
 					var menuButton = doc.getElementById('leftmenu');
 					menuButton.addEventListener('tap', function(event) {
 						if (showMenu) {
@@ -355,6 +344,14 @@
 							}, 300);
 						}
 					};
+					
+								 //主界面向右滑动，若菜单未显示，则显示菜单；否则不做任何操作
+			window.addEventListener("swiperight", openMenu);
+			 //主界面向左滑动，若菜单已显示，则关闭菜单；否则，不做任何操作；
+			 window.addEventListener("swipeleft", closeMenu);
+			 //侧滑菜单触发关闭菜单命令
+			window.addEventListener("menu:close", closeMenu);
+			window.addEventListener("menu:open", openMenu);
 					$.menu = function() {
 							if (showMenu) {
 								closeMenu();
@@ -395,16 +392,16 @@
 				});
 				//主列表点击事件main
 				$('#nav_menu').on('tap', 'div', function(e) {
-					//doc.getElementById('seach_local').addEventListener('tap', function(event) {
 					var linkurl = this.getAttribute('linkurl');
 					$.openWindow({
 						id: linkurl,
 						url: linkurl,
 						show: {
 							aniShow: 'pop-in',
+							autoShow: false
 						},
 						waiting: {
-							autoShow: showloading,
+							autoShow: false,
 							title: '正在加载...', //等待对话框上显示的提示内容
 						}
 					});
@@ -413,7 +410,7 @@
 				function getpullfresh() {
 					//业务逻辑代码，比如通过ajax从服务器获取新数据；
 					//注意，加载完新数据后，必须执行如下代码，注意：若为ajax请求，则需将如下代码放置在处理完ajax响应数据之后
-					console.log('refresh');
+					//console.log('refresh');
 					$('#pullrefresh').pullRefresh().endPulldownToRefresh();
 				}
 				$.oldBack = $.back;

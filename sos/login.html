@@ -44,7 +44,7 @@
 
 			<h1 class="htitle">注册账户</h1>
 			<div class="mui-input-row">
-				<input id='reg_email' type="text" value="1987661@qq.com" placeholder="请输入您的E-mail地址">
+				<input id='reg_email' type="text"  placeholder="请输入您的E-mail地址">
 
 			</div>
 			<div class="mui-input-row">
@@ -100,19 +100,19 @@
 							mui.alert(err, '信息提示');
 							return false;
 						}
-						app.toMain(plus.webview.currentWebview()); //返回首页 并关闭当前页面
+						app.toMain_login(plus.webview.currentWebview()); //返回首页 并关闭当前页面
 					});
 				}, false);
 				//用户快速注册
 				doc.getElementById('reg').addEventListener('tap', function(event) {
 					var reg_email = doc.getElementById('reg_email').value;
 					app.reg(reg_email, function(err) {
-						if (err) {
-							mui.alert(err, '信息提示');
+						if (err.code==0) {
+							mui.alert(err.info, '信息提示');
 							return false;
 						}
-						mui.alert("会员注册成功", '信息提示');
-						app.toMain(plus.webview.currentWebview()); //返回首页 并关闭当前页面
+						mui.alert(err.info, '信息提示');
+						app.toMain_login(plus.webview.currentWebview()); //返回首页 并关闭当前页面
 					});
 					//
 					//

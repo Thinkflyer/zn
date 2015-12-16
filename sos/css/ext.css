@@ -21,6 +21,8 @@
 	font-weight: bold;
 	font-size: 14px;
 	line-height: 20px;
+	white-space:normal; 
+	word-break: break-all; 
 }
 
 .s_date {
@@ -30,6 +32,9 @@
 
 .s_des {
 	font-size: 12px;
+	white-space:normal; 
+	width:100%;
+	word-break: break-all; 
 }
 
 .mui-bar-nav {

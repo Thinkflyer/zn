@@ -117,7 +117,7 @@
 								autoShow: false
 							},
 							waiting: {
-								autoShow: false,
+								autoShow: showloading,
 								title: '正在加载...', //等待对话框上显示的提示内容
 							}
 						});
@@ -146,7 +146,9 @@
 
 									},
 									waiting: {
-										autoShow: true
+										autoShow: showloading,
+										title: '正在加载...', //等待对话框上显示的提示内容
+
 									}
 								});
 								break;
@@ -178,7 +180,8 @@
 									autoShow: false
 								},
 								waiting: {
-									autoShow: true
+									autoShow: showloading,
+									title: '正在加载...', //等待对话框上显示的提示内容
 								},
 								extras: {
 									sid: sid,
@@ -210,7 +213,8 @@
 							aniShow: aniShow
 						},
 						waiting: {
-							autoShow: showloading
+							autoShow: showloading,
+							title: '正在加载...', //等待对话框上显示的提示内容
 						},
 						extras: {
 							sid: sid,
@@ -231,27 +235,28 @@
 				}
 				aniShow = "pop-in";
 			}
-			/**
+		/**
 			 * 关闭侧滑菜单
 			 */
 			function close() {
-				//刷新首页 并关闭侧栏
-					mui.fire(mui.currentWebview.opener(), "show_index");
-				}
-				//点击“关闭侧滑菜单”按钮处理逻辑
-				//在android4.4.2中的swipe事件，需要preventDefault一下，否则触发不正常
-			window.addEventListener('dragstart', function(e) {
+				mui.fire(mui.currentWebview.opener(),"menu:close");
+			}
+			
+			//点击“关闭侧滑菜单”按钮处理逻辑
+			//在android4.4.2中的swipe事件，需要preventDefault一下，否则触发不正常
+			window.addEventListener('dragstart',function(e){
 				mui.gestures.touch.lockDirection = true; //锁定方向
 				mui.gestures.touch.startDirection = e.detail.direction;
 			});
 			window.addEventListener('dragleft', function(e) {
-				if (!mui.isScrolling) {
-					e.detail.gesture.preventDefault();
+				if(!mui.isScrolling){
+					e.detail.gesture.preventDefault();	
 				}
 			});
-			 //监听左滑事件，若菜单已展开，左滑要关闭菜单；
-			window.addEventListener("swipeleft", function(e) {
-				if (Math.abs(e.detail.angle) > 120) {
+		
+			//监听左滑事件，若菜单已展开，左滑要关闭菜单；
+			window.addEventListener("swipeleft",function (e) {
+				if(Math.abs(e.detail.angle)>100){
 					close();
 				}
 			});

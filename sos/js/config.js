@@ -1,4 +1,5 @@
 var _isusecache= 1;//强制使用缓存数据当为0时 缓存将不自动写入
+var _appid='HBuilder'; //fire刷新对应id修改
 //var baseDomain="http://sos.test.com/";
 var baseDomain="http://sos_server.didimama.com/";
 var basepath="/";

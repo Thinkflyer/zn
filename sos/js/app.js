@@ -173,9 +173,9 @@
 	owner.reg = function(reg_email, callback) {
 		callback = callback || $.noop;
 		reg_email = reg_email || {};
-		if (!reg_email.length) return callback('注册邮箱地址不能为空');
+		if (!reg_email.length) return callback(JSON.parse('{"code":0,"info":"注册邮箱地址不能为空"}'));
 		if (!checkEmail(reg_email)) {
-			return callback('注册邮箱地址不正确');
+			return callback(JSON.parse('{"code":0,"info":"注册邮箱地址不正确"}'));
 		} else {
 			//注册邮件开始
 			mui.ajax({
@@ -188,18 +188,18 @@
 				},
 				success: function(json) {
 					var msg = eval(json);
-
 					if (msg.code <= 0) {
-						return callback(msg.info);
+						return callback(msg);
 					} else {
 						//保存登陆状态
 						var regInfo = {
 							account: msg.username,
+							userid: msg.userid,
 							auth: msg.auth,
 							cardnumber: msg.cardnumber,
 						};
 						owner.setCommon('loginInfo', regInfo);
-						return callback(0);
+						return callback(msg);
 					}
 				},
 				error: function(xhr, type, errorThrown) {
@@ -457,10 +457,7 @@
 				type: 'GET',
 				dataType: 'json',
 				url: _geturl,
-				//			data: {
-				//				cid: cid,
-				//				p: page
-				//			},
+			
 				success: function(json) {
 					owner.setcache(_geturl, json);
 					var msg = eval(json);
@@ -819,7 +816,23 @@
 
 		current_view.close();
 	}
-
+	/*用户登陆*/
+	owner.toMain_login = function(current_view) {
+		IndexLogin = plus.webview.getWebviewById("IndexLogin");
+			$.openWindow({
+				id: 'HBuilder',
+				url: 'main.html',
+				show: {
+					aniShow: 'none',
+					autoShow: false,
+				},
+				waiting: {
+					autoShow: showloading
+				}
+			});
+			IndexLogin.close();
+			current_view.close();
+	}
 	/**
 	 * 读取离线缓存开
 	 **/

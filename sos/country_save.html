@@ -90,7 +90,7 @@
 					}
 	
 					//主列表点击事件main
-					$('#pullrefresh').on('tap', 'li', function() {
+					$('#pullrefresh').on('tap', 'li', function(e) {
 						
 						var settings = app.getSettings();
 						//跳转到首页 筛选
@@ -101,7 +101,7 @@
 						settings.local_name = local_name; //设置一个地区属性 默认中国 2
 						settings.newnum = newnum;
 						app.setSettings(settings);
-						mui.fire(plus.webview.getWebviewById('HBuilder'), "refresh_index", {
+						mui.fire(plus.webview.getWebviewById(_appid), "refresh_index", {
 							local_name: local_name,
 							local_id: local_id,
 							news_num: newnum
