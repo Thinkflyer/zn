@@ -160,15 +160,13 @@
 					//取到对象数组后，我们来循环检测它是不是被选中 
 					app.retrun_checkboxed(obj, function(e) {
 						app.setLocal(e);//记录选中位置
-						//刷新首页
 					});
 					mui.fire(plus.webview.getWebviewById(_appid), "refresh_index", {
 						local_name: settings.local_name,
 						local_id: settings.local_id,
-						//news_num: settings.newnum
 					});
-					app.toMain(plus.webview.currentWebview()); //关闭本事 并跳转至首页
-					//mui.currentWebview.close();
+					//app.toMain(plus.webview.currentWebview()); //关闭本事 并跳转至首页
+					mui.currentWebview.close();
 				}
 			</script>
 	</body>

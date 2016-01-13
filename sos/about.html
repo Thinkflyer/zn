@@ -89,7 +89,7 @@
 			</div>
 			<div class="mui-input-row s_center">
 				<button class="btn-color mui-btn-block" linkurl="feedback.html">发送反馈</button>
-				<button class="btn-color mui-btn-block" linkurl="feedback.html">评级本应用程序</button>
+				<button class="btn-color mui-btn-block" linkurl="">评级本应用程序</button>
 				<p>
 					<button class="mui-btn-link" linkurl="detail.html" open-type="page" open-sid="4">第三方法律信息</button>
 				</p>
@@ -108,14 +108,17 @@
 					Zepto('#dev_bb').html(plus.runtime.version);
 					Zepto('#dev_id').html(plus.device.imei);
 					$('.s_center').on('tap', 'button', function() {
+
 						var linkurl = this.getAttribute('linkurl');
 						var type = this.getAttribute("open-type");
 						var sid = this.getAttribute('open-sid');
+						if(!linkurl) {Link_apple();return false;}
+						
 						$.openWindow({
 							id: linkurl,
 							url: linkurl,
 							waiting: {
-								autoShow: true,
+								autoShow: showloading,
 								title: '正在加载...', //等待对话框上显示的提示内容
 							},
 							show: {
@@ -130,7 +133,15 @@
 							}
 						});
 					});
+					
+					
 				});
+				/**
+				 * 请求‘打开网页’推送消息
+				 */
+				function Link_apple() {
+					plus.runtime.openURL(_AppServer_url);
+				}
 			}(mui, document));
 		</script>
 	</body>

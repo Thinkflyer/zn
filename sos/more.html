@@ -152,13 +152,12 @@
 						up: {
 							contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
 							contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
-							callback: app.get_globalnewslist //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+							callback: app.add_more //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
 						}
 					},
 				});
 				if ($.os.plus) {
 					$.plusReady(function() {
-						plus.nativeUI.showWaiting();
 						var self = plus.webview.currentWebview();
 						Zepto('#title').html(self.title); //标题赋值
 						Zepto('#cid').val(self.sid); //分类

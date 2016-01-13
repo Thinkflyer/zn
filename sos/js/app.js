@@ -38,6 +38,8 @@
 		loginInfo.password = loginInfo.password || '';
 		loginInfo.cardnumber = loginInfo.cardnumber || '';
 		loginInfo.is_cardnumber = loginInfo.is_cardnumber;
+		loginInfo.cid = plus.push.getClientInfo().clientid;
+
 		var _posturl = baseDomain + "index.php?g=Api&m=Index&a=ajaxlogin";
 		if (loginInfo.is_cardnumber) {
 			if (loginInfo.cardnumber.length != 12) {
@@ -49,7 +51,8 @@
 					dataType: 'json',
 					url: _posturl,
 					data: {
-						cardnumber: loginInfo.cardnumber
+						cardnumber: loginInfo.cardnumber,
+						cid: loginInfo.cid
 					},
 					success: function(json) {
 						var msg = eval(json);
@@ -61,6 +64,7 @@
 							loginInfo.userid = msg.userid;
 							loginInfo.auth = msg.auth;
 							loginInfo.cardnumber = msg.cardnumber;
+							loginInfo.cid = plus.push.getClientInfo().clientid;
 							owner.setCommon('loginInfo', loginInfo);
 							return callback(0); //登陆成功
 						}
@@ -98,6 +102,8 @@
 						loginInfo.userid = msg.userid;
 						loginInfo.auth = msg.auth;
 						loginInfo.cardnumber = msg.cardnumber;
+						loginInfo.cid = plus.push.getClientInfo().clientid;
+
 						owner.setCommon('loginInfo', loginInfo);
 						return callback(0); //登陆成功
 					}
@@ -122,6 +128,53 @@
 
 
 
+	/**
+	 *  取回调查问卷信息 //不缓存
+	 **/
+	owner.get_voteinfo = function() {
+		var _checked = owner.getLocal();
+		var is_checked = "";
+		var _userinfo = plus.storage.getItem("$user") || "{}";
+		_userinfo = JSON.parse(_userinfo);
+		_nologin = _userinfo.userid;
+		var page = Zepto('#page').val(),
+			cid = Zepto('#cid').val(),
+			keyword = Zepto('#seach_local').val();
+		Zepto('#page').val(parseInt(page) + 1);
+		mui.ajax({
+			timeout: 5000,
+			type: 'GET',
+			dataType: 'json',
+			url: baseDomain + "index.php?g=Api&m=Index&a=vote_list",
+			data: {
+				cid: cid,
+				p: page,
+				keyword: keyword
+			},
+			success: function(json) {
+				var msg = eval(json);
+				if (msg.code == 200) {
+					Zepto.each(msg.data, function(i, v) {
+						var str = '<li class="mui-table-view-cell li_list" linkurl="vote_detail.html" open-type="vote"  open-title="' + v.title + '" open-sid="' + v.id + '"  ><h6 class="black_color s_strong">' + v.title + '</h6><h6 class="s_date">' + v.createtime + '</h6><p class="s_des">' + v.description + '</p></li>';
+
+						Zepto('#newslist').append(str);
+					});
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+				} else {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+				}
+			},
+			error: function(xhr, type, errorThrown) {
+				//异常处理；
+				plus.nativeUI.toast(mylang['error_network']);
+				//console.log(JSON.stringify(xhr));
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+
+
+			}
+		});
+		plus.nativeUI.closeWaiting();
+	}
 
 
 	/**
@@ -170,9 +223,10 @@
 	/**
 	 * 新用户注册
 	 **/
-	owner.reg = function(reg_email, callback) {
+	owner.reg = function(reg_info, callback) {
 		callback = callback || $.noop;
-		reg_email = reg_email || {};
+		reg_email = reg_info.email || {};
+		reg_cid = reg_info.cid || {};
 		if (!reg_email.length) return callback(JSON.parse('{"code":0,"info":"注册邮箱地址不能为空"}'));
 		if (!checkEmail(reg_email)) {
 			return callback(JSON.parse('{"code":0,"info":"注册邮箱地址不正确"}'));
@@ -185,6 +239,7 @@
 				url: baseDomain + "index.php?g=Api&m=Index&a=ajax_reg",
 				data: {
 					reg_email: reg_email,
+					reg_cid: reg_cid
 				},
 				success: function(json) {
 					var msg = eval(json);
@@ -197,6 +252,7 @@
 							userid: msg.userid,
 							auth: msg.auth,
 							cardnumber: msg.cardnumber,
+							cid: reg_cid
 						};
 						owner.setCommon('loginInfo', regInfo);
 						return callback(msg);
@@ -370,7 +426,58 @@
 		plus.nativeUI.closeWaiting();
 	}
 
+/**
+	 *  信息中心 筛选条件
+	 **/
+	owner.get_chooselist = function() {
+		var loginInfo = owner.getCommon('loginInfo');
+		var page = Zepto('#page').val(),
+			cid = Zepto('#cid').val();
+		Zepto('#page').val(parseInt(page) + 1);
+		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=chooselist&p=" + page;
+		var msg = owner.getcache(_geturl);
+		if (_isusecache && msg) {
+			if (msg.code == 200) {
+				Zepto.each(msg.data, function(i, v) {
+					var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '" isend="' + v.is_end + '"  linkurl="info_more.html"  ><a class="mui-navigate-right">['+ v.is_end +']' + v.name + '</a>';
+					Zepto('#newslist').append(str);
+				});
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+			} else {
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+			}
+		} else {
 
+			mui.ajax({
+				timeout: 5000,
+				type: 'GET',
+				dataType: 'json',
+				url: _geturl,
+				success: function(json) {
+					owner.setcache(_geturl, json);
+					var msg = eval(json);
+					if (msg.code == 200) {
+						Zepto.each(msg.data, function(i, v) {
+							var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '"  linkurl="info_more.html"    ><a class="mui-navigate-right">' + v.name + '</a>';
+
+							Zepto('#newslist').append(str);
+						});
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+					} else {
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					//异常处理；
+					plus.nativeUI.toast(mylang['error_network']);
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+
+				}
+			});
+		}
+
+		plus.nativeUI.closeWaiting();
+	}
 	/**
 	 *  取回全球信息
 	 **/
@@ -457,7 +564,7 @@
 				type: 'GET',
 				dataType: 'json',
 				url: _geturl,
-			
+
 				success: function(json) {
 					owner.setcache(_geturl, json);
 					var msg = eval(json);
@@ -798,27 +905,27 @@
 
 	/*用户登陆*/
 	owner.toMain = function(current_view) {
-		//IndexLogin = plus.webview.getWebviewById("IndexLogin");
-		setTimeout(function() { //延时跳转 克服闪烁
-			$.openWindow({
-				id: 'HBuilder',
-				url: 'main.html',
-				show: {
-					aniShow: 'none',
-					autoShow: false,
-				},
-				waiting: {
-					autoShow: showloading
-				}
-			});
-			current_view.close();
-		}, 1500);
+			//IndexLogin = plus.webview.getWebviewById("IndexLogin");
+			setTimeout(function() { //延时跳转 克服闪烁
+				$.openWindow({
+					id: 'HBuilder',
+					url: 'main.html',
+					show: {
+						aniShow: 'none',
+						autoShow: false,
+					},
+					waiting: {
+						autoShow: showloading
+					}
+				});
+				current_view.close();
+			}, 1500);
 
-		current_view.close();
-	}
-	/*用户登陆*/
+			current_view.close();
+		}
+		/*用户登陆*/
 	owner.toMain_login = function(current_view) {
-		IndexLogin = plus.webview.getWebviewById("IndexLogin");
+			IndexLogin = plus.webview.getWebviewById("IndexLogin");
 			$.openWindow({
 				id: 'HBuilder',
 				url: 'main.html',
@@ -832,10 +939,59 @@
 			});
 			IndexLogin.close();
 			current_view.close();
+		}
+	
+	owner.reply=function(self){
+					var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show";
+					var msg = owner.getcache(_geturl);
+					if (_isusecache && msg) {
+						Zepto('.detail-title').html(msg.data.title);
+						Zepto('#content').html(msg.data.content);
+					} else {
+						mui.ajax({
+							type: 'POST',
+							dataType: 'json',
+							url: _geturl,
+							data: {
+								'id': self.sid,
+								'type': self.type
+							},
+							success: function(json) {
+								owner.setcache(_geturl, JSON.stringify(json));
+								var msg = eval(json);
+								var str = '';
+								Zepto('.detail-title').html(msg.data.title); //标题
+								Zepto('#content').html(msg.data.content); //内容
+								Zepto('#reply_nums').html(msg.data.reply_nums); //回复数量
+								if(msg.data.allow_reply > 0) {
+									Zepto("#reply_bar").show();
+									if (msg.data.reply_nums > 0) Zepto('#reply_html').show();
+								}
+								Zepto.each(msg.data.replies, function(i, v) {
+									var html = '<li class="mui-table-view-cell">' +
+										'<div style="margin:-11px -15px;padding:8px 5px 8px 5px;">' +
+										'<img class="mui-media-object mui-pull-left" src="' + _avatar + '">' +
+										'<div>' + v.nickname + '&nbsp;&nbsp;<span class="dtime">' + owner.formatDateTime(v.createtime) +
+										'</span><p id="' + v.id + '">' +
+										v.reply_content +
+										'</p></div></div>' +
+										'</li>';
+									Zepto('#reply_list').append(html);
+								});
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理
+								plus.nativeUI.toast(mylang['error_network']);
+							}
+						});
+					}
+					plus.nativeUI.closeWaiting();
+					plus.webview.currentWebview().show();
+		
 	}
-	/**
-	 * 读取离线缓存开
-	 **/
+		/**
+		 * 读取离线缓存开
+		 **/
 	owner.getcache = function(_requesturl) {
 		//alert(owner.getSettings);
 		var settings = owner.getSettings();
@@ -1109,4 +1265,71 @@
 		});
 		plus.nativeUI.closeWaiting();
 	};
+	owner.submitReply = function() {
+		var reply_input = Zepto("#reply_input");
+		var reply_list = Zepto("#reply_list");
+		var loginInfo = app.getCommon('loginInfo');
+		var sid = Zepto("#sid").val();
+		if (Zepto.trim(reply_input.val()) == "") {
+			mui.alert("回复内容不能为空");
+		} else {
+			mui.ajax({
+				type: "post",
+				url: baseDomain + "index.php?g=Api&m=Index&a=replyadd",
+				data: {
+					m_token: loginInfo.auth,
+					reply_content: reply_input.val(),
+					repyid: sid,
+				},
+				dataType: "json",
+				success: function(data) {
+					if (data.code == 1) {
+						var html = '<li class="mui-table-view-cell">' +
+							'<div style="margin:-11px -15px;padding:8px 5px 8px 5px;">' +
+							'<img class="mui-media-object mui-pull-left" src="' + _avatar + '">' +
+							'<div>' + loginInfo.account + '&nbsp;&nbsp;<span class="dtime">刚刚</span><p >' +
+							reply_input.val() + '</p></div></div></li>';
+						Zepto('#reply_html').show();
+						Zepto("#reply_list").prepend(html);
+						mui.alert("回复成功");
+					} else {
+						mui.alert(data.info);
+					}
+				}
+			})
+		}
+	}
+	owner.formatDateTime = function(datetime) {
+		var current_date = new Date().getTime();
+		var _date = datetime.split(" ")[0];
+		var _time = datetime.split(" ")[1];
+		var date = new Date();
+		date.setFullYear(_date.split("-")[0]);
+		date.setMonth(_date.split("-")[1] - 1);
+		date.setDate(_date.split("-")[2]);
+		date.setHours(_time.split(":")[0]);
+		date.setMinutes(_time.split(":")[1]);
+		date.setSeconds(_time.split(":")[2]);
+		var mul = current_date - date.getTime();
+		var time = parseInt(mul / 1000);
+		if (time < 60) {
+			return "刚刚"
+		} else if (time < 3600) {
+			return parseInt(time / 60) + " 分钟前"
+		} else if (time < 86400) {
+			return parseInt(time / 3600) + " 小时前"
+		} else if (time < 604800) {
+			return parseInt(time / 86400) + " 天前"
+		} else if (time < 2592000) {
+			return parseInt(time / 604800) + " 周前"
+		} else if (time < 31536000) {
+			return parseInt(time / 2592000) + " 个月前"
+		} else {
+			return parseInt(time / 31536000) + " 年前"
+		}
+		return datetime
+	}
+
+
+
 }(mui, window.app = {}));

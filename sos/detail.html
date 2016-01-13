@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
 		<script src="js/config.js"></script>
 		<script src="js/lazyload.js"></script>
-
-	</head>
-
-	<body>
 		<style>
 			html,
 			body,
@@ -38,71 +34,138 @@
 				border-radius: 2px;
 				margin-top: 10px
 			}
+			
+			.footer-left {
+				position: absolute;
+				width: 0px;
+				left: 0px;
+				bottom: 0px;
+				text-align: center;
+				vertical-align: middle;
+				line-height: 100%;
+				padding: 12px 4px;
+			}
+			
+			.footer-right {
+				position: absolute;
+				width: 100px;
+				height: 55px;
+				right: 0px;
+				bottom: 0px;
+				text-align: right;
+				vertical-align: middle;
+				line-height: 100%;
+				padding: 12px 5px;
+				display: inline-block;
+				color: #BBBBBB
+			}
+			
+			.footer-center {
+				height: 100%;
+				padding: 5px 0px;
+			}
+			
+			.footer-center [class*=input] {
+				width: 100%;
+				height: 100%;
+				border-radius: 5px;
+			}
+			
+			.footer-center .input-text {
+				background: #fff;
+				border: solid 1px #ddd;
+				padding: 10px !important;
+				font-size: 16px !important;
+				line-height: 18px !important;
+				font-family: verdana !important;
+				overflow: hidden;
+				width: 85%;
+			}
+			
+			.mui-badge {
+				color: red;
+				font-size: 9px;
+				top: 20px;
+				right: 10px;
+				position: absolute;
+				background-color: #ddd;
+			}
+			
+			.dtime {
+				color: gray;
+				font-size: 10px;
+			}
+			
+			.reply_box {
+				background-color: #F6F6F6;
+				height: 30px;
+				padding: 5px 5px;
+			}
+			
+			#reply_html {
+				display: none;
+			}
+			
+			#reply_bar {
+				display: none;
+			}
 		</style>
 
-		<!-- 主页面容器 -->
-			<!-- 主页面标题 -->
-			<header class="mui-bar mui-bar-nav">
-				<h1 class="mui-title detail-title" id="title"></h1>
-				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
-					<div class="kele mui-action-back mui-icon-back">返回</div>
-				</button>
-			</header>
-			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
-				<div class="mui-scroll">
+	</head>
 
-					<div class="mui-content-padded">
+	<body contextmenu="return false;">
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title detail-title" id="title"></h1>
+			<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+				<div class="kele mui-action-back mui-icon-back">返回</div>
+			</button>
+		</header>
 
-						<div style="background: #FFFFFF; padding: 10px;">
-							<div id="content" class="mui-control-content mui-active">
-							</div>
-						</div>
+		<footer id="reply_bar" class="mui-bar mui-bar-footer" style="display: none;">
+			<label class="footer-left">
+			</label>
+			<div class="footer-center">
+				<input type="text" id="reply_input" class="input-text" placeholder="我要评论..." />
+				<a href="javascript:app.submitReply()"> 提 交 </a>
+			</div>
+		</footer>
+
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="mui-content-padded">
+					<div id="content" class="mui-control-content mui-active">
 					</div>
-					<!--end detail-->
+				</div>
+				<input type="hidden" id="sid" />
+				<div class="mui-content-padded" id="reply_html">
+					<div class="reply_box"><span id="reply_count"></span>回复
+					</div>
+					<ul class="mui-table-view" id="reply_list">
+					</ul>
 				</div>
 			</div>
-			<script>
-				(function($, doc) {
-					$.init();
-					$('#pullrefresh').scroll();
-					var sid = null,
-						msg = null,
-						type = null;
-					$.plusReady(function() {
-						var self = plus.webview.currentWebview();
-						sid = self.sid;
-						type = self.type;
-						var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show&id=" + sid + "&type=" + type;
-						msg = app.getcache(_geturl);
-						if (_isusecache && msg) {
-							Zepto('.detail-title').html(msg.data.title);
-							Zepto('#content').html(msg.data.content);
-						} else {
-							$.ajax({
-								type: 'POST',
-								dataType: 'json',
-								url: _geturl,
-								//data: {'id': sid,'type': type },
-								success: function(json) {
-									app.setcache(_geturl, JSON.stringify(json));
-									var msg = eval(json);
-									var str = '';
-									Zepto('.detail-title').html(msg.data.title);
-									Zepto('#content').html(msg.data.content);
-								},
-								error: function(xhr, type, errorThrown) {
-									//异常处理
-									plus.nativeUI.toast(mylang['error_network']);
-									console.log(JSON.stringify(xhr));
-								}
-							});
-						}
-						plus.nativeUI.closeWaiting();
-						plus.webview.currentWebview().show();
-					});
-				}(mui, document));
-			</script>
-
+		</div>
+		<script>
+			(function($, doc) {
+				$.init({
+					gestureConfig: {
+						doubletap: true
+					},
+					swipeBack: true //启用右滑关闭功能
+				});
+				$('#pullrefresh').scroll();
+				$.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					var sid = self.sid;
+					var type = self.type;
+					Zepto("#sid").val(sid);
+					app.reply(self);
+				});
+				var reply_list = $("#reply_list");
+				reply_list.html("");
+			
+			}(mui, document));
+		</script>
 	</body>
 
 </html>

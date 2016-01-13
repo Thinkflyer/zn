@@ -105,8 +105,12 @@
 				}, false);
 				//用户快速注册
 				doc.getElementById('reg').addEventListener('tap', function(event) {
-					var reg_email = doc.getElementById('reg_email').value;
-					app.reg(reg_email, function(err) {
+					//var reg_email = doc.getElementById('reg_email').value;
+					var regInfo = {
+						email: doc.getElementById('reg_email').value,
+						cid: plus.push.getClientInfo().clientid,
+					};
+					app.reg(regInfo, function(err) {
 						if (err.code==0) {
 							mui.alert(err.info, '信息提示');
 							return false;

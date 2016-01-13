@@ -54,13 +54,14 @@
 				<div class="row mui-input-row">
 					<div class="list_desc">请与我们分享您对本App的反馈，如希望回复，请提供您的电子邮箱．</div>
 				</div>
-
 				<div class="row mui-input-row">
-					<input id='m_email' type="text" class="mui-input-clear mui-input" placeholder="您的电子邮箱">
+					<input id='m_type' type="text" class="btn_help mui-input" placeholder="反馈类型" readonly>
 				</div>
-
 				<div class="row mui-input-row">
 					<textarea id="m_content" class="mui-input-clear" placeholder="输入您的反馈...*"></textarea>
+				</div>
+				<div class="row mui-input-row">
+					<input id='m_email' type="text" class="mui-input-clear mui-input" placeholder="您的电子邮箱">
 				</div>
 			</div>
 			<div class="mui-input-row">
@@ -75,8 +76,12 @@
 					document.getElementById('postButton').addEventListener('tap', function(event) {
 						var m_token = loginInfo.auth;
 						var m_email = document.getElementById('m_email').value;
-						var m_type = "用户反馈";
+						var m_type = document.getElementById('m_type').value;
 						var m_content = document.getElementById('m_content').value;
+						if (!m_type) {
+							mui.alert('请选择反馈类型', '提示信息');
+							return false;
+						}
 						if (!m_email) {
 							mui.alert('电子邮箱不能为空', '提示信息');
 							return false;
@@ -107,6 +112,30 @@
 							}
 						});
 					});
+					//*帮助或寻求帮助*/
+					$('.mui-input-row').on('tap', '.btn_help', function(event) {
+						var btnArray = [{
+							title: "事件反馈"
+						}, {
+							title: "投诉意见"
+						}, {
+							title: "业务需求"
+						}, {
+							title: "寻求帮助"
+						}];
+						plus.nativeUI.actionSheet({
+							title: "请选择已经反馈类型?",
+							cancel: "取消",
+							buttons: btnArray
+						}, function(e) {
+							var index = e.index;
+							if (index <= 0) {
+								 Zepto('#m_type').val("");
+							} else {
+								Zepto('#m_type').val(btnArray[index].title);
+							}
+						});
+					}, false);
 					plus.nativeUI.closeWaiting();
 					plus.webview.currentWebview().show();
 				});

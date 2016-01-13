@@ -42,9 +42,7 @@
 		"File": {
 			"description": "访问本地文件系统"
 		},
-		"Gallery": {
-			"description": "访问系统相册"
-		},
+		
 		"Geolocation": {
 			"description": "访问位置信息"
 		},
@@ -61,9 +59,7 @@
 			"description": "管理应用本地数据"
 		},
 
-		"Uploader": {
-			"description": "管理文件上传任务"
-		},
+		
 		"Runtime": {
 			"description": "访问运行期环境"
 		},
@@ -86,7 +82,7 @@
 		"NativeObj": {
 			"description": "原生对象"
 		},
-		"Push": {}
+		"Push": {},"Zip":{}
 	},
 	"plus": {
 		"splashscreen": {
@@ -105,9 +101,9 @@
 				},
 				"push": {
 					"igexin": {
-						"appid": "lwGDlxQA4yAsY9VGHfZ1lA",
-						"appkey": "et2BBFYg6w7LFQmMvLKqM7",
-						"appsecret": "WkTRbhlTnY9fcfoLXQQECA"
+						"appid": "noGMCcg7yr5EICp1zqXXd6",
+						"appkey": "4rSZarcgkb562jfZQkfMk1",
+						"appsecret": "DediCJdP1j500YnmrYlg2A"
 					}
 				}
 			},
@@ -263,7 +259,9 @@
 					"js/config.js",
 					"fonts/mui.ttf"
 				],
-				"refer": [],
+				"refer": [
+					"login.html"
+				],
 				"priority": 0
 			},
 			"detail.html": {
@@ -411,6 +409,22 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"login.html": {
+				"resources": [
+					"js/app.js",
+					"fonts/iconfont.css",
+					"js/md5.min.js",
+					"js/mui.min.js",
+					"css/ext.css",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/config.js"
+				],
+				"refer": [
+					"IndexLogin.html"
+				],
+				"priority": 0
 			}
 		},
 		"index": {
@@ -437,7 +451,6 @@
 		},
 		"idle": {
 			"resources": [
-				"login.html",
 				"images/Untitled-1.png",
 				"js/mui.lazyload.img.js",
 				"repassword.html",
