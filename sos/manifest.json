@@ -181,7 +181,7 @@
 						"landscape-retina7": ""
 					}
 				},
-				"android": {
+				"android": {"hdpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default-736h@3x.png","ldpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default@2x.png","mdpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default.png","xhdpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default-736h@3x.png","xxhdpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default-736h@3x.png"
 					 /*普通屏启动图片，分辨率：240x282*/
 					 /*大屏启动图片，分辨率：320x442*/
 					 /*高分屏启动图片，分辨率：480x762*/
@@ -241,7 +241,10 @@
 					"feedback.html",
 					"setting.html",
 					"IndexLogin.html",
-					"detail_tel.html"
+					"detail_tel.html",
+					"info_more.html",
+					"vote.html",
+					"iconlist.html"
 				],
 				"priority": 0
 			},
@@ -423,6 +426,52 @@
 				],
 				"refer": [
 					"IndexLogin.html"
+				],
+				"priority": 0
+			},
+			"info_more.html": {
+				"resources": [
+					"fonts/iconfont.css",
+					"js/app.js",
+					"js/md5.min.js",
+					"js/mui.min.js",
+					"css/ext.css",
+					"js/zepto.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"vote.html": {
+				"resources": [
+					"fonts/iconfont.css",
+					"js/app.js",
+					"js/md5.min.js",
+					"js/mui.min.js",
+					"css/ext.css",
+					"js/zepto.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"iconlist.html": {
+				"resources": [
+					"fonts/iconfont.css",
+					"js/app.js",
+					"js/md5.min.js",
+					"js/mui.min.js",
+					"css/ext.css",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/config.js"
+				],
+				"refer": [
+					"more.html"
 				],
 				"priority": 0
 			}
