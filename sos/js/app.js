@@ -426,61 +426,61 @@
 		plus.nativeUI.closeWaiting();
 	}
 
-/**
+	/**
 	 *  信息中心 筛选条件
 	 **/
 	owner.get_chooselist = function() {
-		var loginInfo = owner.getCommon('loginInfo');
-		var page = Zepto('#page').val(),
-			cid = Zepto('#cid').val();
-		Zepto('#page').val(parseInt(page) + 1);
-		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=chooselist&p=" + page;
-		var msg = owner.getcache(_geturl);
-		if (_isusecache && msg) {
-			if (msg.code == 200) {
-				Zepto.each(msg.data, function(i, v) {
-					var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '" isend="' + v.is_end + '"  linkurl="info_more.html"  ><a class="mui-navigate-right">['+ v.is_end +']' + v.name + '</a>';
-					Zepto('#newslist').append(str);
-				});
-				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
-			} else {
-				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-			}
-		} else {
-
-			mui.ajax({
-				timeout: 5000,
-				type: 'GET',
-				dataType: 'json',
-				url: _geturl,
-				success: function(json) {
-					owner.setcache(_geturl, json);
-					var msg = eval(json);
-					if (msg.code == 200) {
-						Zepto.each(msg.data, function(i, v) {
-							var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '"  linkurl="info_more.html"    ><a class="mui-navigate-right">' + v.name + '</a>';
-
-							Zepto('#newslist').append(str);
-						});
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
-					} else {
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-					//异常处理；
-					plus.nativeUI.toast(mylang['error_network']);
+			var loginInfo = owner.getCommon('loginInfo');
+			var page = Zepto('#page').val(),
+				cid = Zepto('#cid').val();
+			Zepto('#page').val(parseInt(page) + 1);
+			var _geturl = baseDomain + "index.php?g=Api&m=Index&a=chooselist&p=" + page;
+			var msg = owner.getcache(_geturl);
+			if (_isusecache && msg) {
+				if (msg.code == 200) {
+					Zepto.each(msg.data, function(i, v) {
+						var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '" isend="' + v.is_end + '"  linkurl="info_more.html"  ><a class="mui-navigate-right">[' + v.is_end + ']' + v.name + '</a>';
+						Zepto('#newslist').append(str);
+					});
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+				} else {
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
-
 				}
-			});
-		}
+			} else {
 
-		plus.nativeUI.closeWaiting();
-	}
-	/**
-	 *  取回全球信息
-	 **/
+				mui.ajax({
+					timeout: 5000,
+					type: 'GET',
+					dataType: 'json',
+					url: _geturl,
+					success: function(json) {
+						owner.setcache(_geturl, json);
+						var msg = eval(json);
+						if (msg.code == 200) {
+							Zepto.each(msg.data, function(i, v) {
+								var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '"  linkurl="info_more.html"    ><a class="mui-navigate-right">' + v.name + '</a>';
+
+								Zepto('#newslist').append(str);
+							});
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+						} else {
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						plus.nativeUI.toast(mylang['error_network']);
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+
+					}
+				});
+			}
+
+			plus.nativeUI.closeWaiting();
+		}
+		/**
+		 *  取回全球信息
+		 **/
 	owner.get_globalnewslist = function() {
 		var _userinfo = plus.storage.getItem("$user") || "{}";
 		_userinfo = JSON.parse(_userinfo);
@@ -925,86 +925,87 @@
 		}
 		/*用户登陆*/
 	owner.toMain_login = function(current_view) {
-			IndexLogin = plus.webview.getWebviewById("IndexLogin");
-			$.openWindow({
-				id: 'HBuilder',
-				url: 'main.html',
-				show: {
-					aniShow: 'none',
-					autoShow: false,
-				},
-				waiting: {
-					autoShow: showloading
-				}
-			});
-			IndexLogin.close();
-			current_view.close();
-		}
-	
-	owner.reply=function(self){
-					var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show";
-					var msg = owner.getcache(_geturl);
-					if (_isusecache && msg) {
-						Zepto('.detail-title').html(msg.data.title);
-						Zepto('#content').html(msg.data.content);
-					} else {
-						mui.ajax({
-							type: 'POST',
-							dataType: 'json',
-							url: _geturl,
-							data: {
-								'id': self.sid,
-								'type': self.type
-							},
-							success: function(json) {
-								owner.setcache(_geturl, JSON.stringify(json));
-								var msg = eval(json);
-								var str = '';
-								Zepto('.detail-title').html(msg.data.title); //标题
-								Zepto('#content').html(msg.data.content); //内容
-								Zepto('#reply_nums').html(msg.data.reply_nums); //回复数量
-								if(msg.data.allow_reply > 0) {
-									Zepto("#reply_bar").show();
-									if (msg.data.reply_nums > 0) Zepto('#reply_html').show();
-								}
-								Zepto.each(msg.data.replies, function(i, v) {
-									var html = '<li class="mui-table-view-cell">' +
-										'<div style="margin:-11px -15px;padding:8px 5px 8px 5px;">' +
-										'<img class="mui-media-object mui-pull-left" src="' + _avatar + '">' +
-										'<div>' + v.nickname + '&nbsp;&nbsp;<span class="dtime">' + owner.formatDateTime(v.createtime) +
-										'</span><p id="' + v.id + '">' +
-										v.reply_content +
-										'</p></div></div>' +
-										'</li>';
-									Zepto('#reply_list').append(html);
-								});
-							},
-							error: function(xhr, type, errorThrown) {
-								//异常处理
-								plus.nativeUI.toast(mylang['error_network']);
-							}
-						});
-					}
-					plus.nativeUI.closeWaiting();
-					plus.webview.currentWebview().show();
-		
+		IndexLogin = plus.webview.getWebviewById("IndexLogin");
+		$.openWindow({
+			id: 'HBuilder',
+			url: 'main.html',
+			show: {
+				aniShow: 'none',
+				autoShow: false,
+			},
+			waiting: {
+				autoShow: showloading
+			}
+		});
+		IndexLogin.close();
+		current_view.close();
 	}
+
+	owner.reply = function(self) {
+			var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show";
+			var _cacheurl=_geturl+ "&type="+self.type+"&id="+self.sid;
+			var msg = owner.getcache(_cacheurl);
+			if (_isusecache && msg) {
+				msg=(JSON.parse(msg));
+				Zepto('.detail-title').html(msg.data.title);
+				Zepto('#content').html(msg.data.content);
+			} else {
+				mui.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: _geturl,
+					data: {
+						'id': self.sid,
+						'type': self.type
+					},
+					success: function(json) {
+						owner.setcache(_cacheurl, JSON.stringify(json));
+						var msg = eval(json);
+						var str = '';
+						Zepto('.detail-title').html(msg.data.title); //标题
+						Zepto('#content').html(msg.data.content); //内容
+						Zepto('#reply_nums').html(msg.data.reply_nums); //回复数量
+						if (msg.data.allow_reply > 0) {
+							Zepto("#reply_bar").show();
+							if (msg.data.reply_nums > 0) Zepto('#reply_html').show();
+						}
+						Zepto.each(msg.data.replies, function(i, v) {
+							var html = '<li class="mui-table-view-cell">' +
+								'<div style="margin:-11px -15px;padding:8px 5px 8px 5px;">' +
+								'<img class="mui-media-object mui-pull-left" src="' + _avatar + '">' +
+								'<div>' + v.nickname + '&nbsp;&nbsp;<span class="dtime">' + owner.formatDateTime(v.createtime) +
+								'</span><p id="' + v.id + '">' +
+								v.reply_content +
+								'</p></div></div>' +
+								'</li>';
+							Zepto('#reply_list').append(html);
+						});
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理
+						plus.nativeUI.toast(mylang['error_network']);
+					}
+				});
+			}
+			plus.nativeUI.closeWaiting();
+			plus.webview.currentWebview().show();
+
+		}
 		/**
 		 * 读取离线缓存开
 		 **/
 	owner.getcache = function(_requesturl) {
-		//alert(owner.getSettings);
 		var settings = owner.getSettings();
-		//alert(settings.autoSync);
 		var offline_article = offline_article || {};
 		var _md5_requesturl = md5(_requesturl); //请求地址格式化
 		var articleinfo = localStorage.getItem(_md5_requesturl) || ''; //获取现有数据
 		if (articleinfo && settings.autoSync) { //当缓存信息存在 并且启用缓存功能时有效.
-			plus.nativeUI.toast('CacheData');
+			if (_iscachemsg) plus.nativeUI.toast('CacheData');
+			
 			var articleinfo = JSON.parse(articleinfo);
 			return articleinfo;
 		} else {
-			plus.nativeUI.toast('AjaxData');
+			if (_iscachemsg) plus.nativeUI.toast('AjaxData');
 
 		}
 	}
@@ -1014,9 +1015,10 @@
 	 * 写入离线缓存
 	 **/
 	owner.setcache = function(_requesturl, json) {
-			//alert(_requesturl);
 			var settings = owner.getSettings();
-			if (_isusecache && settings.autoSync) localStorage.setItem(md5(_requesturl), JSON.stringify(json));
+			if (_isusecache && settings.autoSync) {
+				localStorage.setItem(md5(_requesturl), JSON.stringify(json));
+			}
 		}
 		/**
 		 * 获取当前状态

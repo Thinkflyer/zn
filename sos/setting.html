@@ -275,6 +275,7 @@
 				}, false);
 				//同步开启
 				var settings = app.getSettings();
+
 				autosyncButton = doc.getElementById("autosyncButton");
 				autosyncButton.classList[settings.autoSync ? 'add' : 'remove']('mui-active')
 				autosyncButton.addEventListener('toggle', function(event) {

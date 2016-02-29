@@ -1,9 +1,8 @@
 var _isusecache= 1;//强制使用缓存数据当为0时 缓存将不自动写入
 var _appid='HBuilder'; //fire刷新对应id修改
-var _AppServer_url='http://m.baidu.com'//苹果软件打开地址
 //var baseDomain="http://sos.test.com/";
+var _iscachemsg= 0;
 var _avatar = "images/avatar.png";
-
 var baseDomain="http://sos_server.didimama.com/";
 var basepath="/";
 var jump_baseurl="main.html";

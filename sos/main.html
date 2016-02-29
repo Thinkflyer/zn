@@ -178,8 +178,7 @@
 				<button class="mui-btn mui-btn-block mui-btn-link tel-btn" style="padding-bottom:35px;color:#000000;" id="call_tel">+86 139XXXXXXXX
 				</button>
 			</div>
-		</div>
-
+		</div> 
 		<script>
 			var menu = null,
 				main = null,
@@ -276,7 +275,7 @@
 								sid: sid,
 								type: type
 							}
-						});
+						}); 
 					});
 					var menuButton = doc.getElementById('leftmenu');
 					menuButton.addEventListener('tap', function(event) {
@@ -378,7 +377,7 @@
 						url: linkurl,
 						show: {
 							aniShow: 'pop-in',
-							autoShow: false
+							autoShow: true
 						},
 						waiting: {
 							autoShow: showloading,
@@ -398,7 +397,7 @@
 						url: linkurl,
 						show: {
 							aniShow: 'pop-in',
-							autoShow: false
+							autoShow: true
 						},
 						waiting: {
 							autoShow: false,
@@ -412,7 +411,7 @@
 					//注意，加载完新数据后，必须执行如下代码，注意：若为ajax请求，则需将如下代码放置在处理完ajax响应数据之后
 					//console.log('refresh');
 					$('#pullrefresh').pullRefresh().endPulldownToRefresh();
-				}
+				} 
 				$.oldBack = $.back;
 				var backButtonPress = 0;
 				$.back = function(event) {

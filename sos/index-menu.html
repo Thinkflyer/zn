@@ -180,7 +180,7 @@
 					var sid = this.getAttribute("open-sid");
 					var more = this.getAttribute("open-more");
 					var islogin = this.getAttribute("islogin");
-					var linkurl = this.getAttribute("open-linkurl");
+					//var linkurl = this.getAttribute("open-linkurl");
 					var title = this.getAttribute("open-title");
 
 					if (islogin == 1) {
@@ -200,7 +200,7 @@
 								},
 								extras: {
 									sid: sid,
-									linkurl:linkurl,
+									linkurl:id,
 			    						type: type,
 									title: title,
 									more: more
@@ -226,7 +226,7 @@
 						styles: webview_style,
 						show: {
 							aniShow: 'fade-in',
-							autoShow: false
+							autoShow: true
 						},
 						
 						waiting: {
@@ -235,8 +235,8 @@
 						},
 						extras: {
 							sid: sid,
-							linkurl: linkurl,
-							type: type,
+							linkurl:id,
+			    				type: type,
 							title: title,
 							more: more
 						}
