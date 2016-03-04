@@ -314,10 +314,9 @@
 
 		if (settings.local_name) Zepto('#local_name').html(settings.local_name);
 		if (settings.news_num) Zepto('#news_nums').html(settings.news_num);
-	
 		//第一步 定义路径
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page + str_sql;
-		console.log(_geturl);
+		//console.log(_geturl);
 		var msg = owner.getcache(_geturl);
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
@@ -652,7 +651,7 @@
 						Zepto.each(msg.data, function(i, v) {
 							if (_checked.indexOf(v.local_id + ",") >= 0) is_checked = 'checked';
 							else is_checked = '';
-							var str = '<li class="mui-table-view-cell mui-checkbox mui-right" open-sid="' + v.local_id + '" ><div local_id="' + v.local_id + '" local_name="' + v.localname + '">' + v.localname + ' </div><input type="checkbox" name="local_list"   title="' + v.localname + '" value="' + v.local_id + '" ' + is_checked + '></li>';
+							var str = '<li class="mui-table-view-cell mui-checkbox mui-right" local_id="' + v.local_id + '" local_name="' + v.localname + '">' + v.localname + '<input type="checkbox" name="local_list"  title="' + v.localname + '" value="' + v.local_id + '" ' + is_checked + '></li>';
 							Zepto('#newslist').append(str);
 						});
 						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
