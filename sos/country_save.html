@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -88,10 +89,8 @@
 							$('#pullrefresh').pullRefresh().pullupLoading();
 						});
 					}
-	
 					//主列表点击事件main
 					$('#pullrefresh').on('tap', 'li', function(e) {
-						
 						var settings = app.getSettings();
 						//跳转到首页 筛选
 						var newnum = this.getAttribute('newnum'),
@@ -109,7 +108,6 @@
 						//plus.webview.currentWebview().close();
 						app.toMain(plus.webview.currentWebview()); //关闭本事 并跳转至首页
 						e.stopPropagation(); //防止事件冒泡
-	
 					});
 				}(mui, document));
 			</script>

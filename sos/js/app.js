@@ -303,6 +303,7 @@
 			str_sql = "",
 			cid = Zepto('#cid').val();
 		Zepto('#page').val(parseInt(page) + 1);
+
 		var settings = owner.getSettings();
 		if (settings.local_id) str_sql = "&local_id=" + settings.local_id;
 		else str_sql = "";
@@ -313,8 +314,10 @@
 
 		if (settings.local_name) Zepto('#local_name').html(settings.local_name);
 		if (settings.news_num) Zepto('#news_nums').html(settings.news_num);
+	
 		//第一步 定义路径
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page + str_sql;
+		console.log(_geturl);
 		var msg = owner.getcache(_geturl);
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
@@ -365,7 +368,7 @@
 					//if(type=='abort') alert(1);
 					//异常处理；
 					plus.nativeUI.toast(mylang['error_network']);
-					console.log(JSON.stringify(xhr));
+					//console.log(JSON.stringify(xhr));
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 				}
 			});
@@ -546,6 +549,7 @@
 			cid = Zepto('#cid').val();
 		Zepto('#page').val(parseInt(page) + 1);
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=hospital_list&cid=" + cid + "&p=" + page;
+		//console.log(_geturl);
 		var msg = owner.getcache(_geturl);
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
@@ -908,7 +912,7 @@
 			//IndexLogin = plus.webview.getWebviewById("IndexLogin");
 			setTimeout(function() { //延时跳转 克服闪烁
 				$.openWindow({
-					id: 'HBuilder',
+					id: _appid,
 					url: 'main.html',
 					show: {
 						aniShow: 'none',
@@ -927,7 +931,7 @@
 	owner.toMain_login = function(current_view) {
 		IndexLogin = plus.webview.getWebviewById("IndexLogin");
 		$.openWindow({
-			id: 'HBuilder',
+			id: _appid,
 			url: 'main.html',
 			show: {
 				aniShow: 'none',
@@ -943,10 +947,12 @@
 
 	owner.reply = function(self) {
 			var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show";
-			var _cacheurl=_geturl+ "&type="+self.type+"&id="+self.sid;
+			var _cacheurl = _geturl + "&type=" + self.type + "&id=" + self.sid;
+			//console.log(_cacheurl)
+
 			var msg = owner.getcache(_cacheurl);
 			if (_isusecache && msg) {
-				msg=(JSON.parse(msg));
+				msg = (JSON.parse(msg));
 				Zepto('.detail-title').html(msg.data.title);
 				Zepto('#content').html(msg.data.content);
 			} else {
@@ -1001,7 +1007,7 @@
 		var articleinfo = localStorage.getItem(_md5_requesturl) || ''; //获取现有数据
 		if (articleinfo && settings.autoSync) { //当缓存信息存在 并且启用缓存功能时有效.
 			if (_iscachemsg) plus.nativeUI.toast('CacheData');
-			
+
 			var articleinfo = JSON.parse(articleinfo);
 			return articleinfo;
 		} else {
@@ -1206,7 +1212,7 @@
 					app.setLocal(settings.local_id + ","); //选中信息筛选状态
 					app.setSettings(settings);
 
-					mui.fire(plus.webview.getWebviewById('HBuilder'), "refresh_index", {
+					mui.fire(plus.webview.getWebviewById(_appid), "refresh_index", {
 						local_name: settings.local_id,
 						local_id: settings.local_name,
 					});

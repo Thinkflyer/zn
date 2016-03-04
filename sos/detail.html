@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
@@ -114,10 +115,11 @@
 
 	<body contextmenu="return false;">
 		<header class="mui-bar mui-bar-nav">
-			<h1 class="mui-title detail-title" id="title"></h1>
 			<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
 				<div class="kele mui-action-back mui-icon-back">返回</div>
 			</button>
+			<h1 class="mui-title detail-title" id="title"></h1>
+
 		</header>
 
 		<footer id="reply_bar" class="mui-bar mui-bar-footer" style="display: none;">
@@ -133,6 +135,7 @@
 			<div class="mui-scroll">
 				<div class="mui-content-padded">
 					<div id="content" class="mui-control-content mui-active">
+
 					</div>
 				</div>
 				<input type="hidden" id="sid" />
@@ -162,7 +165,6 @@
 				});
 				var reply_list = $("#reply_list");
 				reply_list.html("");
-			
 			}(mui, document));
 		</script>
 	</body>

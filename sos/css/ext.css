@@ -5,6 +5,11 @@
 	text-align: left;
 }
 
+.loading_msg {
+	font-size: 12px;
+	font-weight: normal;
+	color: #232762
+}
 .s_right {
 	text-align: right;
 }
@@ -71,11 +76,13 @@
 	height: 28px;
 	background: #CC454A;
 	border-radius: 2px;
-	margin: 10px;
 	text-align: center;
 	line-height: 28px;
 	color: #fff;
 	font-size: 14px;
+	top:8px;
+	left:10px;
+	margin-right:10px;
 }
 
 .kele:after {

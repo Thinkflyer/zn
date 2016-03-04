@@ -145,6 +145,8 @@
 
 		<script type="text/javascript">
 			(function($, doc) {
+			
+
 				$.init({
 					pullRefresh: {
 						container: '#pullrefresh', //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
@@ -177,6 +179,7 @@
 					var type = this.getAttribute("open-type");
 					var linkurl = this.getAttribute('linkurl');
 					var sid = this.getAttribute('open-sid');
+					
 					$.openWindow({
 						id: 'main',
 						url: linkurl,

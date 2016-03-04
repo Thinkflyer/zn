@@ -356,7 +356,14 @@
 			},
 			"feedback.html": {
 				"resources": [
-					"js/app.js"
+					"js/app.js",
+					"fonts/iconfont.css",
+					"js/md5.min.js",
+					"js/mui.min.js",
+					"css/ext.css",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/config.js"
 				],
 				"refer": [],
 				"priority": 0

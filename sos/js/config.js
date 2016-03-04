@@ -6,7 +6,7 @@ var _avatar = "images/avatar.png";
 var baseDomain="http://sos_server.didimama.com/";
 var basepath="/";
 var jump_baseurl="main.html";
-var call_telphone= 10086;
+var call_telphone= "0864009208876";
 var version_number="1.0.1";
 /*提示翻译*/
 var mylang={

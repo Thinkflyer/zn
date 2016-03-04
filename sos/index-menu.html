@@ -16,6 +16,7 @@
 				background-color: #333;
 				color: #fff;
 			}
+			
 			.title+.content {
 				margin: 10px 15px 35px;
 				color: #bbb;
@@ -23,9 +24,11 @@
 				font-size: 14px;
 				line-height: 24px;
 			}
+			
 			.mui-table-view {
 				margin-bottom: 35px;
 			}
+			
 			.flex-container {
 				display: -webkit-box;
 				display: -webkit-flex;
@@ -34,14 +37,17 @@
 				justify-content: space-between;
 				text-align: center;
 			}
+			
 			.mui-table-view-cell {
 				border-color: #FFFFFF;
 				font-size: 14px;
 				color: #999999;
 			}
+			
 			.mui-table-view-inverted .mui-table-view-cell::after {
 				background-color: #3B4047;
 			}
+			
 			.left_menu_ico {
 				font-size: 20px;
 				margin-right: 10px;
@@ -50,50 +56,51 @@
 			}
 		</style>
 	</head>
+
 	<body>
 		<div class="left_mui-content">
 			<ul class="mui-table-view mui-table-view-chevron mui-table-view-inverted" style="color: #ddd;">
 				<li class="mui-table-view-cell">
-				<a linkurl="detail_tel.html" open-type="page" open-title="立刻联系我们" open-sid="5">
-					<span class="iconfont icon-phone left_menu_ico"></span>立刻联系我们
-				</a>
+					<a linkurl="detail_tel.html" open-type="page" open-title="立刻联系我们" open-sid="5">
+						<span class="iconfont icon-phone left_menu_ico"></span>立刻联系我们
+					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="country_save.html"  open-title="保存的国家" >
+					<a linkurl="country_save.html" open-title="保存的国家">
 						<span class="iconfont icon-sphere left_menu_ico"></span>保存的国家
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="more.html" open-type="list" open-sid="6" open-more="1" open-title="全球信息" >
-					<span class="iconfont icon-info left_menu_ico"></span>全球信息
+					<a linkurl="more.html" open-type="list" open-sid="6" open-more="1" open-title="全球信息">
+						<span class="iconfont icon-info left_menu_ico"></span>全球信息
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="iconlist.html" open-type="list" open-sid="27" open-more="1" open-title="服务中心" >
-					<span class="iconfont icon-stack left_menu_ico"></span>服务中心
+					<a linkurl="iconlist.html" open-type="list" open-sid="27" open-more="1" open-title="服务中心">
+						<span class="iconfont icon-stack left_menu_ico"></span>服务中心
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="info_more.html" open-type="list" open-sid="6" open-more="1" open-title="信息中心" >
-					<span class="iconfont icon-filetext left_menu_ico"></span>信息中心
+					<a linkurl="info_more.html" open-type="list" open-sid="6" open-more="1" open-title="信息中心">
+						<span class="iconfont icon-filetext left_menu_ico"></span>信息中心
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="hospital.html" open-type="list"  open-title="诊所信息" >
-					<span class="iconfont icon-aidkit left_menu_ico"></span>诊所信息
+					<a linkurl="hospital.html" open-type="list" open-title="诊所信息">
+						<span class="iconfont icon-aidkit left_menu_ico"></span>诊所信息
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="vote.html" open-type="list"  open-title="调查问卷" >
-					<span class="iconfont icon-stack left_menu_ico"></span>调查问卷
+					<a linkurl="vote.html" open-type="list" open-title="调查问卷">
+						<span class="iconfont icon-stack left_menu_ico"></span>调查问卷
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
 					<a linkurl="feedback.html"><span class="iconfont icon-bullhorn left_menu_ico"></span>意见反馈</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="setting.html" open-type="page"  open-title="设置信息" >
-					<span class="iconfont icon-cog left_menu_ico"></span>设置
+					<a linkurl="setting.html" open-type="page" open-title="设置信息">
+						<span class="iconfont icon-cog left_menu_ico"></span>设置
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
@@ -109,7 +116,12 @@
 		</div>
 		<script type="text/javascript" charset="utf-8">
 			(function($, doc) {
-				$.init();
+				$.init({
+					keyEventBind: {
+						backbutton: false,
+						menubutton: false
+					}
+				});
 				var subWebview = null,
 					template = null,
 					index = null,
@@ -117,6 +129,7 @@
 				$.plusReady(function() {
 					var state = app.getState();
 					var self = plus.webview.currentWebview();
+					//获得侧滑主窗口webview对象
 				});
 				//退出操作
 				document.getElementById('loginout_box').addEventListener('tap', function() {
@@ -138,7 +151,6 @@
 						});
 						return;
 					}
-					
 					var btnArray = [{
 						title: "注销当前账号"
 					}, {
@@ -158,12 +170,10 @@
 									show: {
 										aniShow: 'pop-in',
 										autoShow: false
-
 									},
 									waiting: {
 										autoShow: showloading,
 										title: '正在加载...', //等待对话框上显示的提示内容
-
 									}
 								});
 								break;
@@ -182,7 +192,6 @@
 					var islogin = this.getAttribute("islogin");
 					//var linkurl = this.getAttribute("open-linkurl");
 					var title = this.getAttribute("open-title");
-
 					if (islogin == 1) {
 						var state = app.getState();
 						if (!state.account) {
@@ -200,8 +209,8 @@
 								},
 								extras: {
 									sid: sid,
-									linkurl:id,
-			    						type: type,
+									linkurl: id,
+									type: type,
 									title: title,
 									more: more
 								}
@@ -228,15 +237,14 @@
 							aniShow: 'fade-in',
 							autoShow: true
 						},
-						
 						waiting: {
 							autoShow: showloading,
 							title: '正在加载...', //等待对话框上显示的提示内容
 						},
 						extras: {
 							sid: sid,
-							linkurl:id,
-			    				type: type,
+							linkurl: id,
+							type: type,
 							title: title,
 							more: more
 						}
@@ -244,7 +252,7 @@
 					close(); //关闭侧栏菜单
 				});
 			}(mui, document));
-			 //关于backbutton和menubutton两个按键的说明，在iOS平台不存在，故需隐藏
+			//关于backbutton和menubutton两个按键的说明，在iOS平台不存在，故需隐藏
 			if (!mui.os.android) {
 				var span = document.getElementById("android-only")
 				if (span) {
@@ -252,13 +260,16 @@
 				}
 				aniShow = "pop-in";
 			}
-		/**
+			/**
 			 * 关闭侧滑菜单
 			 */
 			function close() {
-				mui.fire(mui.currentWebview.opener(),"menu:close");
+				var main = plus.webview.currentWebview().opener();
+				mui.fire(main, "menu:close");
 			}
-			
+
+
+	
 			//点击“关闭侧滑菜单”按钮处理逻辑
 			//在android4.4.2中的swipe事件，需要preventDefault一下，否则触发不正常
 			window.addEventListener('dragstart',function(e){
@@ -273,10 +284,11 @@
 		
 			//监听左滑事件，若菜单已展开，左滑要关闭菜单；
 			window.addEventListener("swipeleft",function (e) {
-				if(Math.abs(e.detail.angle)>100){
+				if(Math.abs(e.detail.angle)>170){
 					close();
 				}
 			});
+			
 		</script>
 	</body>
 
