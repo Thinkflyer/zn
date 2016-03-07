@@ -231,7 +231,8 @@
 					"js/zepto.min.js",
 					"css/mui.min.css",
 					"js/config.js",
-					"fonts/iconfont.css"
+					"fonts/iconfont.css",
+					"fonts/iconfont.ttf"
 				],
 				"refer": [
 					"country_save.html",
@@ -399,7 +400,8 @@
 					"fonts/mui.ttf",
 					"css/mui.min.css",
 					"js/config.js",
-					"fonts/iconfont.woff"
+					"fonts/iconfont.woff",
+					"fonts/iconfont.ttf"
 				],
 				"refer": [],
 				"priority": 0
@@ -513,7 +515,6 @@
 				"forget_password.html",
 				"images/bg_topbutton.png",
 				"fonts/iconfont.svg",
-				"fonts/iconfont.ttf",
 				"README.md",
 				"terms.html",
 				"reg.html",

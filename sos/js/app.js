@@ -390,7 +390,7 @@
 					var str = '<li class="mui-table-view-cell" local_id="' + v.local_id + '" local_name="' + v.localname + '"  ><a class="mui-navigate-right">' + v.localname + '</a>';
 					Zepto('#newslist').append(str);
 				});
-				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 			} else {
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 			}
@@ -410,7 +410,7 @@
 
 							Zepto('#newslist').append(str);
 						});
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 					} else {
 						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 					}
@@ -418,7 +418,6 @@
 				error: function(xhr, type, errorThrown) {
 					//异常处理；
 					plus.nativeUI.toast(mylang['error_network']);
-					//console.log(JSON.stringify(xhr));
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 
 				}
@@ -654,7 +653,7 @@
 							var str = '<li class="mui-table-view-cell mui-checkbox mui-right" local_id="' + v.local_id + '" local_name="' + v.localname + '">' + v.localname + '<input type="checkbox" name="local_list"  title="' + v.localname + '" value="' + v.local_id + '" ' + is_checked + '></li>';
 							Zepto('#newslist').append(str);
 						});
-						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 					} else {
 						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 					}
