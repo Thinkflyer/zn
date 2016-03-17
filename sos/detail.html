@@ -109,6 +109,12 @@
 			#reply_bar {
 				display: none;
 			}
+			
+			#share_btn {
+				color: #ffffff;
+				font-size: 14px;
+				line-height: 25px;
+			}
 		</style>
 
 	</head>
@@ -119,19 +125,20 @@
 				<div class="kele mui-action-back mui-icon-back">返回</div>
 			</button>
 			<h1 class="mui-title detail-title" id="title"></h1>
+			<a class="mui-icon iconfont icon-share2 mui-pull-right" id="share_btn"></a>
 
 		</header>
-
 		<footer id="reply_bar" class="mui-bar mui-bar-footer" style="display: none;">
 			<label class="footer-left">
 			</label>
 			<div class="footer-center">
 				<input type="text" id="reply_input" class="input-text" placeholder="我要评论..." />
-				<a href="javascript:app.submitReply()"> 提 交 </a>
+				<a href="javascript:app.submitReply()">提 交</a>
 			</div>
 		</footer>
 
 		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<input id="sharehref" class="sharehref" type="hidden" />
 			<div class="mui-scroll">
 				<div class="mui-content-padded">
 					<div id="content" class="mui-control-content mui-active">
@@ -145,10 +152,13 @@
 					<ul class="mui-table-view" id="reply_list">
 					</ul>
 				</div>
+		
 			</div>
 		</div>
+
 		<script>
 			(function($, doc) {
+				var shares = null;
 				$.init({
 					gestureConfig: {
 						doubletap: true
@@ -157,11 +167,115 @@
 				});
 				$('#pullrefresh').scroll();
 				$.plusReady(function() {
+					updateSerivces();
 					var self = plus.webview.currentWebview();
 					var sid = self.sid;
 					var type = self.type;
 					Zepto("#sid").val(sid);
+					//baseDomain
+					Zepto("#sharehref").val(baseDomain+'share/id/'+sid+'.html');
+					//分享链接
 					app.reply(self);
+				});
+		
+				// 分析链接
+				function shareHref() {
+					var ids = [{
+							id: "weixin",
+							ex: "WXSceneSession"
+						}, {
+							id: "weixin",
+							ex: "WXSceneTimeline"
+						}, {
+							id: "qq"
+						}],
+						bts = [{
+							title: "发送给微信好友"
+						}, {
+							title: "分享到微信朋友圈"
+						}, {
+							title: "分享到QQ"
+						}];
+					plus.nativeUI.actionSheet({
+							cancel: "取消",
+							buttons: bts
+						},
+						function(e) {
+							var i = e.index;
+							if (i > 0) {
+								shareAction(ids[i - 1].id, ids[i - 1].ex);
+							}
+						}
+					);
+				}
+				/**
+				 * 分享操作
+				 * @param {String} id
+				 */
+				function shareAction(id, ex) {
+					var s = null;
+					//console.log("分享操作：");
+					if (!id || !(s = shares[id])) {
+						//console.log("无效的分享服务！");
+						return;
+					}
+					if (s.authenticated) {
+						//console.log("---已授权---");
+						shareMessage(s, ex);
+					} else {
+						//console.log("---未授权---");
+						s.authorize(function() {
+							shareMessage(s, ex);
+						}, function(e) {
+							console.log("认证授权失败：" + e.code + " - " + e.message);
+						});
+					}
+				}
+				/**
+				 * 发送分享消息
+				 * @param {plus.share.ShareService} s
+				 */
+				function shareMessage(s, ex) {
+					var msg = {
+						content: content.innerText,
+						extra: {
+							scene: ex
+						}
+					};
+				
+						msg.href = sharehref.value;
+						if (title && title.innerText != "") {
+							msg.title = title.innerText;
+						}
+						if (content && content.innerText != "") {
+							msg.content = content.innerText;
+						}
+						msg.thumbs = ["images/logo_3.png"];
+						msg.pictures = ["images/logo_3.png"];
+						console.log(JSON.stringify(msg));
+					s.send(msg, function() {
+						console.log("分享到\"" + s.description + "\"成功！ ");
+					}, function(e) {
+						console.log("分享到\"" + s.description + "\"失败: " + e.code + " - " + e.message);
+					});
+				}
+				/**
+				 * 更新分享服务
+				 */
+				function updateSerivces() {
+					plus.share.getServices(function(s) {
+						shares = {};
+						for (var i in s) {
+							var t = s[i];
+							shares[t.id] = t;
+						}
+					}, function(e) {
+						console.log("获取分享服务列表失败：" + e.message);
+					});
+				}
+				//*分享链接*/
+				$('.mui-bar-nav').on('tap', 'a', function() {
+					shareHref();
 				});
 				var reply_list = $("#reply_list");
 				reply_list.html("");
