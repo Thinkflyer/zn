@@ -3,15 +3,12 @@
 	owner.checklogin = function() {
 		var loginInfo = owner.getCommon('loginInfo');
 		var settings = owner.getSettings();
-		//	if (!settings.autoLogin || !loginInfo.auth) { //保存密码 并有记录
-		if (!loginInfo.auth) { //保存密码 并有记录
-			//plus.webview.getWebviewById('HBuilder').hide();
+		if (typeof(loginInfo.auth) == "undefined") { //保存密码 并有记录
 			owner.toLogin();
 		}
 	};
 	//跳转至登陆页面
 	owner.toLogin = function() {
-		//setTimeout(function() {
 		mui.openWindow({
 			id: 'IndexLogin',
 			url: 'IndexLogin.html',
@@ -226,6 +223,8 @@
 	owner.reg = function(reg_info, callback) {
 		callback = callback || $.noop;
 		reg_email = reg_info.email || {};
+		reg_weixin = reg_info.weixin || {};
+		reg_qq = reg_info.qq || {};
 		reg_cid = reg_info.cid || {};
 		if (!reg_email.length) return callback(JSON.parse('{"code":0,"info":"注册邮箱地址不能为空"}'));
 		if (!checkEmail(reg_email)) {
@@ -239,6 +238,8 @@
 				url: baseDomain + "index.php?g=Api&m=Index&a=ajax_reg",
 				data: {
 					reg_email: reg_email,
+					reg_weixin: reg_weixin,
+					reg_qq: reg_qq,
 					reg_cid: reg_cid
 				},
 				success: function(json) {
@@ -939,8 +940,13 @@
 				autoShow: showloading
 			}
 		});
-		IndexLogin.close();
-		current_view.close();
+		//
+		IndexLogin.hide();
+		current_view.hide();
+		setTimeout(function() { 
+			current_view.close();
+			IndexLogin.close();
+		}, 500);
 	}
 
 	owner.reply = function(self) {
@@ -969,6 +975,7 @@
 						Zepto('.detail-title').html(msg.data.title); //标题
 						Zepto('#content').html(msg.data.content); //内容
 						Zepto('#reply_nums').html(msg.data.reply_nums); //回复数量
+						//alert(msg.data.allow_reply);
 						if (msg.data.allow_reply > 0) {
 							Zepto("#reply_bar").show();
 							if (msg.data.reply_nums > 0) Zepto('#reply_html').show();

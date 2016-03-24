@@ -120,7 +120,7 @@
 				"keystore": "",/*Android应用打包使用的密钥库文件*/
 				"password": "",/*Android应用打包使用密钥库中证书的密码*/
 				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
-				"permissions": ["<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.GET_TASKS\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.RECEIVE_MMS\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>","<uses-permission android:name=\"android.permission.RECEIVE_SMS\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_MOCK_LOCATION\"/>","<uses-permission android:name=\"android.permission.BROADCAST_SMS\"/>","<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>"]
+				"permissions": ["<uses-permission android:name=\"android.permission.ACCESS_LOCATION_EXTRA_COMMANDS\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.GET_TASKS\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.LOCATION_HARDWARE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.RECEIVE_MMS\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-permission android:name=\"android.permission.CONTROL_LOCATION_UPDATES\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>","<uses-permission android:name=\"android.permission.INSTALL_LOCATION_PROVIDER\"/>","<uses-permission android:name=\"android.permission.RECEIVE_SMS\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_MOCK_LOCATION\"/>","<uses-permission android:name=\"android.permission.BROADCAST_SMS\"/>","<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>"]
 			},
 			"orientation": ["portrait-primary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
 			"icons": {
@@ -217,7 +217,8 @@
 					"detail.html",
 					"nation.html",
 					"search_local.html",
-					"country_save.html"
+					"country_save.html",
+					"offcanvas-drag-right-plus-menu.html"
 				],
 				"priority": 0
 			},
@@ -279,7 +280,9 @@
 					"css/mui.min.css",
 					"js/lazyload.js",
 					"js/config.js",
-					"images/grey.png"
+					"images/grey.png",
+					"fonts/iconfont.ttf",
+					"fonts/iconfont.woff"
 				],
 				"refer": [],
 				"priority": 0
@@ -317,9 +320,18 @@
 			"hospital.html": {
 				"resources": [
 					"js/app.js",
-					"fonts/mui.ttf"
+					"fonts/mui.ttf",
+					"fonts/iconfont.css",
+					"js/md5.min.js",
+					"js/mui.min.js",
+					"css/ext.css",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/config.js"
 				],
-				"refer": [],
+				"refer": [
+					"hospital_detail.html"
+				],
 				"priority": 0
 			},
 			"nation.html": {
@@ -334,7 +346,9 @@
 					"css/mui.min.css",
 					"js/config.js"
 				],
-				"refer": [],
+				"refer": [
+					"weblink.html"
+				],
 				"priority": 0
 			},
 			"more.html": {
@@ -386,7 +400,9 @@
 					"js/config.js",
 					"js/mui.view.js"
 				],
-				"refer": [],
+				"refer": [
+					"detail.html"
+				],
 				"priority": 0
 			},
 			"search_local.html": {
@@ -483,6 +499,28 @@
 					"more.html"
 				],
 				"priority": 0
+			},
+			"hospital_detail.html": {
+				"resources": [
+					"js/app.js",
+					"js/lazyload.js",
+					"fonts/iconfont.css",
+					"js/md5.min.js",
+					"js/mui.min.js",
+					"css/ext.css",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"weblink.html": {
+				"resources": [
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
 			}
 		},
 		"index": {
@@ -518,13 +556,11 @@
 				"README.md",
 				"terms.html",
 				"reg.html",
-				"weblink.html",
 				"fonts/demo.html",
 				"js/mui.lazyload.js",
 				"images/download_loading.gif",
 				"link.html",
 				"news.html",
-				"hospital_detail.html",
 				"images/loading.gif",
 				"fonts/iconfont.eot",
 				"cantlogin.html",

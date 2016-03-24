@@ -111,11 +111,7 @@
 		}
 		
 		.top_button {
-			margin-top: 60px;
-		}
-		
-		.s_list {
-			margin-top: 120px
+
 		}
 		
 		.right_m {
@@ -126,28 +122,29 @@
 		.mui-bar-nav ~ .mui-content {
 			padding-top: 44px;
 		}
+		#pullrefresh{
+		top: 120px;
+		}
 	</style>
 
 	<body>
 
-		<div class="mui-title tit-sort">
-			<input type="hidden" id="page" name="page" value="1" />
-			<input type="hidden" id="cid" name="cid" value="1" />
-		</div>
-		<!-- 侧滑导航根容器 -->
 		<!-- 主页面容器 -->
-		<div class="mui-content">
-			<header class="mui-bar mui-bar-nav">
-				<h1 class="mui-title detail-title" id="title">诊所信息</h1>
-				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title detail-title" id="title"></h1>
+			<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
 					<div class="kele mui-action-back mui-icon-back">返回</div>
 				</button>
-			</header>
-
+		</header>
+		<div class="mui-content">
+			<div class="mui-title tit-sort">
+				<input type="hidden" id="page" name="page" value="1" />
+				<input type="hidden" id="cid" name="cid" value="1" />
+			</div>
 			<div class="top_button">
 				<p class="p_box">国际SOS诊所遍及全球，以下是诊所名单，如果您需要帮助，或者遇到紧急情况，请点击"寻求援助"按钮。 </p>
 			</div>
-			<div id="pullrefresh" class="mui-content mui-scroll-wrapper s_list">
+			<div id="pullrefresh" class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<!--media list-->
 					<div class="hd"></div>
@@ -177,11 +174,12 @@
 						Zepto('#title').html(self.title); //标题赋值
 						Zepto('#cid').val(self.sid); //分类
 						setTimeout(function() {
+							//参数为true代表没有更多数据了,并自动隐藏显示更多字样。
+							$('#pullrefresh').pullRefresh().disablePullupToRefresh(true);
 							$('#pullrefresh').pullRefresh().pullupLoading();
 							plus.nativeUI.closeWaiting();
 						}, 100);
 						plus.webview.currentWebview().show();
-
 					});
 				} else {
 					$.ready(function() {

@@ -66,28 +66,34 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="country_save.html" open-title="保存的国家">
-						<span class="iconfont icon-sphere left_menu_ico"></span>保存的国家
+					<a linkurl="more.html"  open-type="list" open-sid="41" open-more="1" open-title="动态信息">
+						<span class="iconfont icon-display left_menu_ico"></span>动态信息
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="more.html" open-type="list" open-sid="6" open-more="1" open-title="全球信息">
-						<span class="iconfont icon-info left_menu_ico"></span>全球信息
+					<a linkurl="more.html" open-type="list" open-sid="6" open-more="1" open-title="iCover周报">
+						<span class="iconfont icon-info left_menu_ico"></span>iCover周报
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="iconlist.html" open-type="list" open-sid="27" open-more="1" open-title="服务中心">
-						<span class="iconfont icon-stack left_menu_ico"></span>服务中心
+					<a linkurl="country_save.html" open-title="关注地区">
+						<span class="iconfont icon-sphere left_menu_ico"></span>关注地区
+					</a>
+				</li>
+
+				<li class="mui-table-view-cell">
+					<a linkurl="iconlist.html" open-type="list" open-sid="27" open-more="1" open-title="核心业务">
+						<span class="iconfont icon-stack left_menu_ico"></span>核心业务
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="info_more.html" open-type="list" open-sid="6" open-more="1" open-title="信息中心">
-						<span class="iconfont icon-filetext left_menu_ico"></span>信息中心
+					<a linkurl="info_more.html" open-type="list" open-sid="6" open-more="1" open-title="全球信息">
+						<span class="iconfont icon-filetext left_menu_ico"></span>全球信息
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="hospital.html" open-type="list" open-title="诊所信息">
-						<span class="iconfont icon-aidkit left_menu_ico"></span>诊所信息
+					<a linkurl="hospital.html" open-type="list" open-title="救援网络">
+						<span class="iconfont icon-aidkit left_menu_ico"></span>救援网络
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
@@ -96,7 +102,7 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="feedback.html"><span class="iconfont icon-bullhorn left_menu_ico"></span>意见反馈</a>
+					<a linkurl="feedback.html" open-title="用户反馈"><span class="iconfont icon-bullhorn left_menu_ico" ></span>用户反馈</a>
 				</li>
 				<li class="mui-table-view-cell">
 					<a linkurl="setting.html" open-type="page" open-title="设置信息">
@@ -104,7 +110,7 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a linkurl="about.html"><span class="iconfont icon-info left_menu_ico"></span>关于</a>
+					<a linkurl="about.html"  open-title="关于"><span class="iconfont icon-info left_menu_ico"></span>关于</a>
 				</li>
 
 				<li class="mui-table-view-cell" id="loginout_box">
@@ -282,7 +288,7 @@
 		
 			//监听左滑事件，若菜单已展开，左滑要关闭菜单；
 			window.addEventListener("swipeleft",function (e) {
-				if(Math.abs(e.detail.angle)>170){
+				if(Math.abs(e.detail.angle)>130){
 					close();
 				}
 			});

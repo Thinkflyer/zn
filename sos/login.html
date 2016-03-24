@@ -48,6 +48,14 @@
 
 			</div>
 			<div class="mui-input-row">
+				<input id='reg_weixin' type="text"  placeholder="请输入您的微信号">
+
+			</div>
+			<div class="mui-input-row">
+				<input id='reg_qq' type="text"  placeholder="请输入您的QQ号码">
+
+			</div>
+			<div class="mui-input-row">
 				<button id='reg' class="btn-color mui-btn-block ">注册账户</button>
 			</div>
 		</div>
@@ -108,6 +116,9 @@
 					//var reg_email = doc.getElementById('reg_email').value;
 					var regInfo = {
 						email: doc.getElementById('reg_email').value,
+						weixin: doc.getElementById('reg_weixin').value,
+						qq: doc.getElementById('reg_qq').value,
+
 						cid: plus.push.getClientInfo().clientid,
 					};
 					app.reg(regInfo, function(err) {

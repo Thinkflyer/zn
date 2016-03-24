@@ -44,7 +44,7 @@
 	<body>
 		<!-- 侧滑导航根容器 -->
 		<header class="mui-bar mui-bar-nav">
-			<h1 class="mui-title detail-title">意见反馈</h1>
+			<h1 class="mui-title detail-title" id="title"></h1>
 			<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
 				<div class="kele mui-action-back mui-icon-back">返回</div>
 			</button>
@@ -72,6 +72,9 @@
 			(function($, doc) {
 				$.init();
 				$.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					Zepto('#title').html(self.title); //标题赋值 
+					
 					var loginInfo = app.getCommon('loginInfo');
 					document.getElementById('postButton').addEventListener('tap', function(event) {
 						var m_token = loginInfo.auth;

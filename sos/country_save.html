@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -47,7 +46,7 @@
 		<div class="mui-inner-wrap">
 			<!-- 主页面标题 -->
 			<header class="mui-bar mui-bar-nav">
-				<h1 class="mui-title detail-title" id="title">保存的国家</h1>
+				<h1 class="mui-title detail-title" id="title"></h1>
 				<button class="mui-btn mui-btn-link mui-btn-nav mui-pull-left">
 					<div class="kele mui-action-back mui-icon-back">返回</div>
 				</button>
@@ -76,6 +75,8 @@
 					});
 					if ($.os.plus) {
 						$.plusReady(function() {
+							var self = plus.webview.currentWebview();
+							Zepto('#title').html(self.title); //标题赋值
 							plus.nativeUI.showWaiting();
 							setTimeout(function() {
 								$('#pullrefresh').pullRefresh().pullupLoading();

@@ -115,6 +115,16 @@
 				font-size: 14px;
 				line-height: 25px;
 			}
+			#reply_input{width:77%;}
+			#submitReply{
+				position: absolute;
+			}
+			
+			.btn-color {
+				background-color: #832F32;
+				font-size: 14px;
+				color: #ffffff;
+			}
 		</style>
 
 	</head>
@@ -131,9 +141,10 @@
 		<footer id="reply_bar" class="mui-bar mui-bar-footer" style="display: none;">
 			<label class="footer-left">
 			</label>
-			<div class="footer-center">
+			<div class="footer-center" >
 				<input type="text" id="reply_input" class="input-text" placeholder="我要评论..." />
-				<a href="javascript:app.submitReply()">提 交</a>
+				<button class="mui-btn  mui-pull-right btn-color " id="submitReply"> 提 交</button>
+
 			</div>
 		</footer>
 
@@ -173,7 +184,7 @@
 					var type = self.type;
 					Zepto("#sid").val(sid);
 					//baseDomain
-					Zepto("#sharehref").val(baseDomain+'share/id/'+sid+'.html');
+					Zepto("#sharehref").val(baseDomain+'Share/index/id/'+sid+'.html');
 					//分享链接
 					app.reply(self);
 				});
@@ -273,6 +284,13 @@
 						console.log("获取分享服务列表失败：" + e.message);
 					});
 				}
+				
+				//*提交留言*/
+				$('.footer-center').on('tap', '.mui-btn', function() {
+					app.submitReply();
+				});
+				
+				
 				//*分享链接*/
 				$('.mui-bar-nav').on('tap', 'a', function() {
 					shareHref();
