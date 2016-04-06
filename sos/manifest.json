@@ -82,7 +82,7 @@
 		"NativeObj": {
 			"description": "原生对象"
 		},
-		"Push": {},"Zip":{},"Share":{}
+		"Push": {},"Zip":{}
 	},
 	"plus": {
 		"splashscreen": {
@@ -95,7 +95,7 @@
 		"runmode": "normal",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
 		"distribute": {
-			"plugins": {"share":{"qq":{"appid":"","description":"QQ分享"},"sina":{"appkey":"","appsecret":"","redirect_uri":"","description":"可选，新浪微博分享"},"weixin":{"appid":"","appsecret":"","description":"可选，微信分享"},"tencent":{"appkey":"","appsecret":"","redirect_uri":"","description":"可选，腾讯微博分享"}},
+			"plugins": {"share":{},
 				"maps": {
 					
 				},
@@ -282,7 +282,8 @@
 					"js/config.js",
 					"images/grey.png",
 					"fonts/iconfont.ttf",
-					"fonts/iconfont.woff"
+					"fonts/iconfont.woff",
+					"images/avatar.png"
 				],
 				"refer": [],
 				"priority": 0
@@ -314,7 +315,9 @@
 					"css/mui.min.css",
 					"js/config.js"
 				],
-				"refer": [],
+				"refer": [
+					"detail.html"
+				],
 				"priority": 0
 			},
 			"hospital.html": {
@@ -365,7 +368,8 @@
 					"js/config.js"
 				],
 				"refer": [
-					"detail.html"
+					"detail.html",
+					"detail_tel.html"
 				],
 				"priority": 0
 			},
@@ -517,7 +521,14 @@
 			},
 			"weblink.html": {
 				"resources": [
-					"js/app.js"
+					"js/app.js",
+					"fonts/iconfont.css",
+					"js/md5.min.js",
+					"js/mui.min.js",
+					"css/ext.css",
+					"js/zepto.min.js",
+					"css/mui.min.css",
+					"js/config.js"
 				],
 				"refer": [],
 				"priority": 0

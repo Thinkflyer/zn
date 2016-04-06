@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -12,10 +13,12 @@
 			body {
 				background-color: #FFFFFF;
 			}
+			
 			.mui-bar~.mui-content .mui-fullscreen {
 				top: 44px;
 				height: auto;
 			}
+			
 			#leftmenu,
 			#setting,
 			.mui-icon {
@@ -137,17 +140,18 @@
 			}
 		</style>
 	</head>
+
 	<body>
 		<header class="mui-bar mui-bar-nav" id="nav_menu">
 			<a class="mui-action-menu mui-icon mui-icon-bars mui-pull-left"></a>
 			<h1 class="mui-title"><span id="local_name">国家</span><span class="mui-badge hidden" id="news_nums">0</span></h1>
 			<div class="mui-pull-left nav_line" id="btn_refresh">
 			</div>
-			<div id="seach_local" class="mui-icon  mui-icon-search mui-pull-left" linkurl="search_local.html"></div>
-			<div class="mui-icon mui-icon-map mui-pull-right" linkurl="country_save.html"></div>
+			<div id="seach_local" class="mui-icon  mui-icon-search mui-pull-left" open-title="搜索地区" linkurl="search_local.html"></div>
+			<div class="mui-icon mui-icon-map mui-pull-right" open-title="关注地区" linkurl="country_save.html"></div>
 			<div class="mui-pull-right nav_line"></div>
 		</header>
-		
+
 		<div class="mui-content">
 			<div id="slider" class="mui-slider mui-fullscreen">
 				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
@@ -208,7 +212,6 @@
 					}
 				},
 				swipeBack: false,
-				beforeback: back
 			});
 			//操作
 			window.addEventListener('refresh_index', function(event) {
@@ -257,6 +260,7 @@
 			//主列表点击事件main
 			$('#nav_menu').on('tap', 'div', function(e) {
 				var linkurl = this.getAttribute('linkurl');
+				var title = this.getAttribute('open-title');
 				$.openWindow({
 					id: linkurl,
 					url: linkurl,
@@ -267,6 +271,9 @@
 					waiting: {
 						autoShow: false,
 						title: '正在加载...', //等待对话框上显示的提示内容
+					},
+					extras: {
+						title: title,
 					}
 				});
 			});
@@ -293,18 +300,6 @@
 				});
 			});
 		}(mui, document));
-
-		function back() {
-			if (showMenu) {
-				//菜单处于显示状态，返回键应该先关闭菜单,阻止主窗口执行mui.back逻辑；
-				closeMenu();
-				return false;
-			} else {
-				//菜单处于隐藏状态，执行返回时，要先close菜单页面，然后继续执行mui.back逻辑关闭主窗口；
-				menu.close('none');
-				return true;
-			}
-		}
 		//plusReady事件后，自动创建menu窗口；
 		mui.plusReady(function() {
 			main = plus.webview.currentWebview();
@@ -320,7 +315,7 @@
 					}
 				});
 			}, 300);
-			window.addEventListener("menu:close",closeMenu);
+			window.addEventListener("menu:close", closeMenu);
 		});
 		/**
 		 * 显示菜单菜单
@@ -329,7 +324,7 @@
 			if (!showMenu) {
 				//侧滑菜单处于隐藏状态，则立即显示出来；
 				menu.show('none', 0, function() {
-				menu.setStyle({
+					menu.setStyle({
 						left: '0%',
 						transition: {
 							duration: 250
@@ -341,7 +336,6 @@
 							duration: 250
 						}
 					});
-				
 				});
 				//显示遮罩
 				mask.show();
@@ -352,7 +346,6 @@
 		 * 关闭侧滑菜单
 		 */
 		function closeMenu() {
-
 			_closeMenu();
 			//关闭遮罩
 			mask.close();
@@ -367,14 +360,14 @@
 				main.setStyle({
 					left: '0',
 					transition: {
-						duration: 150
+						duration: 250
 					}
 				});
 				//menu页面同时移动
 				menu.setStyle({
 					left: '-70%',
 					transition: {
-						duration: 150
+						duration: 250
 					}
 				});
 				//等窗体动画结束后，隐藏菜单webview，节省资源；
@@ -405,14 +398,14 @@
 		window.addEventListener('dragleft', function(e) {
 			e.detail.gesture.preventDefault();
 		});
-//		//主界面向右滑动，若菜单未显示，则显示菜单；否则不做任何操作；
+		//		//主界面向右滑动，若菜单未显示，则显示菜单；否则不做任何操作；
 		window.addEventListener("swiperight", openMenu);
-//		//主界面向左滑动，若菜单已显示，则关闭菜单；否则，不做任何操作；
+		//		//主界面向左滑动，若菜单已显示，则关闭菜单；否则，不做任何操作；
 		window.addEventListener("swipeleft", closeMenu);
-//		//menu页面向左滑动，关闭菜单；
-//		window.addEventListener("menu:swipeleft",  closeMenu);
-//		//重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
-		window.addEventListener("menu:close",closeMenu);
+		//		//menu页面向左滑动，关闭菜单；
+		//		window.addEventListener("menu:swipeleft",  closeMenu);
+		//		//重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
+		window.addEventListener("menu:close", closeMenu);
 		window.addEventListener("menu:open", openMenu);
 		mui.menu = function() {
 			if (showMenu) {
@@ -421,6 +414,27 @@
 				openMenu();
 			}
 		}
+		//首页返回键处理
+		//处理逻辑：1秒内，连续两次按返回键，则退出应用；
+		var first = null;
+		mui.back = function() {
+			if (showMenu) {
+				closeMenu();
+			} else {
+				//首次按键，提示‘再按一次退出应用’
+				if (!first) {
+					first = new Date().getTime();
+					mui.toast('再按一次退出应用');
+					setTimeout(function() {
+						first = null;
+					}, 1000);
+				} else {
+					if (new Date().getTime() - first < 1000) {
+						plus.runtime.quit();
+					}
+				}
+			}
+		};
 		// 操作
 	</script>
 

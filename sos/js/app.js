@@ -437,11 +437,12 @@
 				cid = Zepto('#cid').val();
 			Zepto('#page').val(parseInt(page) + 1);
 			var _geturl = baseDomain + "index.php?g=Api&m=Index&a=chooselist&p=" + page;
+		
 			var msg = owner.getcache(_geturl);
 			if (_isusecache && msg) {
 				if (msg.code == 200) {
 					Zepto.each(msg.data, function(i, v) {
-						var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '" isend="' + v.is_end + '"  linkurl="info_more.html"  ><a class="mui-navigate-right">[' + v.is_end + ']' + v.name + '</a>';
+						var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '" local_id="' + v.local_id + '" isend="' + v.is_end + '"  linkurl="info_more.html"  ><a class="mui-navigate-right">' + v.name + '</a>';
 						Zepto('#newslist').append(str);
 					});
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
@@ -460,7 +461,7 @@
 						var msg = eval(json);
 						if (msg.code == 200) {
 							Zepto.each(msg.data, function(i, v) {
-								var str = '<li class="mui-table-view-cell" typeid="' + v.typeid + '"  linkurl="info_more.html"    ><a class="mui-navigate-right">' + v.name + '</a>';
+								var str = '<li class="mui-table-view-cell" typeid="' + v.typeid  + '" local_id="' + v.local_id + '" isend="' + v.is_end + '"  linkurl="info_more.html"    ><a class="mui-navigate-right">' + v.name + '</a>';
 
 								Zepto('#newslist').append(str);
 							});
@@ -909,22 +910,24 @@
 	/*用户登陆*/
 	owner.toMain = function(current_view) {
 			//IndexLogin = plus.webview.getWebviewById("IndexLogin");
+			plus.nativeUI.closeWaiting();
 			setTimeout(function() { //延时跳转 克服闪烁
 				$.openWindow({
 					id: _appid,
 					url: 'main.html',
 					show: {
 						aniShow: 'none',
-						autoShow: false,
+						autoShow: true,
 					},
 					waiting: {
 						autoShow: showloading
 					}
 				});
+			//	_appid.reload();
 				current_view.close();
-			}, 1500);
+			}, 1000);
 
-			current_view.close();
+			current_view.hiden();
 		}
 		/*用户登陆*/
 	owner.toMain_login = function(current_view) {
@@ -1048,6 +1051,23 @@
 		localStorage.setItem('$state', JSON.stringify(state));
 	};
 
+	/**
+	 * 全球信息返回路径
+	 **/
+									
+	owner.get_Historyurl = function(baseDomain,msg) {
+		if(msg.parentid==23){
+			//23 则返回主列表
+			history_url= baseDomain + "index.php?g=Api&m=Index&a=chooselist&p=0";
+		}else{
+			if(msg.parentid){
+				history_url= baseDomain + "index.php?g=Api&m=Index&a=chooselist&parentid=" + msg.parentid;
+			}else{
+				history_url= "";
+			}
+		}
+	return history_url;
+	};
 
 	/*记录当前语种信息*/
 	owner.setLanguage = function(language, callback) {
@@ -1240,7 +1260,6 @@
 		var lat = codns.latitude; //获取到当前位置的纬度；
 		var longt = codns.longitude; //获取到当前位置的经度
 		mui.ajax({
-			async: true,
 			type: 'GET',
 			dataType: 'json',
 			url: baseDomain + "index.php?g=Api&m=Index&a=get_local",

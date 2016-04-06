@@ -110,6 +110,7 @@
 					}
 					//主列表跳转
 					$('#pullrefresh').on('tap', 'li', function(e) {
+						plus.nativeUI.showWaiting();
 						var settings = app.getSettings();
 						//跳转到首页 筛选
 						var	local_id = this.getAttribute('local_id'),
@@ -122,7 +123,7 @@
 							local_id: local_id
 						});
 						app.toMain(plus.webview.currentWebview()); //关闭本事 并跳转至首页
-						e.stopPropagation(); //防止事件冒泡
+						//e.stopPropagation(); //防止事件冒泡
 					});
 					//主列表点击事件main 
 					$('#pullrefresh').on('tap', 'input', function(event) {
@@ -146,9 +147,7 @@
 					});
 					//点击定位按钮						
 					doc.getElementById('local_btn').addEventListener('tap', function(event) {
-							
-						
-						
+
 						plus.nativeUI.showWaiting('正在获取地理位置信息');
 						plus.geolocation.getCurrentPosition(app.geoInf, function(e) {
 							mui.alert("获取位置信息失败!","信息提示");

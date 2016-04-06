@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -21,6 +22,7 @@
 			
 			.mui-control-content {
 				min-height: 320px;
+				padding-bottom:60px;
 			}
 			
 			.mui-bar-nav ~ .mui-content {
@@ -28,7 +30,7 @@
 			}
 			
 			#title {
-				width: 80%;
+				width: 65%;
 				margin: 0 auto;
 			}
 			
@@ -97,16 +99,11 @@
 							Zepto('.detail-title').html(msg.data.title);
 							Zepto('#content').html(msg.data.content);
 						} else {
-
 							$.ajax({
 								type: 'GET',
 								dataType: 'json',
 								url: _geturl,
-								//							data: {
-								//								'id': sid,
-								//								'type': type,
-								//								'ishtml': 1
-								//							},
+
 								success: function(json) {
 									app.setcache(_geturl, JSON.stringify(json));
 									var msg = eval(json);
@@ -140,6 +137,11 @@
 							}
 						});
 					}, false);
+					//*通用链接的外部打开处理*/
+					$('#content').on('tap', 'a', function(e) {
+						var targetHref = this.getAttribute('href');
+						plus.runtime.openURL(targetHref);
+					});
 				}(mui, document));
 			</script>
 

@@ -120,6 +120,7 @@
 		<div class="mui-title tit-sort">
 			<input type="hidden" id="page" name="page" value="1" />
 			<input type="hidden" id="cid" name="cid" value="1" />
+			<input type="hidden" id="more" name="more" value="1" />
 		</div>
 		<div class="mui-content">
 			<header class="mui-bar mui-bar-nav">
@@ -143,8 +144,6 @@
 
 		<script type="text/javascript">
 			(function($, doc) {
-			
-
 				$.init({
 					pullRefresh: {
 						container: '#pullrefresh', //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
@@ -160,6 +159,7 @@
 						var self = plus.webview.currentWebview();
 						Zepto('#title').html(self.title); //标题赋值
 						Zepto('#cid').val(self.sid); //分类
+						Zepto('#more').val(self.more);
 						setTimeout(function() {
 							$('#pullrefresh').pullRefresh().pullupLoading();
 							plus.nativeUI.closeWaiting();
@@ -177,12 +177,13 @@
 					var type = this.getAttribute("open-type");
 					var linkurl = this.getAttribute('linkurl');
 					var sid = this.getAttribute('open-sid');
-					
+					var more =  Zepto('#more').val();
+					if(more=2) linkurl="detail_tel.html";
 					$.openWindow({
 						id: 'main',
 						url: linkurl,
 						show: {
-							autoShow: false,
+							autoShow: true,
 						},
 						waiting: {
 							autoShow: showloading,
