@@ -5,6 +5,7 @@
 		var settings = owner.getSettings();
 		if (typeof(loginInfo.auth) == "undefined") { //保存密码 并有记录
 			owner.toLogin();
+			return false;
 		}
 	};
 	//跳转至登陆页面
@@ -817,6 +818,7 @@
 				if (msg.code == 200) {
 					Zepto.each(msg.data, function(i, v) {
 						var _requesturl = baseDomain + v; //需要缓存的地址
+						console.log(_requesturl);
 						mui.ajax({
 							type: 'GET',
 							dataType: 'json',
@@ -909,7 +911,7 @@
 
 	/*用户登陆*/
 	owner.toMain = function(current_view) {
-			//IndexLogin = plus.webview.getWebviewById("IndexLogin");
+		    current_view.hide();
 			plus.nativeUI.closeWaiting();
 			setTimeout(function() { //延时跳转 克服闪烁
 				$.openWindow({
@@ -923,11 +925,11 @@
 						autoShow: showloading
 					}
 				});
-			//	_appid.reload();
-				current_view.close();
+				plus.nativeUI.closeWaiting();
+				_appid.reload();
 			}, 1000);
+			current_view.close();
 
-			current_view.hiden();
 		}
 		/*用户登陆*/
 	owner.toMain_login = function(current_view) {
@@ -951,15 +953,12 @@
 			IndexLogin.close();
 		}, 500);
 	}
-
 	owner.reply = function(self) {
 			var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show";
 			var _cacheurl = _geturl + "&type=" + self.type + "&id=" + self.sid;
-			//console.log(_cacheurl)
-
 			var msg = owner.getcache(_cacheurl);
 			if (_isusecache && msg) {
-				msg = (JSON.parse(msg));
+				if(typeof(msg)=='string') msg = (JSON.parse(msg));
 				Zepto('.detail-title').html(msg.data.title);
 				Zepto('#content').html(msg.data.content);
 			} else {
@@ -978,7 +977,6 @@
 						Zepto('.detail-title').html(msg.data.title); //标题
 						Zepto('#content').html(msg.data.content); //内容
 						Zepto('#reply_nums').html(msg.data.reply_nums); //回复数量
-						//alert(msg.data.allow_reply);
 						if (msg.data.allow_reply > 0) {
 							Zepto("#reply_bar").show();
 							if (msg.data.reply_nums > 0) Zepto('#reply_html').show();
@@ -1014,14 +1012,14 @@
 		var _md5_requesturl = md5(_requesturl); //请求地址格式化
 		var articleinfo = localStorage.getItem(_md5_requesturl) || ''; //获取现有数据
 		if (articleinfo && settings.autoSync) { //当缓存信息存在 并且启用缓存功能时有效.
-			if (_iscachemsg) plus.nativeUI.toast('CacheData');
-
+			if (_iscachemsg) plus.nativeUI.toast('CacheData\n');
 			var articleinfo = JSON.parse(articleinfo);
 			return articleinfo;
 		} else {
-			if (_iscachemsg) plus.nativeUI.toast('AjaxData');
+			if (_iscachemsg) plus.nativeUI.toast('AjaxData\n');
 
 		}
+		console.log(_requesturl);
 	}
 
 
@@ -1256,6 +1254,7 @@
 	}
 
 	owner.geoInf = function(position) {
+		var settings = app.getSettings();
 		var codns = position.coords; //获取地理坐标信息；
 		var lat = codns.latitude; //获取到当前位置的纬度；
 		var longt = codns.longitude; //获取到当前位置的经度
@@ -1276,10 +1275,14 @@
 						if (i > 0) { //点了是 
 							//比较是否有信息
 							if (owner.comp_country(msg.info)) {
-								owner.toMain(plus.webview.getWebviewById('search_local.html')); //关闭本事 并跳转至首页
-
+								mui.fire(plus.webview.getWebviewById(_appid), "refresh_index", {
+										local_name: settings.local_name,
+										local_id: settings.local_id,
+								});
+								mui.currentWebview.close();
+								//关闭本事 并跳转至首页
 							} else {
-								alert('未找到匹配信息');
+								plus.nativeUI.toast(mylang['error_comp']);
 							}
 
 							//

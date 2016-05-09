@@ -7,7 +7,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<script src="js/config.js"></script>
 	</head>
-	<body>
+	<body> 
 		<style>
 			#leftmenu,
 			#setting,
@@ -33,7 +33,7 @@
 			}
 			
 			#seach_local {
-				width: 72%;
+				width: 70%;
 				height: 30px;
 				border-radius: 12px;
 				margin-top: 8px;
@@ -134,7 +134,6 @@
 						});
 						e.stopPropagation();
 					});
-
 					function refresh_list() {
 						$('#pullrefresh').pullRefresh().pullupLoading();
 					}
@@ -147,11 +146,11 @@
 					});
 					//点击定位按钮						
 					doc.getElementById('local_btn').addEventListener('tap', function(event) {
-
 						plus.nativeUI.showWaiting('正在获取地理位置信息');
 						plus.geolocation.getCurrentPosition(app.geoInf, function(e) {
 							mui.alert("获取位置信息失败!","信息提示");
-						});
+							plus.nativeUI.closeWaiting();
+						});												
 					});
 				}(mui, document));
 			

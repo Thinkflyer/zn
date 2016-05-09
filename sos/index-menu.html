@@ -191,6 +191,7 @@
 				}, false);
 				//*通用链接处理*/
 				$('.mui-table-view-cell').on('tap', 'a', function() {
+					close();//关闭侧栏菜单
 					var id = this.getAttribute("linkurl");
 					var type = this.getAttribute("open-type");
 					var sid = this.getAttribute("open-sid");
@@ -235,6 +236,7 @@
 					var webview_style = {
 						popGesture: "close"
 					};
+					
 					$.openWindow({
 						id: id,
 						url: id,
@@ -255,7 +257,6 @@
 							more: more
 						}
 					});
-					close(); //关闭侧栏菜单
 				});
 			}(mui, document));
 			//关于backbutton和menubutton两个按键的说明，在iOS平台不存在，故需隐藏

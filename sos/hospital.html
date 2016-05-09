@@ -193,10 +193,10 @@
 					var linkurl = this.getAttribute('linkurl');
 					var sid = this.getAttribute('open-sid');
 					$.openWindow({
-						id: 'main',
+						id: linkurl,
 						url: linkurl,
 						show: {
-							autoShow: true,
+							autoShow: false
 						},
 						waiting: {
 							autoShow: showloading,
@@ -210,10 +210,7 @@
 							type: type
 						}
 					});
-					//alert(22);
-					//var self = plus.webview.currentWebview();
-					//$.back();
-					//mui.fire(mui.currentWebview.opener(), "closeall");
+
 				});
 				doc.getElementById('call_tel').addEventListener('tap', function(event) {
 					var btnArray = ['返回', '立即拨打'];

@@ -136,7 +136,6 @@
 			</button>
 			<h1 class="mui-title detail-title" id="title"></h1>
 			<!--a class="mui-icon iconfont icon-share2 mui-pull-right" id="share_btn"></a-->
-
 		</header>
 		<footer id="reply_bar" class="mui-bar mui-bar-footer" style="display: none;">
 			<label class="footer-left">
@@ -149,12 +148,11 @@
 		</footer>
 
 		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
-			<input id="sharehref" class="sharehref" type="hidden" />
 			<div class="mui-scroll">
 				<div class="mui-content-padded">
+					<input id="sharehref" class="sharehref" type="hidden" />
 					<div id="content" class="mui-control-content mui-active">
 					</div>
-					
 				</div>
 				<input type="hidden" id="sid" />
 				<div class="mui-content-padded" id="reply_html">
@@ -289,9 +287,7 @@
 				$('.footer-center').on('tap', '.mui-btn', function() {
 					app.submitReply();
 				});
-				
-				
-		
+
 				//*通用链接的外部打开处理*/
 				$('#content').on('tap', 'a', function(e) {
 				        var targetHref = this.getAttribute('href');

@@ -62,7 +62,7 @@
 			<div class="mui-table-view">
 				<div class="row mui-input-row s_center">
 					<div class="list_desc"><img src="images/logo_3.png" width="50%"></div>
-					<p class="s_strong black_color">Version 1.0.4</p>
+					<p class="s_strong black_color">Version <span class="blue_color" id="version_number"></span></p>
 				</div>
 				<div class="row mui-input-row">
 					账号#:
@@ -84,6 +84,9 @@
 				<!--<div class="row mui-input-row">
 					设备ID:<span class="blue_color formart_t" id="dev_id"></span>
 				</div>-->
+				<div class="row mui-input-row">
+                    发布时间:<span class="blue_color formart_t" id="updatetime"></span>
+                </div>
 			</div>
 			<div class="mui-input-row s_center">
 				<button class="btn-color mui-btn-block" linkurl="feedback.html">发送反馈</button>
@@ -105,6 +108,8 @@
 					Zepto('#dev_no').html(plus.device.model);
 					Zepto('#dev_bb').html(plus.runtime.version);
 					Zepto('#dev_id').html(plus.device.imei);
+					Zepto('#updatetime').html(updatetime);
+                    Zepto('#version_number').html(version_number);
 					$('.s_center').on('tap', 'button', function() {
 
 						var linkurl = this.getAttribute('linkurl');

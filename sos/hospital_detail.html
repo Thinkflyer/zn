@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<script src="js/config.js"></script>
 		<script src="js/lazyload.js"></script>
 	</head>
@@ -51,9 +48,7 @@
 			</header>
 			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
 				<div class="mui-scroll">
-
 					<div class="mui-content-padded">
-
 						<div style="background: #FFFFFF; padding: 10px;">
 							<div id="content" class="mui-control-content mui-active">
 								<strong id="m_local"></strong>
@@ -82,13 +77,13 @@
 					var sid = null,
 						type = null;
 					$.plusReady(function() {
-						plus.nativeUI.showWaiting();
 						var self = plus.webview.currentWebview();
 						sid = self.sid;
 						type = self.type;
 						var _geturl = baseDomain + "index.php?g=Api&m=Index&a=show&id=" + sid + "&type=" + type;
 						msg = app.getcache(_geturl);
 						if (_isusecache && msg) {
+							if(typeof(msg)=='string') msg = (JSON.parse(msg));
 							Zepto('#m_local').html(msg.data.local_id);
 							Zepto('#m_title').html(msg.data.title);
 							Zepto('#m_tel').html("<a title='" + msg.data.tel + "'>呼叫</a>");
@@ -102,12 +97,7 @@
 								type: 'GET',
 								dataType: 'json',
 								url: _geturl,
-								//data: {
-								//	'id': sid,
-								//	'type': type
-								//	},
 								success: function(json) {
-									
 									app.setcache(_geturl, JSON.stringify(json));
 									var msg = eval(json);
 									var str = '';
@@ -123,7 +113,7 @@
 								error: function(xhr, type, errorThrown) {
 									//异常处理
 									plus.nativeUI.toast(mylang['error_network']);
-									console.log(JSON.stringify(xhr));
+									//console.log(JSON.stringify(xhr));
 								}
 							});
 						}

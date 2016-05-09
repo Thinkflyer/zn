@@ -209,7 +209,8 @@
 					"css/mui.min.css",
 					"images/bg_topbutton_rep.png",
 					"js/config.js",
-					"fonts/iconfont.woff"
+					"fonts/iconfont.woff",
+					null
 				],
 				"refer": [
 					"index-menu.html",
@@ -437,7 +438,8 @@
 					"images/bg_button.png",
 					"css/mui.min.css",
 					"js/lazyload.js",
-					"js/config.js"
+					"js/config.js",
+					null
 				],
 				"refer": [],
 				"priority": 0
@@ -485,7 +487,9 @@
 					"css/mui.min.css",
 					"js/config.js"
 				],
-				"refer": [],
+				"refer": [
+					"vote_detail.html"
+				],
 				"priority": 0
 			},
 			"iconlist.html": {
@@ -529,6 +533,13 @@
 					"js/zepto.min.js",
 					"css/mui.min.css",
 					"js/config.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"vote_detail.html": {
+				"resources": [
+					"js/app.js"
 				],
 				"refer": [],
 				"priority": 0
