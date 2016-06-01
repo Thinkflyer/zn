@@ -4,11 +4,12 @@ var _appid='cn.frun.assistance'; //fire刷新对应id修改
 var _iscachemsg= 0;
 var _avatar = "images/avatar.png";
 var baseDomain="http://info.china-tpa.com/";
+//var baseDomain="http://sos.test.com/";
 var basepath="/";
 var jump_baseurl="main.html";
 var call_telphone= "0864009208876";
-var version_number="1.0.6";
-var updatetime="2016/04/06";
+var version_number="1.0.7";
+var updatetime="2016/05/31";
 /*提示翻译*/
 var mylang={
 		'error_no_empty' : "此项不能为空",
@@ -35,7 +36,6 @@ var regBox = {
 //引用其他css 样式表 注意上下顺序
 document.write("<link href=\"css/mui.min.css\" rel='stylesheet' />");
 document.write("<link href=\"css/ext.css\" rel='stylesheet' />");
-
 //引入 md5  和 app.js
 document.write("<script src=\"js/zepto.min.js\"></script>");
 document.write("<script src=\"js/md5.min.js\"></script>");
