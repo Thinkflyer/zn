@@ -1,6 +1,6 @@
-var _isusecache= 1;//强制使用缓存数据当为0时 缓存将不自动写入
-var _appid='cn.frun.assistance'; //fire刷新对应id修改
-//var _appid='HBuilder';
+var _isusecache= 0;//强制使用缓存数据当为0时 缓存将不自动写入
+//var _appid='cn.frun.assistance'; //fire刷新对应id修改
+var _appid='HBuilder';
 var _iscachemsg= 0;
 var _avatar = "images/avatar.png";
 var baseDomain="http://info.china-tpa.com/";
@@ -8,8 +8,8 @@ var baseDomain="http://info.china-tpa.com/";
 var basepath="/";
 var jump_baseurl="main.html";
 var call_telphone= "0864009208876";
-var version_number="1.0.7";
-var updatetime="2016/05/31";
+var version_number="1.0.6";
+var updatetime="2016/06/11";
 /*提示翻译*/
 var mylang={
 		'error_no_empty' : "此项不能为空",

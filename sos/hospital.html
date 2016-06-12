@@ -146,11 +146,8 @@
 			</div>
 			<div id="pullrefresh" class="mui-scroll-wrapper">
 				<div class="mui-scroll">
-					<!--media list-->
 					<div class="hd"></div>
-					<ul class="mui-table-view list" id="newslist">
-					</ul>
-					<!--end media list-->
+					<ul class="mui-table-view list" id="newslist"></ul>
 				</div>
 			</div>
 
@@ -160,12 +157,13 @@
 			(function($, doc) {
 				$.init({
 					pullRefresh: {
-						container: '#pullrefresh', //待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+						container: '#pullrefresh', 
 						up: {
-							contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
-							contentnomore: '<font class="loading_msg">没有更多数据了</font>', //可选，请求完毕若没有更多数据时显示的提醒内容；
-							callback: app.get_hospital_list //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+							contentrefresh: "正在加载...", 
+							contentnomore: '<font class="loading_msg">没有更多数据了</font>',
+							callback: app.get_hospital_list 
 						}
+						
 					},
 				});
 				if ($.os.plus) {
@@ -174,8 +172,6 @@
 						Zepto('#title').html(self.title); //标题赋值
 						Zepto('#cid').val(self.sid); //分类
 						setTimeout(function() {
-							//参数为true代表没有更多数据了,并自动隐藏显示更多字样。
-							$('#pullrefresh').pullRefresh().disablePullupToRefresh(true);
 							$('#pullrefresh').pullRefresh().pullupLoading();
 							plus.nativeUI.closeWaiting();
 						}, 100);

@@ -390,6 +390,7 @@
 		//第一步 定义路径
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=newslist&cid=" + cid + "&p=" + page + str_sql;
 		var msg = owner.getcache(_geturl);
+		//console.log(_geturl);
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
 				if (msg.newnum > 0) {
@@ -620,13 +621,11 @@
 			cid = Zepto('#cid').val();
 		Zepto('#page').val(parseInt(page) + 1);
 		var _geturl = baseDomain + "index.php?g=Api&m=Index&a=hospital_list&cid=" + cid + "&p=" + page;
-		//console.log(_geturl);
 		var msg = owner.getcache(_geturl);
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
 				Zepto.each(msg.data, function(i, v) {
 					var str = '<li class="mui-table-view-cell" linkurl="hospital_detail.html" open-type="hospital" open-sid="' + v.id + '"  ><a class="mui-navigate-right"><b>' + v.catname + '</b><span class="right_m" >' + v.local_id + '</span></a>';
-
 					Zepto('#newslist').append(str);
 				});
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
@@ -657,7 +656,7 @@
 				error: function(xhr, type, errorThrown) {
 					//异常处理；
 					plus.nativeUI.toast(mylang['error_network']);
-					console.log(JSON.stringify(xhr));
+					//console.log(JSON.stringify(xhr));
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
 
 				}
