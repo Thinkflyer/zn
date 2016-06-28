@@ -1,7 +1,7 @@
 {
 	"@platforms": ["android", "iPhone", "iPad"],
-	"id": "cn.frun.assistance",/*应用的标识，创建应用时自动生成，勿手动修改*/
-	"name": "Assistance Demo",/*应用名称，程序桌面图标名称*/
+	"id": "assistance",/*应用的标识，创建应用时自动生成，勿手动修改*/
+	"name": "ONE iCover",/*应用名称，程序桌面图标名称*/
 	"version": {
 		"name": "1.0.1",/*应用版本名称*/
 		"code": ""
@@ -122,7 +122,7 @@
 				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
 				"permissions": ["<uses-permission android:name=\"android.permission.ACCESS_LOCATION_EXTRA_COMMANDS\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.GET_TASKS\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.LOCATION_HARDWARE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.RECEIVE_MMS\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-permission android:name=\"android.permission.CONTROL_LOCATION_UPDATES\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>","<uses-permission android:name=\"android.permission.INSTALL_LOCATION_PROVIDER\"/>","<uses-permission android:name=\"android.permission.RECEIVE_SMS\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_MOCK_LOCATION\"/>","<uses-permission android:name=\"android.permission.BROADCAST_SMS\"/>","<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>"]
 			},
-			"orientation": ["portrait-primary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+			"orientation": ["portrait-primary","portrait-secondary","landscape-primary","landscape-secondary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
 			"icons": {
 				"ios": {
 					"prerendered": true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
@@ -181,7 +181,7 @@
 						"landscape-retina7": ""
 					}
 				},
-				"android": {"hdpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default-736h@3x.png","ldpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default@2x.png","mdpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default.png","xhdpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default-736h@3x.png","xxhdpi":"/MAC_DISK/Assistance2/HBuilder-Hello/HBuilder-Hello/splash/Default-736h@3x.png"
+				"android": {"mdpi":"/Volumes/1/@@@@@/app@240.png","ldpi":"/Volumes/1/@@@@@/app@320.png","hdpi":"/Volumes/1/@@@@@/app@480.png","xhdpi":"/Volumes/1/@@@@@/app@720.png","xxhdpi":"/Volumes/1/@@@@@/app@1080.png"
 					 /*普通屏启动图片，分辨率：240x282*/
 					 /*大屏启动图片，分辨率：320x442*/
 					 /*高分屏启动图片，分辨率：480x762*/
