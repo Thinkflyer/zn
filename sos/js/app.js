@@ -625,7 +625,7 @@
 		if (_isusecache && msg) {
 			if (msg.code == 200) {
 				Zepto.each(msg.data, function(i, v) {
-					var str = '<li class="mui-table-view-cell" linkurl="hospital_detail.html" open-type="hospital" open-sid="' + v.id + '"  ><a class="mui-navigate-right"><b>' + v.catname + '</b><span class="right_m" >' + v.local_id + '</span></a>';
+					var str = '<li class="mui-table-view-cell" linkurl="hospital_detail.html" open-type="hospital" open-sid="' + v.id + '"  ><a class="mui-navigate-right"><b>' + v.catname + '</b><p class="right_m" >' + v.local_id + '</p></a>';
 					Zepto('#newslist').append(str);
 				});
 				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
@@ -644,7 +644,7 @@
 					var msg = eval(json);
 					if (msg.code == 200) {
 						Zepto.each(msg.data, function(i, v) {
-							var str = '<li class="mui-table-view-cell" linkurl="hospital_detail.html" open-type="hospital" open-sid="' + v.id + '"  ><a class="mui-navigate-right"><b>' + v.catname + '</b><span class="right_m" >' + v.local_id + '</span></a>';
+							var str = '<li class="mui-table-view-cell" linkurl="hospital_detail.html" open-type="hospital" open-sid="' + v.id + '"  ><a class="mui-navigate-right"><b>' + v.catname + '</b><p class="right_m" >' + v.local_id + '</p></a>';
 
 							Zepto('#newslist').append(str);
 						});

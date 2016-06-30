@@ -9,8 +9,8 @@ var baseDomain="http://info.china-tpa.com/";
 var basepath="/";
 var jump_baseurl="main.html";
 var call_telphone= "0864009208876";
-var version_number="1.0.8";
-var updatetime="2016/06/28";
+var version_number="1.0.9";
+var updatetime="2016/06/30";
 /*提示翻译*/
 var mylang={
 		'error_no_empty' : "此项不能为空",
